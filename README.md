@@ -78,10 +78,10 @@ npm run preview
 ```
 
 ## 🔮 Future Improvements
-* **Platform Integrations:** Chrome extension to auto-detect and log solved questions directly from LeetCode.
-* **Custom Intervals:** Allow users to define custom spaced-repetition schedules beyond the default 3/7/30 days.
+* **Platform Integrations:** ✅ Chrome extension (MV3) auto-detects solved questions from LeetCode, GFG, Codeforces, CodeChef, AtCoder and syncs to web app.
+* **Custom Intervals:** ✅ User-configurable spaced-repetition schedules in Settings.
 * **Cloud Sync:** Optional OAuth and Supabase/Firebase integration for syncing progress across multiple devices.
-* **Algorithm Tags:** More granular tags for algorithmic patterns (e.g., Two Pointers, Sliding Window).
+* **Algorithm Tags:** ✅ 23 granular tags (Two Pointers, Sliding Window, DP, Graphs, etc.) with filtering.
 
 ## 📄 License
 This project is open-source and available under the [MIT License](LICENSE).
