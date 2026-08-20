@@ -87,8 +87,9 @@ export const Progress: React.FC = () => {
     <div className="space-y-6 max-w-7xl mx-auto">
       {/* Header section */}
       <div>
+        <span className="text-[11px] font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest mb-1 block">Analytics</span>
         <h2 className="text-2xl font-bold tracking-tight text-zinc-950 dark:text-zinc-50">Analytics & Progress</h2>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">
           Visualize your DSA journey, topic coverage, and revision performance.
         </p>
       </div>
@@ -98,7 +99,7 @@ export const Progress: React.FC = () => {
           {/* Top Quick Stats row */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Card className="flex items-center gap-4">
-              <div className="p-3 bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-xl border border-blue-500/20 shrink-0">
+              <div className="p-3 bg-brand-500/10 text-brand-600 dark:text-brand-400 rounded-xl border border-brand-500/20 shrink-0">
                 <FileText size={20} />
               </div>
               <div>
@@ -205,7 +206,7 @@ export const Progress: React.FC = () => {
                           fontSize: '11px'
                         }}
                       />
-                      <Bar dataKey="count" fill="#3b82f6" radius={[0, 4, 4, 0]} barSize={12} />
+                      <Bar dataKey="count" fill="#0d9488" radius={[0, 4, 4, 0]} barSize={12} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>

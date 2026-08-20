@@ -20,11 +20,11 @@ function AppContent() {
     <>
       <a 
         href="#main-content" 
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 px-4 py-2 bg-blue-600 text-white rounded-lg"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 px-4 py-2 bg-brand-600 text-white rounded-lg"
       >
         Skip to main content
       </a>
-      <div className="flex min-h-screen bg-[#f9fafb] dark:bg-[#09090b] text-zinc-900 dark:text-zinc-100 transition-colors duration-150">
+      <div className="flex min-h-screen app-glow text-zinc-900 dark:text-zinc-100 transition-colors duration-150">
       
       {/* Desktop Sidebar Panel */}
       <div className="hidden md:block shrink-0">
@@ -40,12 +40,12 @@ function AppContent() {
             onClick={() => setIsMobileMenuOpen(false)} 
           />
           {/* Content Container */}
-          <div className="relative flex flex-col w-64 h-full bg-white dark:bg-zinc-950 border-r border-zinc-200 dark:border-zinc-800 animate-in slide-in-from-left duration-250">
+          <div className="relative flex flex-col w-64 h-full bg-zinc-950 border-r border-zinc-800 animate-in slide-in-from-left duration-250">
             {/* Close trigger */}
             <div className="absolute top-4 right-4 z-55">
               <button 
                 onClick={() => setIsMobileMenuOpen(false)} 
-                className="p-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-900 cursor-pointer"
+                className="p-1.5 rounded-lg border border-zinc-800 text-zinc-400 hover:bg-white/[0.06] cursor-pointer"
                 aria-label="Close menu"
               >
                 <X size={16} />
@@ -63,16 +63,16 @@ function AppContent() {
       <div className="flex-1 flex flex-col min-w-0">
         
         {/* Mobile Header Bar */}
-        <header className="h-16 px-6 border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 flex items-center justify-between md:hidden shrink-0 sticky top-0 z-30 shadow-xs">
+        <header className="h-16 px-6 border-b border-zinc-800/70 dark:border-zinc-800/50 bg-zinc-950 flex items-center justify-between md:hidden shrink-0 sticky top-0 z-30 shadow-sm">
           <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-lg">
+            <div className="h-8 w-8 rounded-lg brand-gradient flex items-center justify-center text-white font-bold text-lg">
               D
             </div>
-            <span className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">DSA Revise</span>
+            <span className="text-sm font-semibold text-white tracking-tight">DSA Revise</span>
           </div>
           <button
             onClick={() => setIsMobileMenuOpen(true)}
-            className="p-2 rounded-lg border border-zinc-200 dark:border-zinc-800 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-900 cursor-pointer"
+            className="p-2 rounded-lg border border-zinc-800 text-zinc-400 hover:bg-white/[0.06] hover:text-zinc-200 cursor-pointer"
             aria-label="Open menu"
           >
             <Menu size={18} />

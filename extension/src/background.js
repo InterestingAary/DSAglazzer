@@ -1,9 +1,7 @@
 // Background service worker for DSA Revision Tracker Chrome Extension
 // Handles storage sync, cross-tab communication, and platform detection
 
-import { STORAGE_KEYS, PLATFORMS, detectPlatform, generateQuestionId } from './utils/constants.js';
-
-let pendingDetection = null;
+import { STORAGE_KEYS, detectPlatform, generateQuestionId } from './utils/constants.js';
 
 // Initialize storage with defaults
 chrome.runtime.onInstalled.addListener(async () => {
@@ -184,7 +182,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
           target: { tabId },
           files: [`contentScripts/${platform.key}.js`]
         });
-      } catch (e) {
+      } catch {
         // Script already injected or error
       }
     }

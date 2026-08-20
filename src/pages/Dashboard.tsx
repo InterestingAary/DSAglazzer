@@ -59,7 +59,7 @@ export const Dashboard: React.FC = () => {
       value: stats.solvedCount,
       description: 'Total questions added to tracker',
       icon: FileText,
-      colorClass: 'text-blue-600 dark:text-blue-400 bg-blue-500/10 border-blue-500/20'
+      colorClass: 'text-brand-600 dark:text-brand-400 bg-brand-500/10 border-brand-500/20'
     },
     {
       title: 'Questions Due Today',
@@ -93,8 +93,9 @@ export const Dashboard: React.FC = () => {
       {/* Top Banner Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
+          <span className="text-[11px] font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest mb-1 block">Overview</span>
           <h2 className="text-2xl font-bold tracking-tight text-zinc-950 dark:text-zinc-50">Welcome back, Developer</h2>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">Here's your spaced repetition status for today.</p>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">Here's your spaced repetition status for today.</p>
         </div>
         
         {/* Dynamic call to action button */}
@@ -102,7 +103,7 @@ export const Dashboard: React.FC = () => {
           <Button 
             variant="primary" 
             onClick={() => navigate('/today')}
-            className="shadow-blue-500/20 shadow-md group active:scale-[0.98]"
+            className="shadow-brand-600/25 shadow-md group active:scale-[0.98]"
           >
             Start Today's Revision ({stats.dueTodayCount + stats.overdueCount} due)
             <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
@@ -132,7 +133,7 @@ export const Dashboard: React.FC = () => {
                 </div>
               </div>
               <div className="mt-4 space-y-1">
-                <span className="text-3xl font-bold text-zinc-900 dark:text-zinc-50 tracking-tight">{c.value}</span>
+                <span className="stat-number text-3xl font-bold text-zinc-900 dark:text-zinc-50">{c.value}</span>
                 <p className="text-xs text-zinc-400 dark:text-zinc-500 font-medium">{c.description}</p>
               </div>
             </Card>
@@ -148,18 +149,23 @@ export const Dashboard: React.FC = () => {
         {/* Left Column: Streak details */}
         <Card className="lg:col-span-1 flex flex-col justify-between gap-5 h-full">
           <div>
-            <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50 mb-4">Revision Streaks</h3>
+            <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50 mb-4 flex items-center gap-2">
+              <span className="h-4 w-1 rounded-full bg-brand-500" />
+              Revision Streaks
+            </h3>
             <div className="flex flex-col gap-6 items-center py-4">
               <div className="relative flex items-center justify-center">
                 {/* Outer Ring */}
-                <div className="w-24 h-24 rounded-full border-4 border-zinc-100 dark:border-zinc-800 flex items-center justify-center">
-                  <div className="text-center">
-                    <span className="text-3xl font-extrabold text-orange-600 dark:text-orange-400 leading-none">
-                      {stats.currentStreak}
-                    </span>
-                    <span className="block text-[10px] text-zinc-400 dark:text-zinc-500 font-bold uppercase mt-0.5">
-                      Days
-                    </span>
+                <div className="w-24 h-24 rounded-full p-[3px] brand-gradient flex items-center justify-center shadow-lg shadow-brand-600/20">
+                  <div className="w-full h-full rounded-full bg-white dark:bg-zinc-900 flex items-center justify-center">
+                    <div className="text-center">
+                      <span className="stat-number text-3xl font-extrabold text-brand-600 dark:text-brand-400 leading-none">
+                        {stats.currentStreak}
+                      </span>
+                      <span className="block text-[10px] text-zinc-400 dark:text-zinc-500 font-bold uppercase mt-0.5">
+                        Days
+                      </span>
+                    </div>
                   </div>
                 </div>
                 {/* Fire Badge */}
@@ -194,7 +200,10 @@ export const Dashboard: React.FC = () => {
         {/* Right Column: Upcoming Schedule List */}
         <Card className="lg:col-span-2 flex flex-col justify-between gap-5 h-full">
           <div>
-            <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50 mb-4">Upcoming Revision Agenda</h3>
+            <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50 mb-4 flex items-center gap-2">
+              <span className="h-4 w-1 rounded-full bg-brand-500" />
+              Upcoming Revision Agenda
+            </h3>
             <div className="divide-y divide-zinc-100 dark:divide-zinc-800/60">
               {upcomingRevisions.length > 0 ? (
                 upcomingRevisions.map(({ question, nextRev }, idx) => {
@@ -204,7 +213,7 @@ export const Dashboard: React.FC = () => {
                   return (
                     <div key={idx} className="flex items-center justify-between py-3 first:pt-0 last:pb-0 gap-3 group">
                       <div className="flex flex-col gap-0.5 overflow-hidden">
-                        <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 group-hover:text-blue-500 transition-colors truncate">
+                        <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors truncate">
                           {question.name}
                         </span>
                         <div className="flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-500">

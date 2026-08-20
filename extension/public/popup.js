@@ -1,6 +1,6 @@
 // Popup script for DSA Revision Tracker Extension
 
-import { STORAGE_KEYS, MESSAGE_TYPES, PLATFORMS } from '../src/utils/constants.js';
+import { STORAGE_KEYS, MESSAGE_TYPES } from '../src/utils/constants.js';
 
 // DOM Elements
 const elements = {
@@ -70,7 +70,7 @@ async function checkSyncStatus() {
     });
     
     updateSyncUI(response);
-  } catch (error) {
+  } catch {
     updateSyncUI({ webAppConnected: false });
   }
 }
@@ -174,7 +174,7 @@ function setupEventListeners() {
         type: MESSAGE_TYPES.CHECK_SYNC_STATUS
       });
       updateSyncUI(status);
-    } catch (error) {
+    } catch {
       updateSyncUI({ webAppConnected: false });
     } finally {
       elements.syncBtn.disabled = false;

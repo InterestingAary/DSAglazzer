@@ -84,7 +84,7 @@ export const Modal: React.FC<ModalProps> = ({
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs transition-opacity duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/70 backdrop-blur-sm transition-opacity duration-200"
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
@@ -96,10 +96,10 @@ export const Modal: React.FC<ModalProps> = ({
       />
       <div 
         ref={modalRef}
-        className={`relative w-full ${sizeClasses[size]} bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xl overflow-hidden transition-all duration-200 transform scale-100 flex flex-col max-h-[90vh]`}
+        className={`relative w-full ${sizeClasses[size]} bg-white dark:bg-zinc-900 border border-zinc-200/90 dark:border-zinc-800 rounded-2xl shadow-2xl overflow-hidden transition-all duration-200 transform scale-100 flex flex-col max-h-[90vh]`}
       >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-100 dark:border-zinc-800">
-          <h3 id="modal-title" className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">{title}</h3>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50/60 dark:bg-zinc-900/60">
+          <h3 id="modal-title" className="text-lg font-semibold text-zinc-950 dark:text-zinc-50 tracking-tight">{title}</h3>
           <Button 
             variant="ghost" 
             size="sm" 

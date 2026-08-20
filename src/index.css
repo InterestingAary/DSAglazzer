@@ -2,56 +2,70 @@
 
 /* Design Tokens & Variable Declarations */
 @theme {
-  --color-border-card: rgba(255, 255, 255, 0.08);
-  --color-border-card-light: rgba(0, 0, 0, 0.08);
-  
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+
+  /* Brand accent: teal */
+  --color-brand-50: #f0fdfa;
+  --color-brand-100: #ccfbf1;
+  --color-brand-200: #99f6e4;
+  --color-brand-300: #5eead4;
+  --color-brand-400: #2dd4bf;
+  --color-brand-500: #14b8a6;
+  --color-brand-600: #0d9488;
+  --color-brand-700: #0f766e;
+  --color-brand-800: #115e59;
+  --color-brand-900: #134e4a;
+  --color-brand-950: #042f2e;
 }
 
 /* Custom Base Layer Styles */
 @layer base {
   :root {
-    --bg-app: #f9fafb;
+    --bg-app: #f7f7f8;
     --bg-card: #ffffff;
-    --border-main: rgba(0, 0, 0, 0.08);
-    --text-primary: #111827;
-    --text-secondary: #4b5563;
-    --text-tertiary: #9ca3af;
-    --accent: #2563eb;
-    --accent-hover: #1d4ed8;
-    --accent-glow: rgba(37, 99, 235, 0.15);
-    
+    --bg-subtle: #f1f1f3;
+    --border-main: rgba(15, 18, 22, 0.09);
+    --border-strong: rgba(15, 18, 22, 0.14);
+    --text-primary: #131316;
+    --text-secondary: #565660;
+    --text-tertiary: #9c9ca6;
+    --accent: #0d9488;
+    --accent-hover: #0f766e;
+    --accent-glow: rgba(13, 148, 136, 0.12);
+
     /* Status Colors */
-    --color-easy: #10b981;
-    --color-easy-bg: rgba(16, 185, 129, 0.1);
-    --color-medium: #f59e0b;
-    --color-medium-bg: rgba(245, 158, 11, 0.1);
-    --color-hard: #ef4444;
-    --color-hard-bg: rgba(239, 68, 68, 0.1);
-    
+    --color-easy: #059669;
+    --color-easy-bg: rgba(5, 150, 105, 0.1);
+    --color-medium: #d97706;
+    --color-medium-bg: rgba(217, 119, 6, 0.1);
+    --color-hard: #dc2626;
+    --color-hard-bg: rgba(220, 38, 38, 0.1);
+
     color-scheme: light;
   }
 
   :root.dark {
-    --bg-app: #09090b;
-    --bg-card: #18181b;
-    --border-main: rgba(255, 255, 255, 0.08);
-    --text-primary: #f4f4f5;
-    --text-secondary: #a1a1aa;
-    --text-tertiary: #52525b;
-    --accent: #3b82f6;
-    --accent-hover: #60a5fa;
-    --accent-glow: rgba(59, 130, 246, 0.2);
-    
+    --bg-app: #0a0a0d;
+    --bg-card: #131316;
+    --bg-subtle: #1a1a1f;
+    --border-main: rgba(255, 255, 255, 0.09);
+    --border-strong: rgba(255, 255, 255, 0.16);
+    --text-primary: #f4f4f6;
+    --text-secondary: #a3a3ad;
+    --text-tertiary: #5c5c66;
+    --accent: #2dd4bf;
+    --accent-hover: #5eead4;
+    --accent-glow: rgba(45, 212, 191, 0.14);
+
     /* Status Colors */
     --color-easy: #34d399;
-    --color-easy-bg: rgba(52, 211, 153, 0.1);
+    --color-easy-bg: rgba(52, 211, 153, 0.12);
     --color-medium: #fbbf24;
-    --color-medium-bg: rgba(251, 191, 36, 0.1);
+    --color-medium-bg: rgba(251, 191, 36, 0.12);
     --color-hard: #f87171;
-    --color-hard-bg: rgba(248, 113, 113, 0.1);
-    
+    --color-hard-bg: rgba(248, 113, 113, 0.12);
+
     color-scheme: dark;
   }
 
@@ -62,6 +76,11 @@
     transition: background-color 0.2s ease, border-color 0.2s ease;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  ::selection {
+    background: var(--accent-glow);
   }
 }
 
@@ -88,8 +107,28 @@
 .glass-panel {
   background-color: var(--bg-card);
   border: 1px solid var(--border-main);
-  border-radius: 12px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px -12px rgba(0, 0, 0, 0.08);
+}
+
+/* App background: subtle radial glow */
+.app-glow {
+  background:
+    radial-gradient(ellipse 70% 40% at 50% -10%, var(--accent-glow), transparent 70%),
+    var(--bg-app);
+}
+
+/* Gradient brand text */
+.brand-text-gradient {
+  background: linear-gradient(120deg, var(--accent), #06b6d4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Brand gradient surface */
+.brand-gradient {
+  background: linear-gradient(135deg, #0d9488, #0891b2);
 }
 
 /* CSS Animation classes */
@@ -100,4 +139,10 @@
 
 .animate-pulse-subtle {
   animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Numeric stats: aligned digits */
+.stat-number {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
 }

@@ -1,9 +1,8 @@
 // LeetCode content script - Detects solved problems
 // Runs on problem pages after submission
 
-import { PLATFORMS, MESSAGE_TYPES } from '../utils/constants.js';
+import { MESSAGE_TYPES } from '../utils/constants.js';
 
-let lastUrl = location.href;
 let observer = null;
 
 function init() {

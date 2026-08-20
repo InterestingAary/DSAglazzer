@@ -66,10 +66,10 @@ export const Heatmap: React.FC<HeatmapProps> = ({ questions }) => {
   // Color selection based on density
   const getCellColor = (count: number) => {
     if (count === 0) return 'bg-zinc-100 dark:bg-zinc-900 border-zinc-200/50 dark:border-zinc-800/80';
-    if (count <= 1) return 'bg-emerald-200 dark:bg-emerald-950 border-emerald-300 dark:border-emerald-900/60 text-emerald-800 dark:text-emerald-400';
-    if (count <= 2) return 'bg-emerald-300 dark:bg-emerald-800 border-emerald-400 dark:border-emerald-700/60 text-white';
-    if (count <= 4) return 'bg-emerald-400 dark:bg-emerald-600 border-emerald-500 dark:border-emerald-500/60 text-white';
-    return 'bg-emerald-600 dark:bg-emerald-400 border-emerald-700 dark:border-emerald-300 text-white';
+    if (count <= 1) return 'bg-brand-200 dark:bg-brand-950 border-brand-300 dark:border-brand-900/60 text-brand-800 dark:text-brand-400';
+    if (count <= 2) return 'bg-brand-300 dark:bg-brand-800 border-brand-400 dark:border-brand-700/60 text-white';
+    if (count <= 4) return 'bg-brand-500 dark:bg-brand-600 border-brand-600 dark:border-brand-500/60 text-white';
+    return 'bg-brand-700 dark:bg-brand-400 border-brand-800 dark:border-brand-300 text-white';
   };
 
   const formatDate = (date: Date) => {
@@ -146,10 +146,10 @@ export const Heatmap: React.FC<HeatmapProps> = ({ questions }) => {
         <div className="flex items-center justify-end gap-1.5 text-[10px] text-zinc-400 dark:text-zinc-500 mt-3.5 pr-2 select-none">
           <span>Less</span>
           <div className="w-2.5 h-2.5 rounded-sm border bg-zinc-100 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800" />
-          <div className="w-2.5 h-2.5 rounded-sm border bg-emerald-200 dark:bg-emerald-950 border-emerald-300 dark:border-emerald-900" />
-          <div className="w-2.5 h-2.5 rounded-sm border bg-emerald-300 dark:bg-emerald-800 border-emerald-400 dark:border-emerald-750" />
-          <div className="w-2.5 h-2.5 rounded-sm border bg-emerald-400 dark:bg-emerald-600 border-emerald-500 dark:border-emerald-550" />
-          <div className="w-2.5 h-2.5 rounded-sm border bg-emerald-600 dark:bg-emerald-400 border-emerald-700 dark:border-emerald-300" />
+          <div className="w-2.5 h-2.5 rounded-sm border bg-brand-200 dark:bg-brand-950 border-brand-300 dark:border-brand-900" />
+          <div className="w-2.5 h-2.5 rounded-sm border bg-brand-300 dark:bg-brand-800 border-brand-400 dark:border-brand-700" />
+          <div className="w-2.5 h-2.5 rounded-sm border bg-brand-500 dark:bg-brand-600 border-brand-600 dark:border-brand-500" />
+          <div className="w-2.5 h-2.5 rounded-sm border bg-brand-700 dark:bg-brand-400 border-brand-800 dark:border-brand-300" />
           <span>More</span>
         </div>
       </div>

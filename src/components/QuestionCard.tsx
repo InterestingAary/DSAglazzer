@@ -72,7 +72,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ question, onEdit, is
   };
 
   return (
-    <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-5 shadow-xs hover:border-zinc-350 dark:hover:border-zinc-700/80 transition-all duration-200 group flex flex-col justify-between h-full gap-4">
+    <div className="bg-white dark:bg-zinc-900/70 border border-zinc-200/80 dark:border-zinc-800/80 rounded-xl p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_-16px_rgba(0,0,0,0.12)] dark:shadow-none hover:border-brand-500/40 dark:hover:border-brand-400/30 hover:shadow-lg hover:shadow-brand-600/5 dark:hover:shadow-none hover:-translate-y-[2px] transition-all duration-200 group flex flex-col justify-between h-full gap-4">
       <div>
         {/* Card Header: Platform, Difficulty, Selection & Favorite Star */}
         <div className="flex items-center justify-between gap-2 mb-3">
@@ -87,7 +87,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ question, onEdit, is
                 aria-label={isSelected ? 'Deselect' : 'Select'}
               >
                 {isSelected ? (
-                  <CheckSquare size={16} className="text-blue-600 dark:text-blue-400" />
+                  <CheckSquare size={16} className="text-brand-600 dark:text-brand-400" />
                 ) : (
                   <Square size={16} className="text-zinc-400 dark:text-zinc-500" />
                 )}
@@ -121,7 +121,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ question, onEdit, is
 
         {/* Problem Name & Topic */}
         <div className="space-y-1">
-          <h4 className="text-base font-semibold text-zinc-900 dark:text-zinc-50 line-clamp-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+          <h4 className="text-base font-semibold text-zinc-900 dark:text-zinc-50 line-clamp-1 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
             {question.name}
           </h4>
           <p className="text-xs text-zinc-400 dark:text-zinc-500 font-medium">

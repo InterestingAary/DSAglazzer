@@ -228,8 +228,9 @@ export const AllQuestions: React.FC = () => {
       {/* Header Area */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
+          <span className="text-[11px] font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest mb-1 block">Library</span>
           <h2 className="text-2xl font-bold tracking-tight text-zinc-950 dark:text-zinc-50">All Solved Questions</h2>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">
             Search, filter, and organize your DSA problem sets.
           </p>
         </div>
@@ -251,7 +252,7 @@ export const AllQuestions: React.FC = () => {
       </div>
 
       {/* Filter Options Toolbar */}
-      <div className="bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800/80 rounded-xl p-4 shadow-xs space-y-4">
+      <div className="bg-white dark:bg-zinc-900/70 border border-zinc-200/80 dark:border-zinc-800/80 rounded-xl p-4 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_-16px_rgba(0,0,0,0.12)] dark:shadow-none space-y-4">
         {/* Search and Checkboxes */}
         <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">
           <div className="relative flex-1">
@@ -261,7 +262,7 @@ export const AllQuestions: React.FC = () => {
               placeholder="Search by problem name..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-9 pl-9 pr-4 bg-zinc-50 dark:bg-zinc-950/60 border border-zinc-250 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="w-full h-9 pl-9 pr-4 bg-zinc-50 dark:bg-zinc-950/60 border border-zinc-250 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-brand-500"
             />
           </div>
 
@@ -302,7 +303,7 @@ export const AllQuestions: React.FC = () => {
             <select
               value={selectedTopic}
               onChange={(e) => setSelectedTopic(e.target.value)}
-              className="h-9 px-3 bg-zinc-50 dark:bg-zinc-950/60 border border-zinc-250 dark:border-zinc-800 rounded-lg text-xs text-zinc-800 dark:text-zinc-300 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer"
+              className="h-9 px-3 bg-zinc-50 dark:bg-zinc-950/60 border border-zinc-250 dark:border-zinc-800 rounded-lg text-xs text-zinc-800 dark:text-zinc-300 focus:outline-none focus:ring-1 focus:ring-brand-500 cursor-pointer"
             >
               {uniqueTopics.map((topic, i) => (
                 <option key={i} value={topic}>{topic}</option>
@@ -316,7 +317,7 @@ export const AllQuestions: React.FC = () => {
             <select
               value={selectedDifficulty}
               onChange={(e) => setSelectedDifficulty(e.target.value)}
-              className="h-9 px-3 bg-zinc-50 dark:bg-zinc-950/60 border border-zinc-250 dark:border-zinc-800 rounded-lg text-xs text-zinc-800 dark:text-zinc-300 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer"
+              className="h-9 px-3 bg-zinc-50 dark:bg-zinc-950/60 border border-zinc-250 dark:border-zinc-800 rounded-lg text-xs text-zinc-800 dark:text-zinc-300 focus:outline-none focus:ring-1 focus:ring-brand-500 cursor-pointer"
             >
               <option value="All">All Difficulties</option>
               <option value="Easy">Easy</option>
@@ -331,7 +332,7 @@ export const AllQuestions: React.FC = () => {
             <select
               value={selectedPlatform}
               onChange={(e) => setSelectedPlatform(e.target.value)}
-              className="h-9 px-3 bg-zinc-50 dark:bg-zinc-950/60 border border-zinc-250 dark:border-zinc-800 rounded-lg text-xs text-zinc-800 dark:text-zinc-300 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer"
+              className="h-9 px-3 bg-zinc-50 dark:bg-zinc-950/60 border border-zinc-250 dark:border-zinc-800 rounded-lg text-xs text-zinc-800 dark:text-zinc-300 focus:outline-none focus:ring-1 focus:ring-brand-500 cursor-pointer"
             >
               <option value="All">All Platforms</option>
               <option value="LeetCode">LeetCode</option>
@@ -348,7 +349,7 @@ export const AllQuestions: React.FC = () => {
             <select
               value={revisionFilter}
               onChange={(e) => setRevisionFilter(e.target.value as 'All' | 'Pending' | 'Completed')}
-              className="h-9 px-3 bg-zinc-50 dark:bg-zinc-950/60 border border-zinc-250 dark:border-zinc-800 rounded-lg text-xs text-zinc-800 dark:text-zinc-300 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer"
+              className="h-9 px-3 bg-zinc-50 dark:bg-zinc-950/60 border border-zinc-250 dark:border-zinc-800 rounded-lg text-xs text-zinc-800 dark:text-zinc-300 focus:outline-none focus:ring-1 focus:ring-brand-500 cursor-pointer"
             >
               <option value="All">All Revisions</option>
               <option value="Pending">Revision Pending</option>
@@ -385,7 +386,7 @@ export const AllQuestions: React.FC = () => {
             <span>Showing <span className="font-semibold">{filteredQuestions.length}</span> matching question{filteredQuestions.length !== 1 ? 's' : ''}</span>
             <button 
               onClick={handleClearFilters}
-              className="text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 cursor-pointer font-medium"
+              className="text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1 cursor-pointer font-medium"
             >
               <X size={12} />
               Reset All Filters
@@ -468,7 +469,7 @@ export const AllQuestions: React.FC = () => {
               placeholder="e.g. 3Sum"
               value={formName}
               onChange={(e) => setFormName(e.target.value)}
-              className="h-9 px-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-lg text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="h-9 px-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-lg text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-brand-500"
             />
           </div>
 
@@ -479,7 +480,7 @@ export const AllQuestions: React.FC = () => {
               <select
                 value={formPlatform}
                 onChange={(e) => setFormPlatform(e.target.value as Platform)}
-                className="h-9 px-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-lg text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="h-9 px-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-lg text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-brand-500"
               >
                 <option value="LeetCode">LeetCode</option>
                 <option value="Striver">Striver Sheet</option>
@@ -495,7 +496,7 @@ export const AllQuestions: React.FC = () => {
               <select
                 value={formDifficulty}
                 onChange={(e) => setFormDifficulty(e.target.value as Difficulty)}
-                className="h-9 px-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-lg text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="h-9 px-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-lg text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-brand-500"
               >
                 <option value="Easy">Easy</option>
                 <option value="Medium">Medium</option>
@@ -514,7 +515,7 @@ export const AllQuestions: React.FC = () => {
                 placeholder="e.g. Dynamic Programming"
                 value={formTopic}
                 onChange={(e) => setFormTopic(e.target.value)}
-                className="h-9 px-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-lg text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="h-9 px-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-lg text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 list="topic-suggestions"
               />
               <datalist id="topic-suggestions">
@@ -545,7 +546,7 @@ export const AllQuestions: React.FC = () => {
                 required
                 value={formSolvedDate}
                 onChange={(e) => setFormSolvedDate(e.target.value)}
-                className="h-9 px-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-lg text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="h-9 px-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-lg text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-brand-500"
               />
             </div>
           </div>
@@ -559,7 +560,7 @@ export const AllQuestions: React.FC = () => {
               placeholder="e.g. https://leetcode.com/problems/..."
               value={formLink}
               onChange={(e) => setFormLink(e.target.value)}
-              className="h-9 px-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-lg text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="h-9 px-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-lg text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-brand-500"
             />
           </div>
 
@@ -571,7 +572,7 @@ export const AllQuestions: React.FC = () => {
               value={formNotes}
               onChange={(e) => setFormNotes(e.target.value)}
               rows={4}
-              className="p-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-855 rounded-lg text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-blue-500 font-mono"
+              className="p-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-855 rounded-lg text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-brand-500 font-mono"
             />
           </div>
 
@@ -609,7 +610,7 @@ export const AllQuestions: React.FC = () => {
                 type="checkbox"
                 checked={formIsFavourite}
                 onChange={(e) => setFormIsFavourite(e.target.checked)}
-                className="rounded border-zinc-300 dark:border-zinc-700 text-blue-600 focus:ring-blue-500 h-4 w-4 bg-zinc-50 dark:bg-zinc-950 cursor-pointer"
+                className="rounded border-zinc-300 dark:border-zinc-700 text-brand-600 focus:ring-brand-500 h-4 w-4 bg-zinc-50 dark:bg-zinc-950 cursor-pointer"
               />
               Mark as Favourite
             </label>
@@ -619,7 +620,7 @@ export const AllQuestions: React.FC = () => {
                 type="checkbox"
                 checked={formNeedsPractice}
                 onChange={(e) => setFormNeedsPractice(e.target.checked)}
-                className="rounded border-zinc-300 dark:border-zinc-700 text-blue-600 focus:ring-blue-500 h-4 w-4 bg-zinc-50 dark:bg-zinc-950 cursor-pointer"
+                className="rounded border-zinc-300 dark:border-zinc-700 text-brand-600 focus:ring-brand-500 h-4 w-4 bg-zinc-50 dark:bg-zinc-950 cursor-pointer"
               />
               Needs More Practice
             </label>

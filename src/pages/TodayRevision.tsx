@@ -63,8 +63,9 @@ export const TodayRevision: React.FC = () => {
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
       <div>
+        <span className="text-[11px] font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest mb-1 block">Daily Queue</span>
         <h2 className="text-2xl font-bold tracking-tight text-zinc-950 dark:text-zinc-50">Today's Revisions</h2>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">
           Solve due questions to strengthen your memory and maintain your streak.
         </p>
       </div>
@@ -72,10 +73,10 @@ export const TodayRevision: React.FC = () => {
       {dueQuestions.length > 0 ? (
         <div className="space-y-4">
           {/* Header Status Card */}
-          <div className="p-4 bg-blue-500/5 dark:bg-blue-500/10 border border-blue-500/20 rounded-xl flex items-center gap-3">
-            <AlertCircle size={20} className="text-blue-600 dark:text-blue-400 shrink-0" />
+          <div className="p-4 bg-brand-500/5 dark:bg-brand-500/10 border border-brand-500/20 rounded-xl flex items-center gap-3">
+            <AlertCircle size={20} className="text-brand-600 dark:text-brand-400 shrink-0" />
             <p className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
-              You have <span className="font-bold text-blue-700 dark:text-blue-400">{dueQuestions.length}</span> question{dueQuestions.length > 1 ? 's' : ''} due for revision today.
+              You have <span className="font-bold text-brand-700 dark:text-brand-400">{dueQuestions.length}</span> question{dueQuestions.length > 1 ? 's' : ''} due for revision today.
             </p>
           </div>
 
@@ -137,7 +138,7 @@ export const TodayRevision: React.FC = () => {
                         {editingNotesId !== q.id ? (
                           <button
                             onClick={() => handleStartEditing(q.id, q.notes)}
-                            className="text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-0.5 cursor-pointer font-medium"
+                            className="text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-0.5 cursor-pointer font-medium"
                           >
                             <Edit3 size={11} />
                             Edit
@@ -157,7 +158,7 @@ export const TodayRevision: React.FC = () => {
                         <textarea
                           value={noteContent}
                           onChange={(e) => setNoteContent(e.target.value)}
-                          className="w-full text-xs bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded p-2 focus:outline-none focus:ring-1 focus:ring-blue-500 text-zinc-850 dark:text-zinc-250 font-mono mt-1"
+                          className="w-full text-xs bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded p-2 focus:outline-none focus:ring-1 focus:ring-brand-500 text-zinc-850 dark:text-zinc-250 font-mono mt-1"
                           rows={3}
                           placeholder="Add revision hints or solutions..."
                         />

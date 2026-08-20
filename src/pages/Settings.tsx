@@ -121,8 +121,9 @@ export const Settings: React.FC = () => {
     <div className="space-y-6 max-w-3xl mx-auto">
       {/* Header */}
       <div>
+        <span className="text-[11px] font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest mb-1 block">Preferences</span>
         <h2 className="text-2xl font-bold tracking-tight text-zinc-950 dark:text-zinc-50">Settings & Sync</h2>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">
           Manage your browser notifications, export/import tracker data, and reset options.
         </p>
       </div>
@@ -131,7 +132,7 @@ export const Settings: React.FC = () => {
         {/* Notifications Preference */}
         <Card className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-5">
           <div className="flex gap-4 items-start">
-            <div className="p-3 bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-xl border border-blue-500/20 shrink-0">
+            <div className="p-3 bg-brand-500/10 text-brand-600 dark:text-brand-400 rounded-xl border border-brand-500/20 shrink-0">
               <Bell size={20} />
             </div>
             <div className="space-y-1">
@@ -253,7 +254,7 @@ export const Settings: React.FC = () => {
                 value={newInterval}
                 onChange={(e) => setNewInterval(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleAddInterval()}
-                className="h-9 px-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-250 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-blue-500 w-40"
+                className="h-9 px-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-250 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-brand-500 w-40"
               />
               <Button variant="secondary" size="sm" onClick={handleAddInterval} className="cursor-pointer">
                 <Plus size={14} />

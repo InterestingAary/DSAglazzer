@@ -139,8 +139,9 @@ export const Calendar: React.FC = () => {
       {/* Header section */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
+          <span className="text-[11px] font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest mb-1 block">Timeline</span>
           <h2 className="text-2xl font-bold tracking-tight text-zinc-950 dark:text-zinc-50">Revision Calendar</h2>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">
             Track your history and upcoming revision timelines day by day.
           </p>
         </div>
@@ -173,7 +174,7 @@ export const Calendar: React.FC = () => {
             <div className="flex gap-4 text-[10px] text-zinc-400 dark:text-zinc-500">
               <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-rose-500" /> Overdue</span>
               <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-amber-500" /> Due Today</span>
-              <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-blue-500" /> Upcoming</span>
+              <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-brand-500" /> Upcoming</span>
               <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Completed</span>
             </div>
           </div>
@@ -202,7 +203,7 @@ export const Calendar: React.FC = () => {
                   onClick={() => setSelectedDateStr(cell.dateStr!)}
                   className={`aspect-square p-1 rounded-lg border flex flex-col items-center justify-between relative transition-all duration-150 cursor-pointer ${
                     isSelected
-                      ? 'bg-blue-600 border-blue-600 text-white shadow-sm shadow-blue-500/20 hover:bg-blue-500'
+                      ? 'bg-brand-600 border-brand-600 text-white shadow-sm shadow-brand-600/25 hover:bg-brand-500'
                       : isToday
                         ? 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-950 dark:text-zinc-50 hover:bg-zinc-150 dark:hover:bg-zinc-750'
                         : 'bg-white dark:bg-zinc-950/20 border-zinc-200/50 dark:border-zinc-800/80 text-zinc-850 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-900/60'
@@ -223,7 +224,7 @@ export const Calendar: React.FC = () => {
                         <span className={`w-1 h-1 rounded-full ${isSelected ? 'bg-white' : 'bg-amber-500'}`} />
                       )}
                       {indicators.hasUpcoming && (
-                        <span className={`w-1 h-1 rounded-full ${isSelected ? 'bg-white' : 'bg-blue-500'}`} />
+                        <span className={`w-1 h-1 rounded-full ${isSelected ? 'bg-white' : 'bg-brand-500'}`} />
                       )}
                       {indicators.hasCompleted && (
                         <span className={`w-1 h-1 rounded-full ${isSelected ? 'bg-white' : 'bg-emerald-500'}`} />
@@ -274,7 +275,7 @@ export const Calendar: React.FC = () => {
                             ? 'text-rose-600 dark:text-rose-400' 
                             : item.status === 'pending' 
                               ? 'text-amber-600 dark:text-amber-400' 
-                              : 'text-blue-600 dark:text-blue-450'
+                              : 'text-brand-600 dark:text-brand-400'
                       }`}>
                         {item.status === 'completed' ? <CheckCircle2 size={10} /> : <Clock size={10} />}
                         {item.status === 'completed' 
