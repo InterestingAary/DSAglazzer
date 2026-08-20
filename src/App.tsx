@@ -10,13 +10,21 @@ import AllQuestions from './pages/AllQuestions';
 import Calendar from './pages/Calendar';
 import Progress from './pages/Progress';
 import Settings from './pages/Settings';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import './App.css';
 
 function AppContent() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-[#f9fafb] dark:bg-[#09090b] text-zinc-900 dark:text-zinc-100 transition-colors duration-150">
+    <>
+      <a 
+        href="#main-content" 
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 px-4 py-2 bg-blue-600 text-white rounded-lg"
+      >
+        Skip to main content
+      </a>
+      <div className="flex min-h-screen bg-[#f9fafb] dark:bg-[#09090b] text-zinc-900 dark:text-zinc-100 transition-colors duration-150">
       
       {/* Desktop Sidebar Panel */}
       <div className="hidden md:block shrink-0">
@@ -72,7 +80,7 @@ function AppContent() {
         </header>
 
         {/* View Frame */}
-        <main className="flex-1 overflow-y-auto px-4 py-6 md:px-8 md:py-8">
+        <main id="main-content" className="flex-1 overflow-y-auto px-4 py-6 md:px-8 md:py-8">
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/today" element={<TodayRevision />} />
@@ -85,6 +93,7 @@ function AppContent() {
         </main>
       </div>
     </div>
+</>
   );
 }
 
@@ -93,7 +102,9 @@ export function App() {
     <ThemeProvider>
       <DatabaseProvider>
         <BrowserRouter>
-          <AppContent />
+          <ErrorBoundary>
+            <AppContent />
+          </ErrorBoundary>
         </BrowserRouter>
       </DatabaseProvider>
     </ThemeProvider>

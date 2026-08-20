@@ -1,15 +1,19 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { 
   Bell, 
   Download, 
   Upload, 
   Trash2, 
   Check, 
-  AlertTriangle
+  AlertTriangle,
+  RotateCcw,
+  Plus,
+  Minus
 } from 'lucide-react';
 import { useDatabase } from '../context/DatabaseContext';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
+import { getRevisionIntervals, setRevisionIntervals, DEFAULT_INTERVALS } from '../utils/spacedRepetition';
 
 export const Settings: React.FC = () => {
   const { 
@@ -24,6 +28,34 @@ export const Settings: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [importStatus, setImportStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [resetConfirm, setResetConfirm] = useState(false);
+  const [intervals, setIntervals] = useState<number[]>(DEFAULT_INTERVALS);
+  const [newInterval, setNewInterval] = useState('');
+
+  useEffect(() => {
+    setIntervals(getRevisionIntervals());
+  }, []);
+
+  const handleAddInterval = () => {
+    const value = parseInt(newInterval, 10);
+    if (!isNaN(value) && value > 0 && value <= 365 && !intervals.includes(value)) {
+      const updated = [...intervals, value].sort((a, b) => a - b);
+      setIntervals(updated);
+      setRevisionIntervals(updated);
+      setNewInterval('');
+    }
+  };
+
+  const handleRemoveInterval = (value: number) => {
+    if (intervals.length <= 1) return;
+    const updated = intervals.filter(i => i !== value);
+    setIntervals(updated);
+    setRevisionIntervals(updated);
+  };
+
+  const handleResetIntervals = () => {
+    setIntervals(DEFAULT_INTERVALS);
+    setRevisionIntervals(DEFAULT_INTERVALS);
+  };
 
   // Handle Export data
   const handleExport = () => {
@@ -179,6 +211,60 @@ export const Settings: React.FC = () => {
                 <AlertTriangle size={14} /> Invalid file format.
               </span>
             )}
+          </div>
+        </Card>
+
+        {/* Spaced Repetition Intervals */}
+        <Card className="p-5 space-y-4">
+          <div className="flex gap-4 items-start border-b border-zinc-100 dark:border-zinc-800/80 pb-4">
+            <div className="p-3 bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-xl border border-purple-500/20 shrink-0">
+              <RotateCcw size={20} />
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">Spaced Repetition Intervals</h3>
+              <p className="text-xs text-zinc-400 dark:text-zinc-500 font-medium">
+                Customize the revision schedule intervals (in days). Default: 3, 7, 30 days.
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex flex-wrap items-center gap-2">
+              {intervals.map((interval, idx) => (
+                <div key={idx} className="flex items-center gap-1.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg px-3 py-1.5">
+                  <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Day {interval}</span>
+                  <button
+                    onClick={() => handleRemoveInterval(interval)}
+                    className="p-0.5 text-zinc-400 hover:text-red-500 dark:hover:text-red-400 cursor-pointer"
+                    aria-label={`Remove ${interval} day interval`}
+                  >
+                    <Minus size={14} />
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <input
+                type="number"
+                min="1"
+                max="365"
+                placeholder="Add interval (days)"
+                value={newInterval}
+                onChange={(e) => setNewInterval(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleAddInterval()}
+                className="h-9 px-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-250 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-blue-500 w-40"
+              />
+              <Button variant="secondary" size="sm" onClick={handleAddInterval} className="cursor-pointer">
+                <Plus size={14} />
+                Add
+              </Button>
+            </div>
+
+            <Button variant="ghost" size="sm" onClick={handleResetIntervals} className="text-xs font-semibold text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300">
+              <RotateCcw size={13} />
+              Reset to Default (3, 7, 30)
+            </Button>
           </div>
         </Card>
 

@@ -5,26 +5,67 @@ import {
   Star, 
   AlertCircle,
   X,
-  Inbox
+  Inbox,
+  Tag,
+  Check,
+  CheckSquare,
+  Trash2,
+  Download
 } from 'lucide-react';
 import { useDatabase } from '../context/DatabaseContext';
-import type { Question, Platform, Difficulty } from '../types';
+import type { Question, Platform, Difficulty, AlgorithmTag } from '../types';
+import { ALGORITHM_TAGS } from '../types';
 import { QuestionCard } from '../components/QuestionCard';
 import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
+import { Card } from '../components/ui/Card';
 import { getTodayDateString } from '../utils/dateUtils';
 
 export const AllQuestions: React.FC = () => {
-  const { questions, addQuestion, updateQuestion } = useDatabase();
+  const { questions, addQuestion, updateQuestion, deleteQuestion } = useDatabase();
 
   // Search & Filter state
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTopic, setSelectedTopic] = useState('All');
   const [selectedDifficulty, setSelectedDifficulty] = useState('All');
   const [selectedPlatform, setSelectedPlatform] = useState('All');
+  const [selectedAlgorithmTags, setSelectedAlgorithmTags] = useState<AlgorithmTag[]>([]);
   const [showFavouriteOnly, setShowFavouriteOnly] = useState(false);
   const [showNeedsPracticeOnly, setShowNeedsPracticeOnly] = useState(false);
   const [revisionFilter, setRevisionFilter] = useState<'All' | 'Pending' | 'Completed'>('All');
+
+  // Bulk selection state
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [isSelectionMode, setIsSelectionMode] = useState(false);
+
+  const clearSelection = () => {
+    setSelectedIds(new Set());
+    setIsSelectionMode(false);
+  };
+
+  const handleBulkDelete = () => {
+    if (selectedIds.size === 0) return;
+    if (confirm(`Delete ${selectedIds.size} question${selectedIds.size > 1 ? 's' : ''}?`)) {
+      selectedIds.forEach(id => deleteQuestion(id));
+      clearSelection();
+    }
+  };
+
+  const handleBulkExport = () => {
+    if (selectedIds.size === 0) return;
+    const selectedQuestions = questions.filter(q => selectedIds.has(q.id));
+    const dataStr = JSON.stringify(selectedQuestions, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `dsa-revision-tracker-export-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    clearSelection();
+  };
 
   // Modal states
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -40,6 +81,7 @@ export const AllQuestions: React.FC = () => {
   const [formNotes, setFormNotes] = useState('');
   const [formIsFavourite, setFormIsFavourite] = useState(false);
   const [formNeedsPractice, setFormNeedsPractice] = useState(false);
+  const [formAlgorithmTags, setFormAlgorithmTags] = useState<AlgorithmTag[]>([]);
 
   // Extract unique topics for the filter dropdown
   const uniqueTopics = useMemo(() => {
@@ -61,6 +103,7 @@ export const AllQuestions: React.FC = () => {
     setFormNotes('');
     setFormIsFavourite(false);
     setFormNeedsPractice(false);
+    setFormAlgorithmTags([]);
     setIsAddModalOpen(true);
   };
 
@@ -76,6 +119,7 @@ export const AllQuestions: React.FC = () => {
     setFormNotes(q.notes);
     setFormIsFavourite(q.isFavourite);
     setFormNeedsPractice(q.needsPractice);
+    setFormAlgorithmTags(q.algorithmTags || []);
   };
 
   // Form submit handlers
@@ -93,6 +137,7 @@ export const AllQuestions: React.FC = () => {
       notes: formNotes,
       isFavourite: formIsFavourite,
       needsPractice: formNeedsPractice,
+      algorithmTags: formAlgorithmTags,
     });
     setIsAddModalOpen(false);
   };
@@ -111,6 +156,7 @@ export const AllQuestions: React.FC = () => {
       notes: formNotes,
       isFavourite: formIsFavourite,
       needsPractice: formNeedsPractice,
+      algorithmTags: formAlgorithmTags,
     });
     setEditingQuestion(null);
   };
@@ -131,13 +177,17 @@ export const AllQuestions: React.FC = () => {
       // 4. Platform filter
       const matchesPlatform = selectedPlatform === 'All' || q.platform === selectedPlatform;
       
-      // 5. Star filter
+      // 5. Algorithm Tags filter
+      const matchesAlgorithmTags = selectedAlgorithmTags.length === 0 || 
+        selectedAlgorithmTags.some(tag => q.algorithmTags?.includes(tag));
+      
+      // 6. Star filter
       const matchesFavourite = !showFavouriteOnly || q.isFavourite;
       
-      // 6. Practice filter
+      // 7. Practice filter
       const matchesNeedsPractice = !showNeedsPracticeOnly || q.needsPractice;
 
-      // 7. Revision Status filter
+      // 8. Revision Status filter
       let matchesRevision = true;
       const nextPending = q.revisions.find(r => r.status === 'pending' || r.status === 'overdue');
       
@@ -147,7 +197,7 @@ export const AllQuestions: React.FC = () => {
         matchesRevision = !nextPending;
       }
 
-      return matchesSearch && matchesTopic && matchesDifficulty && matchesPlatform && matchesFavourite && matchesNeedsPractice && matchesRevision;
+      return matchesSearch && matchesTopic && matchesDifficulty && matchesPlatform && matchesAlgorithmTags && matchesFavourite && matchesNeedsPractice && matchesRevision;
     });
   }, [
     questions,
@@ -155,6 +205,7 @@ export const AllQuestions: React.FC = () => {
     selectedTopic,
     selectedDifficulty,
     selectedPlatform,
+    selectedAlgorithmTags,
     showFavouriteOnly,
     showNeedsPracticeOnly,
     revisionFilter
@@ -166,6 +217,7 @@ export const AllQuestions: React.FC = () => {
     setSelectedTopic('All');
     setSelectedDifficulty('All');
     setSelectedPlatform('All');
+    setSelectedAlgorithmTags([]);
     setShowFavouriteOnly(false);
     setShowNeedsPracticeOnly(false);
     setRevisionFilter('All');
@@ -181,10 +233,21 @@ export const AllQuestions: React.FC = () => {
             Search, filter, and organize your DSA problem sets.
           </p>
         </div>
-        <Button variant="primary" onClick={openAddModal} className="shrink-0 active:scale-[0.98]">
-          <Plus size={16} />
-          Add Question
-        </Button>
+        <div className="flex items-center gap-2 shrink-0">
+          <Button 
+            variant={isSelectionMode ? 'primary' : 'secondary'} 
+            size="sm" 
+            onClick={() => setIsSelectionMode(!isSelectionMode)}
+            className="active:scale-[0.98]"
+          >
+            <CheckSquare size={14} />
+            {isSelectionMode ? 'Exit Selection' : 'Select Items'}
+          </Button>
+          <Button variant="primary" onClick={openAddModal} className="shrink-0 active:scale-[0.98]">
+            <Plus size={16} />
+            Add Question
+          </Button>
+        </div>
       </div>
 
       {/* Filter Options Toolbar */}
@@ -284,7 +347,7 @@ export const AllQuestions: React.FC = () => {
             <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider pl-1">Revision Status</span>
             <select
               value={revisionFilter}
-              onChange={(e) => setRevisionFilter(e.target.value as any)}
+              onChange={(e) => setRevisionFilter(e.target.value as 'All' | 'Pending' | 'Completed')}
               className="h-9 px-3 bg-zinc-50 dark:bg-zinc-950/60 border border-zinc-250 dark:border-zinc-800 rounded-lg text-xs text-zinc-800 dark:text-zinc-300 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer"
             >
               <option value="All">All Revisions</option>
@@ -294,8 +357,30 @@ export const AllQuestions: React.FC = () => {
           </div>
         </div>
 
+        {/* Algorithm Tags Filter */}
+        <div className="flex flex-col gap-1">
+          <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider pl-1">Algorithm Tags</span>
+          <div className="flex flex-wrap gap-1.5 max-h-20 overflow-y-auto pr-1">
+            {ALGORITHM_TAGS.map((tag) => (
+              <button
+                key={tag}
+                onClick={() => setSelectedAlgorithmTags(prev => 
+                  prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
+                )}
+                className={`px-2.5 py-1 text-[10px] font-medium rounded-full border transition-colors cursor-pointer ${
+                  selectedAlgorithmTags.includes(tag)
+                    ? 'bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-500/20 dark:border-purple-500/10'
+                    : 'bg-zinc-50 dark:bg-zinc-950/40 border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100'
+                }`}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Clear Filters Indicator */}
-        {(searchQuery || selectedTopic !== 'All' || selectedDifficulty !== 'All' || selectedPlatform !== 'All' || showFavouriteOnly || showNeedsPracticeOnly || revisionFilter !== 'All') && (
+        {(searchQuery || selectedTopic !== 'All' || selectedDifficulty !== 'All' || selectedPlatform !== 'All' || selectedAlgorithmTags.length > 0 || showFavouriteOnly || showNeedsPracticeOnly || revisionFilter !== 'All') && (
           <div className="flex items-center justify-between border-t border-zinc-150 dark:border-zinc-800 pt-3 text-xs text-zinc-500 dark:text-zinc-400">
             <span>Showing <span className="font-semibold">{filteredQuestions.length}</span> matching question{filteredQuestions.length !== 1 ? 's' : ''}</span>
             <button 
@@ -308,6 +393,36 @@ export const AllQuestions: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Bulk Actions Toolbar */}
+      {isSelectionMode && selectedIds.size > 0 && (
+        <div className="fixed bottom-4 right-4 left-4 md:left-auto md:right-4 md:w-80 z-50 animate-in slide-up-from-bottom duration-200">
+          <Card className="p-4 shadow-lg border-zinc-200 dark:border-zinc-800">
+            <div className="flex items-center justify-between gap-3 mb-3">
+              <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+                {selectedIds.size} question{selectedIds.size > 1 ? 's' : ''} selected
+              </span>
+              <button
+                onClick={clearSelection}
+                className="p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 cursor-pointer"
+                aria-label="Clear selection"
+              >
+                <X size={16} />
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Button variant="danger" size="sm" onClick={handleBulkDelete} className="flex-1 min-w-[120px] cursor-pointer">
+                <Trash2 size={14} />
+                Delete Selected
+              </Button>
+              <Button variant="secondary" size="sm" onClick={handleBulkExport} className="flex-1 min-w-[120px] cursor-pointer">
+                <Download size={14} />
+                Export Selected
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
 
       {/* Questions Cards List Grid */}
       {filteredQuestions.length > 0 ? (
@@ -458,6 +573,33 @@ export const AllQuestions: React.FC = () => {
               rows={4}
               className="p-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-855 rounded-lg text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-blue-500 font-mono"
             />
+          </div>
+
+          {/* Algorithm Tags */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-semibold text-zinc-650 dark:text-zinc-400 flex items-center gap-1">
+              <Tag size={13} />
+              Algorithm Tags
+            </label>
+            <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto pr-1">
+              {ALGORITHM_TAGS.map((tag) => (
+                <button
+                  key={tag}
+                  type="button"
+                  onClick={() => setFormAlgorithmTags(prev => 
+                    prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
+                  )}
+                  className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-colors cursor-pointer flex items-center gap-1.5 ${
+                    formAlgorithmTags.includes(tag)
+                      ? 'bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-500/20 dark:border-purple-500/10'
+                      : 'bg-zinc-50 dark:bg-zinc-950/40 border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100'
+                  }`}
+                >
+                  {tag}
+                  {formAlgorithmTags.includes(tag) && <Check size={11} />}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Checkboxes */}

@@ -5,7 +5,10 @@ import {
   Edit3, 
   Trash2, 
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  Tag,
+  CheckSquare,
+  Square
 } from 'lucide-react';
 import type { Question } from '../types';
 import { Badge } from './ui/Badge';
@@ -16,9 +19,12 @@ import { getTodayDateString } from '../utils/dateUtils';
 interface QuestionCardProps {
   question: Question;
   onEdit: (q: Question) => void;
+  isSelected?: boolean;
+  onSelect?: (id: string) => void;
+  selectionMode?: boolean;
 }
 
-export const QuestionCard: React.FC<QuestionCardProps> = ({ question, onEdit }) => {
+export const QuestionCard: React.FC<QuestionCardProps> = ({ question, onEdit, isSelected = false, onSelect, selectionMode = false }) => {
   const { deleteQuestion, completeRevision, updateQuestion } = useDatabase();
   const todayStr = getTodayDateString();
 
@@ -68,9 +74,25 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ question, onEdit }) 
   return (
     <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-5 shadow-xs hover:border-zinc-350 dark:hover:border-zinc-700/80 transition-all duration-200 group flex flex-col justify-between h-full gap-4">
       <div>
-        {/* Card Header: Platform, Difficulty & Favorite Star */}
+        {/* Card Header: Platform, Difficulty, Selection & Favorite Star */}
         <div className="flex items-center justify-between gap-2 mb-3">
           <div className="flex items-center gap-1.5 overflow-hidden">
+            {selectionMode && onSelect && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onSelect(question.id);
+                }}
+                className="p-1.5 rounded-lg border transition-colors cursor-pointer flex-shrink-0"
+                aria-label={isSelected ? 'Deselect' : 'Select'}
+              >
+                {isSelected ? (
+                  <CheckSquare size={16} className="text-blue-600 dark:text-blue-400" />
+                ) : (
+                  <Square size={16} className="text-zinc-400 dark:text-zinc-500" />
+                )}
+              </button>
+            )}
             <Badge variant={getPlatformVariant(question.platform)}>
               {question.platform}
             </Badge>
@@ -106,6 +128,23 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ question, onEdit }) 
             {question.topic}
           </p>
         </div>
+
+        {/* Algorithm Tags */}
+        {question.algorithmTags && question.algorithmTags.length > 0 && (
+          <div className="flex flex-wrap gap-1 mt-2">
+            {question.algorithmTags.slice(0, 3).map((tag) => (
+              <Badge key={tag} variant="default" className="bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-500/20 dark:border-purple-500/10 text-[10px] px-2 py-0.5">
+                <Tag size={10} className="mr-0.5" />
+                {tag}
+              </Badge>
+            ))}
+            {question.algorithmTags.length > 3 && (
+              <Badge variant="default" className="bg-zinc-500/10 text-zinc-700 dark:text-zinc-400 border-zinc-500/20 dark:border-zinc-500/10 text-[10px] px-2 py-0.5">
+                +{question.algorithmTags.length - 3} more
+              </Badge>
+            )}
+          </div>
+        )}
 
         {/* Notes (truncate) */}
         {question.notes && (

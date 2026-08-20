@@ -1,0 +1,74 @@
+{
+  "manifest_version": 3,
+  "name": "DSA Revision Tracker",
+  "short_name": "DSA Tracker",
+  "version": "1.0.0",
+  "description": "Auto-detect solved problems on LeetCode, GFG, Codeforces and sync to your spaced repetition tracker",
+  "icons": {
+    "16": "icons/icon-16.svg",
+    "32": "icons/icon-32.svg",
+    "48": "icons/icon-48.svg",
+    "128": "icons/icon-128.svg"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "DSA Revision Tracker",
+    "default_icon": {
+      "16": "icons/icon-16.svg",
+      "32": "icons/icon-32.svg",
+      "48": "icons/icon-48.svg",
+      "128": "icons/icon-128.svg"
+    }
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://leetcode.com/problems/*", "*://leetcode.cn/problems/*"],
+      "js": ["contentScripts/leetcode.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["*://www.geeksforgeeks.org/problems/*", "*://practice.geeksforgeeks.org/problems/*"],
+      "js": ["contentScripts/gfg.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["*://codeforces.com/problemset/problem/*", "*://codeforces.com/contest/*/problem/*"],
+      "js": ["contentScripts/codeforces.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["*://www.codechef.com/problems/*"],
+      "js": ["contentScripts/codechef.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["*://atcoder.jp/contests/*/tasks/*"],
+      "js": ["contentScripts/atcoder.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "*://leetcode.com/*",
+    "*://leetcode.cn/*",
+    "*://geeksforgeeks.org/*",
+    "*://codeforces.com/*",
+    "*://codechef.com/*",
+    "*://atcoder.jp/*"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["icons/*"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "minimum_chrome_version": "88"
+}

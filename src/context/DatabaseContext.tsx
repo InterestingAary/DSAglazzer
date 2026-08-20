@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { Question, UserStats } from '../types';
 import { getTodayDateString, calculateStreak, addDays } from '../utils/dateUtils';
-import { createRevisionSchedules } from '../utils/spacedRepetition';
+import { createRevisionSchedules, getRevisionIntervals } from '../utils/spacedRepetition';
 
 interface DatabaseContextType {
   questions: Question[];
@@ -103,7 +103,8 @@ export const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   // 4. CRUD operations
   const addQuestion = (q: Omit<Question, 'id' | 'revisions' | 'createdAt' | 'updatedAt'>) => {
     const id = crypto.randomUUID();
-    const revisions = createRevisionSchedules(q.solvedDate);
+    const intervals = getRevisionIntervals();
+    const revisions = createRevisionSchedules(q.solvedDate, intervals);
     
     const newQuestion: Question = {
       ...q,
@@ -123,7 +124,8 @@ export const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         // If solved date changed, we recalculate pending revisions
         let revisions = q.revisions;
         if (updatedFields.solvedDate && updatedFields.solvedDate !== q.solvedDate) {
-          const newSchedules = createRevisionSchedules(updatedFields.solvedDate);
+          const intervals = getRevisionIntervals();
+          const newSchedules = createRevisionSchedules(updatedFields.solvedDate, intervals);
           // Preserve completed/skipped status if matching intervals exist, else replace
           revisions = newSchedules.map(newRev => {
             const oldRev = q.revisions.find(r => r.intervalDays === newRev.intervalDays);

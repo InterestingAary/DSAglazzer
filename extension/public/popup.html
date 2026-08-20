@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DSA Revision Tracker</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="popup-header">
+      <div class="logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="18" height="18" rx="4" stroke="currentColor"/>
+          <path d="M9 9h6M9 12h6M9 15h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="title">DSA Tracker</span>
+      </div>
+      <span class="badge" id="question-count">0</span>
+    </header>
+
+    <!-- Sync Status -->
+    <div class="sync-status" id="sync-status">
+      <div class="status-indicator">
+        <span class="dot" id="sync-dot"></span>
+        <span class="label" id="sync-label">Checking...</span>
+      </div>
+      <button class="btn-icon" id="sync-btn" title="Sync now">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M23 4v6h-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M1 20v-6h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="stats-grid">
+      <div class="stat">
+        <span class="stat-value" id="stat-solved">0</span>
+        <span class="stat-label">Solved</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value" id="stat-due">0</span>
+        <span class="stat-label">Due Today</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value" id="stat-streak">0</span>
+        <span class="stat-label">Streak</span>
+      </div>
+    </div>
+
+    <!-- Recent Questions -->
+    <div class="section">
+      <div class="section-header">
+        <h3>Recent Activity</h3>
+        <a href="#" id="view-all" class="link">View All</a>
+      </div>
+      <div class="question-list" id="question-list">
+        <div class="empty-state">No questions yet</div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="actions">
+      <button class="btn btn-primary" id="open-webapp">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <polyline points="15 3 21 3 21 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="10" y1="14" x2="21" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Open Web App
+      </button>
+      <button class="btn btn-secondary" id="add-manual">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Add Manually
+      </button>
+    </div>
+
+    <!-- Settings -->
+    <div class="section settings-section" id="settings-section">
+      <h3>Settings</h3>
+      <div class="setting">
+        <label class="toggle">
+          <input type="checkbox" id="auto-detect" checked>
+          <span class="slider"></span>
+        </label>
+        <div class="setting-info">
+          <span class="setting-title">Auto-detect solves</span>
+          <span class="setting-desc">Automatically add problems when you solve them</span>
+        </div>
+      </div>
+      <div class="setting">
+        <label class="toggle">
+          <input type="checkbox" id="sync-enabled" checked>
+          <span class="slider"></span>
+        </label>
+        <div class="setting-info">
+          <span class="setting-title">Sync to web app</span>
+          <span class="setting-desc">Sync with the DSA Revision Tracker web app</span>
+        </div>
+      </div>
+      <div class="setting">
+        <label for="webapp-url" class="setting-label">Web App URL</label>
+        <input type="url" id="webapp-url" value="http://localhost:5173" placeholder="http://localhost:5173">
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="popup-footer">
+      <span class="version">v1.0.0</span>
+      <a href="#" id="help-link" class="link">Help</a>
+    </footer>
+  </div>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
