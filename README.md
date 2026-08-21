@@ -6,7 +6,7 @@
 
 > **Temporary GitHub Pages deployment** — the project will move to a custom domain in the future.
 
-**https://avaneetg10371-create.github.io/dsa-revision-tracker/**
+**https://InterestingAary.github.io/DSAglazzer/**
 
 ## 📌 Overview
 

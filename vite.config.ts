@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
-const base = '/dsa-revision-tracker/'
+const base = '/DSAglazzer/'
 
 // https://vite.dev/config/
 export default defineConfig({
