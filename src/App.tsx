@@ -4,6 +4,8 @@ import { Menu, X } from 'lucide-react';
 import { DatabaseProvider } from './context/DatabaseContext';
 import { ThemeProvider } from './context/ThemeContext';
 import Sidebar from './components/Sidebar';
+import ScrollProgress from './components/ScrollProgress';
+import SmoothScroll from './components/SmoothScroll';
 import Dashboard from './pages/Dashboard';
 import TodayRevision from './pages/TodayRevision';
 import AllQuestions from './pages/AllQuestions';
@@ -18,13 +20,16 @@ function AppContent() {
 
   return (
     <>
+      <ScrollProgress />
+      <SmoothScroll />
       <a 
         href="#main-content" 
         className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 px-4 py-2 bg-brand-600 text-white rounded-lg"
       >
         Skip to main content
       </a>
-      <div className="flex min-h-screen app-glow text-zinc-900 dark:text-zinc-100 transition-colors duration-150">
+      <div className="dot-grid" aria-hidden="true" />
+      <div className="flex min-h-screen app-glow text-zinc-900 dark:text-zinc-100 transition-colors duration-150 relative">
       
       {/* Desktop Sidebar Panel */}
       <div className="hidden md:block shrink-0">

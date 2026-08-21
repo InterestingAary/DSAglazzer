@@ -1,171 +1,144 @@
-# DSA Revision Tracker
+<div align="center">
 
-![DSA Revision Tracker Preview](https://via.placeholder.com/1200x600?text=DSA+Revision+Tracker)
+<img src="https://readme-typing-svg.demolab.com?font=Space+Grotesk&size=26&pause=900&color=14B8A6&center=true&vCenter=true&width=640&lines=DSAglazzer;Spaced+Repetition+for+DSA;Build+in+Public" alt="Typing SVG" />
 
-## 🌐 Live Demo
+# DSAglazzer
 
-> **Temporary GitHub Pages deployment** — the project will move to a custom domain in the future.
+**Remember what you solve. Revise on time. Never forget a pattern.**
 
-**https://InterestingAary.github.io/DSAglazzer/**
+<a href="https://interestingaary.github.io/DSAglazzer/"><img src="https://img.shields.io/badge/Live_Demo-14b8a6?style=for-the-badge&logo=github&logoColor=white" alt="Live Demo" /></a>
+<a href="https://github.com/InterestingAary/DSAglazzer/actions"><img src="https://img.shields.io/github/actions/workflow/status/InterestingAary/DSAglazzer/ci.yml?label=CI%2FCD&style=for-the-badge&logo=github" alt="CI/CD" /></a>
+<a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-0d9488?style=for-the-badge" alt="MIT License" /></a>
+<a href="https://interestingaary.github.io/portfolio/"><img src="https://img.shields.io/badge/Portfolio-%E2%9C%A8-F7A928?style=for-the-badge" alt="Portfolio" /></a>
+
+<br/>
+<sup>Crafted by <a href="https://github.com/InterestingAary">Aaryan Mittal</a> — Developer • Builder • Creator • B.Tech CCE • Srujana 2026 Hackathon Winner • Google Student Ambassador 2026</sup>
+
+</div>
+
+---
+
+![DSAglazzer Preview](https://via.placeholder.com/1200x600/0a0a0d/14b8a6?text=DSAglazzer+—+Portfolio-grade+DSA+Tracker)
+
+> **Live:** **https://interestingaary.github.io/DSAglazzer/** — GitHub Pages (custom domain planned later). Add to Home Screen — it's a PWA.
 
 ## 📌 Overview
 
-The **DSA Revision Tracker** is a developer-focused, offline-first web application designed to help students and software engineers systematically track and revise Data Structures and Algorithms (DSA) questions. It leverages the power of spaced repetition to ensure that problems are revisited at scientifically optimal intervals (Day 3, Day 7, Day 30), drastically improving long-term retention.
+**DSAglazzer** is a developer-focused, offline-first DSA revision tracker built with **React 19 + Vite + Tailwind CSS v4**. It schedules every solved problem through **spaced repetition** (Day 3 · Day 7 · Day 30 — fully customizable) so you revisit patterns at the exact moment you'd otherwise forget them.
 
-### Who is it for?
+**Who is it for?** Students, competitive programmers, and interview prep grinders who are tired of solving 300 problems and remembering 30.
 
-Anyone preparing for coding interviews — students, competitive programmers, and working professionals — who wants a reliable way to remember the problems they solve, instead of forgetting them within a week.
+**How it works**
 
-### How the revision system works
+1. Solve a problem → `Add Question` with platform, topic, difficulty, algorithm tags.
+2. App auto-schedules revisions at expanding intervals.
+3. **Today's Revision** queue surfaces what's due. `Complete` advances, `Skip` postpones by a day, missed becomes `Overdue`.
+4. Dashboard, Heatmap, Calendar, and Analytics keep you honest.
 
-1. You solve a DSA problem and add it to the tracker.
-2. The app automatically schedules revision sessions at expanding intervals (default: Day 3, Day 7, Day 30 — fully customizable in Settings).
-3. Each due revision appears on the **Today's Revision** queue. Complete it to advance to the next interval, or skip it to postpone by one day.
-4. Missed revisions become **overdue** and are prioritized on your dashboard, so nothing slips through the cracks.
+> Originally a collaborative tracker with [@avaneetg10371-create](https://github.com/avaneetg10371-create) — now iterated as **DSAglazzer** under [@InterestingAary](https://github.com/InterestingAary) at portfolio-level polish: grain + dot-grid + `Lenis` smooth scroll + `framer-motion` reveals + `Space Grotesk` / `Instrument Serif` typography.
 
 ## ✨ Features
 
-* **Spaced Repetition Engine:** Automatically schedules revisions at 3, 7, and 30 days after a problem is solved — with fully customizable intervals.
-* **Offline-First (LocalStorage):** 100% of data is stored securely in your browser's local storage. No accounts, no database latency, no privacy concerns. Works as a PWA.
-* **GitHub-Style Heatmap:** A visual 365-day grid tracking your daily problem-solving and revision activity.
-* **Smart Streaks:** Dynamic daily streak calculation based on your latest activity.
-* **Full CRUD & Filters:** Add, edit, delete, search, and deeply filter questions by Topic, Difficulty, Platform, Algorithm Tags, and custom flags.
-* **Bulk Operations:** Select multiple questions to delete or export them in one action.
-* **Calendar Agenda:** A dedicated month-view calendar showing scheduled, upcoming, overdue, and completed revisions with interactive dot indicators.
-* **Progress Analytics:** Recharts-powered graphs analyzing your progress by difficulty, topic, and revision performance.
-* **Algorithm Tags:** 23 granular tags (Two Pointers, Sliding Window, DP, Graphs, etc.) with filtering.
-* **Dark Mode:** Sleek light/dark theme with automatic persistence.
-* **Data Portability:** Export your entire database to a JSON file and import it anytime.
-* **Web Notifications:** Get browser alerts when revisions are due to keep your streak alive.
-* **Chrome Extension (MV3):** Auto-detects solved problems on LeetCode, GFG, Codeforces, CodeChef, and AtCoder to quickly add them to your tracker.
+- **Spaced Repetition Engine** — 3/7/30 defaults, editable in Settings (1–365 days, sorted & persisted).
+- **Offline-First** — 100% LocalStorage, PWA installable, works offline.
+- **Heatmap** — 365-day GitHub-style activity grid (teal scale).
+- **Streaks** — smart daily streak from solves + revisions.
+- **Full CRUD & Smart Filters** — topic, difficulty, platform, 23 algorithm tags, favourites, needs-practice, revision status + bulk delete/export.
+- **Calendar** — month view with overdue/due/upcoming/completed dots + agenda drawer.
+- **Analytics** — Recharts difficulty donut + top-topics bars + completion rate.
+- **Portfolio-grade UI** — `Inter` + `Space Grotesk` + `Instrument Serif`, film grain, dot-grid, `card-lift`, `line` markers, scroll-progress bar, `Lenis`, `Reveal` entrances.
+- **Dark/Light** — token-based themes, persisted.
+- **Notifications** — browser push when revisions are due.
+- **Data Portability** — import/export JSON, Danger Zone reset.
+- **Chrome Extension (MV3)** — auto-detects *Accepted* solves on **LeetCode, GFG, Codeforces, CodeChef, AtCoder** → sync via `storage`.
 
 ## 🛠 Tech Stack
 
-* **Core:** React 19, TypeScript, Vite
-* **Styling:** Tailwind CSS v4
-* **Icons:** Lucide React
-* **Charts:** Recharts
-* **Routing:** React Router v7
-* **State Management:** React Context API + LocalStorage Sync
-* **Testing:** Vitest + React Testing Library
-* **CI/CD:** GitHub Actions (lint, typecheck, tests, build, GitHub Pages deployment)
-* **PWA:** vite-plugin-pwa (offline support + installable)
+<p align="center">
+  <a href="https://skillicons.dev"><img src="https://skillicons.dev/icons?i=react,typescript,vite,tailwind,nodejs,git,github,vscode&perline=8" alt="Stack" /></a>
+</p>
 
-## 📂 Folder Structure
+- **Core:** React 19, TypeScript, Vite 8
+- **Styling:** Tailwind CSS 4, custom tokens (`--color-brand-*`, grain, dot-grid, card-lift)
+- **Motion:** `framer-motion` 13, `lenis` 1.3
+- **Icons:** `lucide-react`
+- **Charts:** `recharts` 3
+- **Routing:** `react-router-dom` 7
+- **State:** React Context API + LocalStorage sync
+- **Testing:** `vitest` 4 + `@testing-library/react` 16 + `jsdom` (49 tests)
+- **Extension:** `esbuild` 0.20, MV3
+- **CI/CD:** GitHub Actions → GitHub Pages
+
+## 📂 Structure
 
 ```
-dsa-revision-tracker/
-├── public/                 # Static assets
+DSAglazzer/
+├── public/                 # icons, manifest
 ├── src/
-│   ├── components/         # Reusable UI primitives and complex components (Sidebar, Heatmap, Cards)
-│   ├── context/            # Global state managers (DatabaseContext, ThemeContext)
-│   ├── pages/              # Application views (Dashboard, Calendar, AllQuestions, etc.)
-│   ├── types/              # TypeScript interfaces and type definitions
-│   ├── utils/              # Helper functions for spaced repetition and date math
-│   ├── App.tsx             # Root router and layout container
-│   ├── index.css           # Global Tailwind directives and CSS variables
-│   └── main.tsx            # React application entry point
-├── extension/              # Chrome extension (MV3) source and build tooling
-├── .github/workflows/      # CI/CD pipeline (build, test, deploy to GitHub Pages)
-├── package.json
-├── tsconfig.json
-├── vite.config.ts
-└── README.md
+│   ├── components/         # ui/* + Reveal, SmoothScroll, ScrollProgress, Heatmap, QuestionCard, Sidebar
+│   ├── context/            # DatabaseContext, ThemeContext
+│   ├── pages/              # Dashboard, TodayRevision, AllQuestions, Calendar, Progress, Settings
+│   ├── types/ & utils/     # spacedRepetition, dateUtils
+│   ├── App.tsx & index.css # app-glow, dot-grid, grain, card-lift
+│   └── main.tsx
+├── extension/              # MV3: src/contentScripts/*, background.js, public/popup.*
+├── .github/workflows/      # ci.yml (lint → typecheck → test → build → Pages)
+└── vite.config.ts          # base: /DSAglazzer/
 ```
 
-## 🚀 Installation
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/avaneetg10371-create/dsa-revision-tracker.git
-   cd dsa-revision-tracker
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-
-## 💻 Running Locally
-
-To start the Vite development server, run:
-```bash
-npm run dev
-```
-Navigate to `http://localhost:5173` in your browser. All your data will save instantly and persist locally.
-
-## 🧪 Running Tests
+## 🚀 Quickstart
 
 ```bash
-npm test
+git clone https://github.com/InterestingAary/DSAglazzer.git
+cd DSAglazzer
+npm install
+npm run dev        # http://localhost:5173
 ```
 
-## 🏗 Build Instructions
+## 🧪 Tests
 
-To generate a production-ready optimized build:
 ```bash
-npm run build
+npm test           # 49 tests — dateUtils, spacedRepetition, DatabaseContext
 ```
-This runs the strict TypeScript compiler and outputs minified static assets to the `dist/` directory. You can preview the production build using:
+
+## 🏗 Build
+
 ```bash
+npm run build      # tsc -b && vite build → dist/
 npm run preview
 ```
 
-## 🚢 Deployment
+## 🧩 Chrome Extension
 
-The project deploys to **GitHub Pages** via GitHub Actions on every push to `main`:
-
-```text
-push to main
-    ↓
-GitHub Actions (npm install → lint → typecheck → test → build)
-    ↓
-upload Pages artifact
-    ↓
-deploy to GitHub Pages
+```bash
+cd extension
+npm install
+npm run build      # → dist/ (load unpacked in chrome://extensions)
+npm run package    # → dsa-tracker-extension.zip
 ```
 
-The workflow lives in `.github/workflows/ci.yml`. GitHub Pages must be enabled in the repository settings (**Settings → Pages → Source: GitHub Actions**).
+Covers LeetCode (`/problems/*`), GFG (`/problems/*` + `/practice/*`), Codeforces (`/problemset/problem/*` etc.), CodeChef (`/problems/*`), AtCoder (`/contests/*/tasks/*`).
 
-## 🔮 Future Improvements
+## 🚢 Deployment
 
-* **Cloud Sync:** Optional OAuth and Supabase/Firebase integration for syncing progress across multiple devices.
-* **Custom Domain:** Move the temporary GitHub Pages URL to a dedicated custom domain.
+Push to `main` → **GitHub Actions**: lint → typecheck → test → build → `upload Pages artifact` → deploy. Pages source: **GitHub Actions** (`/DSAglazzer/` base + `/DSAglazzer/sw.js`).
 
-## 👥 Contributors
+## 👤 Author
 
-### Aaryan Mittal
+<div align="center">
 
-**@InterestingAary**
+**Aaryan Mittal** — [@InterestingAary](https://github.com/InterestingAary) · [Portfolio](https://interestingaary.github.io/portfolio/) · [LinkedIn](https://www.linkedin.com/in/aryan-mittal-3217b9381/) · Gaming & Vlog on YouTube
 
-Contributor / Developer
+*B.Tech CCE — Building software, games, and ideas. 1st Place Srujana 2026 · Google Student Ambassador 2026.*
 
-### Avaneet
+<img src="https://skillicons.dev/icons?i=js,ts,react,nodejs,python,cpp,html,css,tailwind,git,github&perline=9" alt="Aaryan skills" />
 
-**@avaneetg10371-create**
-
-Repository Owner / Developer
-
-## 🧩 Contributions
-
-### Aaryan Mittal
-
-Aaryan contributed substantially to the development of the project, including work across the application's implementation, UI, functionality, debugging, and project development. Concrete contributions include:
-
-* **UI implementation:** refined the application's design system — sidebar, dashboard, cards, and page layouts
-* **Frontend components:** built reusable UI primitives (Button, Card, Badge, Modal) and feature components (Heatmap, QuestionCard)
-* **Application logic:** implemented the spaced-repetition scheduling engine and bulk operations
-* **Feature development:** PWA support, customizable revision intervals, algorithm pattern tags, and the Chrome extension (MV3) with platform detectors
-* **Testing:** set up the Vitest + React Testing Library suite (49 tests covering scheduling, date utilities, and state management)
-* **Bug fixes & debugging:** resolved CI failures, type issues, and accessibility gaps
-* **Deployment work:** configured the CI/CD pipeline and GitHub Pages deployment
+</div>
 
 ## 🙏 Acknowledgements
 
-This project was developed collaboratively by Aaryan Mittal and Avaneet.
-
-The repository is maintained by the project team, with Avaneet as the repository owner and Aaryan contributing as a collaborator.
+Evolved from a collaborative tracker with **Avaneet (@avaneetg10371-create)**. Original repo remains at `avaneetg10371-create/dsa-revision-tracker` (reset to initial). **DSAglazzer** is now maintained by **Aaryan Mittal** as a portfolio-grade iteration.
 
 ## 📄 License
 
-This project is open-source and available under the [MIT License](LICENSE).
+MIT © 2026 [Aaryan Mittal](./LICENSE) — see [LICENSE](./LICENSE).

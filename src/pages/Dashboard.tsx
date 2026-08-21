@@ -14,6 +14,7 @@ import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
 import Heatmap from '../components/Heatmap';
+import Reveal from '../components/Reveal';
 import { getTodayDateString } from '../utils/dateUtils';
 
 export const Dashboard: React.FC = () => {
@@ -90,12 +91,13 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Top Banner Header */}
+      {/* Top Banner Header — portfolio-style display */}
+      <Reveal>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <span className="text-[11px] font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest mb-1 block">Overview</span>
-          <h2 className="text-2xl font-bold tracking-tight text-zinc-950 dark:text-zinc-50">Welcome back, Developer</h2>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">Here's your spaced repetition status for today.</p>
+          <span className="inline-flex items-center gap-2 text-[11px] font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest mb-1">Overview <span className="h-px w-8 bg-brand-500/50 hidden sm:inline-block" aria-hidden="true" /></span>
+          <h2 className="font-display text-3xl font-bold tracking-tight text-zinc-950 dark:text-zinc-50">Welcome back, <span className="font-serif italic font-normal text-brand-600 dark:text-brand-400">Developer</span></h2>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1.5 max-w-xl">Here&apos;s your <span className="line">spaced repetition</span> status for today — built like your portfolio, shipped like a product.</p>
         </div>
         
         {/* Dynamic call to action button */}
@@ -105,7 +107,7 @@ export const Dashboard: React.FC = () => {
             onClick={() => navigate('/today')}
             className="shadow-brand-600/25 shadow-md group active:scale-[0.98]"
           >
-            Start Today's Revision ({stats.dueTodayCount + stats.overdueCount} due)
+            Start Today&apos;s Revision ({stats.dueTodayCount + stats.overdueCount} due)
             <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
           </Button>
         ) : (
@@ -119,8 +121,10 @@ export const Dashboard: React.FC = () => {
           </Button>
         )}
       </div>
+      </Reveal>
 
       {/* KPI Cards Grid */}
+      <Reveal delay={0.06}>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {cardsData.map((c, i) => {
           const Icon = c.icon;
@@ -140,11 +144,15 @@ export const Dashboard: React.FC = () => {
           );
         })}
       </div>
+      </Reveal>
 
       {/* Heatmap Row */}
+      <Reveal delay={0.1}>
       <Heatmap questions={questions} />
+      </Reveal>
 
       {/* Main Grid: Streak + Next up list */}
+      <Reveal delay={0.14}>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Streak details */}
         <Card className="lg:col-span-1 flex flex-col justify-between gap-5 h-full">
@@ -271,6 +279,7 @@ export const Dashboard: React.FC = () => {
           </div>
         </Card>
       </div>
+      </Reveal>
     </div>
   );
 };

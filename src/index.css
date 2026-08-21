@@ -1,11 +1,13 @@
 @import "tailwindcss";
 
-/* Design Tokens & Variable Declarations */
+/* Design Tokens — DSAglazzer x Portfolio fusion */
 @theme {
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Instrument Serif", Georgia, serif;
+  --font-mono: ui-monospace, "Cascadia Code", "SFMono-Regular", Menlo, Consolas, monospace;
 
-  /* Brand accent: teal */
+  /* Brand accent: teal (DSAglazzer) — aligns with portfolio's lime but teal reads "focus" for DSA */
   --color-brand-50: #f0fdfa;
   --color-brand-100: #ccfbf1;
   --color-brand-200: #99f6e4;
@@ -17,10 +19,23 @@
   --color-brand-800: #115e59;
   --color-brand-900: #134e4a;
   --color-brand-950: #042f2e;
+
+  /* Portfolio ink/panel tokens for depth */
+  --color-ink: #0a0a0d;
+  --color-panel: #111117;
+  --color-panel-2: #16161e;
+  --color-edge: rgba(255, 255, 255, 0.09);
+  --color-accent: #14b8a6;
 }
 
-/* Custom Base Layer Styles */
 @layer base {
+  html {
+    scroll-padding-top: 5.5rem;
+    scrollbar-color: #2a2a33 #0a0a0d;
+    scrollbar-width: thin;
+    overflow-x: clip;
+  }
+
   :root {
     --bg-app: #f7f7f8;
     --bg-card: #ffffff;
@@ -33,15 +48,15 @@
     --accent: #0d9488;
     --accent-hover: #0f766e;
     --accent-glow: rgba(13, 148, 136, 0.12);
-
-    /* Status Colors */
     --color-easy: #059669;
     --color-easy-bg: rgba(5, 150, 105, 0.1);
     --color-medium: #d97706;
     --color-medium-bg: rgba(217, 119, 6, 0.1);
     --color-hard: #dc2626;
     --color-hard-bg: rgba(220, 38, 38, 0.1);
-
+    --dot: rgba(15, 18, 22, 0.06);
+    --mark: rgba(20, 184, 166, 0.22);
+    --mark-ink: #0f172a;
     color-scheme: light;
   }
 
@@ -56,16 +71,16 @@
     --text-tertiary: #5c5c66;
     --accent: #2dd4bf;
     --accent-hover: #5eead4;
-    --accent-glow: rgba(45, 212, 191, 0.14);
-
-    /* Status Colors */
+    --accent-glow: rgba(45, 212, 191, 0.16);
     --color-easy: #34d399;
     --color-easy-bg: rgba(52, 211, 153, 0.12);
     --color-medium: #fbbf24;
     --color-medium-bg: rgba(251, 191, 36, 0.12);
     --color-hard: #f87171;
     --color-hard-bg: rgba(248, 113, 113, 0.12);
-
+    --dot: rgba(255, 255, 255, 0.035);
+    --mark: rgba(45, 212, 191, 0.38);
+    --mark-ink: #042f2e;
     color-scheme: dark;
   }
 
@@ -77,72 +92,99 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    overflow-x: clip;
   }
 
-  ::selection {
-    background: var(--accent-glow);
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation: grain 9s steps(10) infinite;
+  }
+
+  @keyframes grain { 0%,100%{opacity:0.035} 50%{opacity:0.06} }
+
+  ::selection { background: var(--accent-glow); color: var(--text-primary); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+  @media (pointer: fine) {
+    html.cursor-on, html.cursor-on * { cursor: none !important; }
   }
 }
 
-/* Scrollbar Customization */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-main); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
 
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--border-main);
-  border-radius: 9999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-tertiary);
-}
-
-/* Custom CSS helper utilities */
+/* ── Portfolio-grade utilities ── */
 .glass-panel {
   background-color: var(--bg-card);
   border: 1px solid var(--border-main);
   border-radius: 14px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px -12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 24px -12px rgba(0,0,0,0.08);
 }
 
-/* App background: subtle radial glow */
 .app-glow {
-  background:
-    radial-gradient(ellipse 70% 40% at 50% -10%, var(--accent-glow), transparent 70%),
-    var(--bg-app);
+  background: radial-gradient(ellipse 70% 40% at 50% -10%, var(--accent-glow), transparent 70%), var(--bg-app);
 }
 
-/* Gradient brand text */
+.dot-grid {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+  background-size: 26px 26px;
+  -webkit-mask-image: radial-gradient(ellipse 100% 80% at 50% 40%, black 30%, transparent 78%);
+  mask-image: radial-gradient(ellipse 100% 80% at 50% 40%, black 30%, transparent 78%);
+}
+
+.grid-bg {
+  background-image: linear-gradient(to right, rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.035) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 35%, black 25%, transparent 75%);
+  mask-image: radial-gradient(ellipse 90% 70% at 50% 35%, black 25%, transparent 75%);
+}
+
+.glow { background: radial-gradient(closest-side, var(--accent-glow), transparent 70%); }
+
 .brand-text-gradient {
   background: linear-gradient(120deg, var(--accent), #06b6d4);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.brand-gradient { background: linear-gradient(135deg, #0d9488, #0891b2); }
+
+.text-outline { color: transparent; -webkit-text-stroke: 1.5px rgba(244,244,245,0.28); }
+:root.dark .text-outline { -webkit-text-stroke: 1.5px rgba(244,244,245,0.28); }
+:root:not(.dark) .text-outline { -webkit-text-stroke: 1.5px rgba(19,19,22,0.22); }
+
+.line { color: var(--mark-ink); background-image: linear-gradient(to top, var(--mark) 0 100%, transparent 100%); box-decoration-break: clone; -webkit-box-decoration-break: clone; padding: 0 0.1em; }
+
+.card-lift { transition: transform 0.25s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
+.card-lift:hover { transform: translateY(-3px); border-color: rgba(20,184,166,0.32); box-shadow: 0 16px 40px -16px rgba(0,0,0,0.35), 0 0 0 1px rgba(20,184,166,0.07), 0 0 36px -10px rgba(20,184,166,0.16); }
+
+@keyframes pulse-subtle { 0%,100%{opacity:1} 50%{opacity:0.6} }
+.animate-pulse-subtle { animation: pulse-subtle 2s cubic-bezier(0.4,0,0.6,1) infinite; }
+
+.stat-number { font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+.float-slow { animation: float 7s ease-in-out infinite; }
+
+@keyframes marquee { to { transform: translateX(-50%); } }
+.marquee-track { animation: marquee 30s linear infinite; }
+.marquee-reverse { animation-direction: reverse; }
+
+.tape-band { background: repeating-linear-gradient(-45deg, rgba(20,184,166,0.055) 0 10px, transparent 10px 20px), var(--bg-app); }
+
+@media (prefers-reduced-motion: reduce) {
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important}
+  body::after{animation:none}
+  .marquee-track{animation:none}
 }
 
-/* Brand gradient surface */
-.brand-gradient {
-  background: linear-gradient(135deg, #0d9488, #0891b2);
-}
-
-/* CSS Animation classes */
-@keyframes pulse-subtle {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
-}
-
-.animate-pulse-subtle {
-  animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* Numeric stats: aligned digits */
-.stat-number {
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
-}
+.scrollbar-hide{ -ms-overflow-style:none; scrollbar-width:none }
+.scrollbar-hide::-webkit-scrollbar{display:none}
