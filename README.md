@@ -8,8 +8,8 @@
 
 <a href="https://interestingaary.github.io/DSAglazzer/"><img src="https://img.shields.io/badge/Live_Demo-14b8a6?style=for-the-badge&logo=github&logoColor=white" alt="Live Demo" /></a>
 <a href="https://github.com/InterestingAary/DSAglazzer/actions"><img src="https://img.shields.io/github/actions/workflow/status/InterestingAary/DSAglazzer/ci.yml?label=CI%2FCD&style=for-the-badge&logo=github" alt="CI/CD" /></a>
-<a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-0d9488?style=for-the-badge" alt="MIT License" /></a>
 <a href="https://interestingaary.github.io/portfolio/"><img src="https://img.shields.io/badge/Portfolio-%E2%9C%A8-F7A928?style=for-the-badge" alt="Portfolio" /></a>
+<a href="https://github.com/InterestingAary/DSAglazzer"><img src="https://img.shields.io/badge/DSAglazzer-All_Rights_Reserved-0a0a0d?style=for-the-badge" alt="DSAglazzer" /></a>
 
 <br/>
 <sup>Crafted by <a href="https://github.com/InterestingAary">Aaryan Mittal</a> — Developer • Builder • Creator • B.Tech CCE • Srujana 2026 Hackathon Winner • Google Student Ambassador 2026</sup>
@@ -141,4 +141,4 @@ Evolved from a collaborative tracker with **Avaneet (@avaneetg10371-create)**. O
 
 ## 📄 License
 
-MIT © 2026 [Aaryan Mittal](./LICENSE) — see [LICENSE](./LICENSE).
+All rights reserved © 2026 **Aaryan Mittal** — **DSAglazzer**. No license file is currently provided. All rights reserved.
