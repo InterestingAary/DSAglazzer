@@ -118,35 +118,30 @@ export const Dashboard: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* ── Left column 75% ── */}
         <div className="lg:col-span-9 flex flex-col gap-6">
-          {/* Hero */}
+          {/* Hero — ALGO_ELITE precision (private ds) with live data */}
           <Reveal>
-            <section className="relative overflow-hidden rounded-lg border border-white/10 bg-[var(--bg-card)] p-6 md:p-8">
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-brand-500/[0.07] to-transparent" aria-hidden="true" />
-              <div className="relative z-10 flex flex-col justify-between gap-6 md:flex-row md:items-center">
-                <div>
-                  <h1 className="font-display text-3xl md:text-[2.6rem] font-bold leading-tight tracking-tight text-zinc-950 dark:text-[#e7e0ed]">
-                    {greeting()}, Aaryan.
-                  </h1>
-                  <p className="mt-1.5 text-sm text-zinc-600 dark:text-[#cbc3d7]">
-                    Keep solving. Your next breakthrough is one problem away.
-                  </p>
-                  <div className="mt-4 flex flex-wrap gap-2 font-mono text-xs text-zinc-700 dark:text-[#cbc3d7]">
-                    {[`${stats.currentStreak} Day Streak`, `${weekCount} Problems This Week`, `${completion.pct}% Revision Accuracy`, `${stats.overdueCount} Overdue`].map(chip => (
-                      <span key={chip} className="rounded-full border border-white/10 bg-black/5 dark:bg-white/[0.04] px-3 py-1">{chip}</span>
-                    ))}
+            <section className="relative overflow-hidden rounded-lg border border-white/10 bg-[#0c0c0c] dark:bg-[#0c0c0c] p-6 sm:p-8">
+              <ShaderBackground className="absolute inset-0 opacity-20 mix-blend-screen pointer-events-none" intensity={0.35} />
+              <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+                <div className="flex flex-col gap-4 max-w-2xl">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                    <span className="text-emerald-400 font-mono text-xs tracking-wider uppercase font-bold">{greeting()}, Aaryan • Session Active</span>
                   </div>
-                  {dueTotal > 0 && (
-                    <Button variant="primary" onClick={() => navigate('/today')} className="mt-5 group">
-                      Start Revising ({dueTotal} due)
-                      <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
-                    </Button>
-                  )}
+                  <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight uppercase leading-[0.9] text-[#f5f5f5]">
+                    ALGORITHMIC<br /><span className="text-brand-300">MASTERY</span> & SYSTEM RECALL
+                  </h1>
+                  <p className="text-sm text-zinc-400 max-w-lg leading-relaxed">Crafting high-performance intuition with clean invariants, optimal complexity, and disciplined spaced recall. {dueTotal > 0 ? `${dueTotal} revisions due —` : 'No due revisions —'} keep the streak alive.</p>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-4 border-t border-white/10">
+                    <div className="flex flex-col"><span className="text-2xl font-black text-white">{stats.currentStreak}D</span><span className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold">Day Streak</span></div>
+                    <div className="flex flex-col"><span className="text-2xl font-black text-emerald-400">{weekCount}</span><span className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold">Solved / Wk</span></div>
+                    <div className="flex flex-col"><span className="text-2xl font-black text-white">{completion.pct}%</span><span className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold">Accuracy</span></div>
+                    <div className="flex flex-col"><span className="text-2xl font-black text-white">{Math.round(stats.totalRevisionsCompleted * 0.35 + stats.solvedCount * 0.5)}h</span><span className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold">Practice</span></div>
+                  </div>
+                  {dueTotal > 0 && (<Button variant="primary" onClick={() => navigate('/today')} className="mt-2 w-fit group bg-emerald-500 text-[#042f2e] hover:bg-emerald-400">Start Revising ({dueTotal} due) <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" /></Button>)}
                 </div>
-                <div className="shrink-0 self-center">
-                  <ProgressRing percent={completion.pct} />
-                  <p className="mt-2 text-center font-mono text-xs text-zinc-500 dark:text-[#958ea0]">
-                    {stats.totalRevisionsCompleted} revisions cleared
-                  </p>
+                <div className="shrink-0 flex items-center justify-center self-center lg:self-auto p-4 bg-[#161616] border border-white/10">
+                  <ProgressRing percent={completion.pct} size={128} />
                 </div>
               </div>
             </section>
