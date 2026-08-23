@@ -27,13 +27,6 @@ export const BrandLogo: React.FC<{ size?: number; withText?: boolean; className?
           {/* sparkle */}
           <path d="M31.5 8.5l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9.9-2.1Z" fill="#fff" opacity="0.95" />
         </svg>
-        {!reduce && (
-          <motion.span
-            className="absolute inset-x-0 h-[2px] bg-white/50 blur-[1px]"
-            animate={{ top: ["12%", "84%", "12%"] }}
-            transition={{ duration: 3.4, repeat: Infinity, ease: "easeInOut" }}
-          />
-        )}
       </motion.div>
       {withText && (
         <div className="leading-none">
