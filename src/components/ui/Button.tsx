@@ -15,10 +15,10 @@ export const Button: React.FC<ButtonProps> = ({
   const baseStyle = 'inline-flex items-center justify-center gap-1.5 rounded-lg font-semibold transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60 focus-visible:ring-offset-1 focus-visible:ring-offset-white dark:focus-visible:ring-offset-zinc-950 disabled:opacity-50 disabled:pointer-events-none cursor-pointer';
   
   const variants = {
-    primary: 'bg-gradient-to-b from-brand-500 to-brand-600 hover:from-brand-400 hover:to-brand-500 text-white shadow-sm shadow-brand-600/25 hover:shadow-md hover:shadow-brand-600/30 active:scale-[0.98]',
-    secondary: 'bg-white dark:bg-zinc-800/60 hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-100 border border-zinc-200 dark:border-zinc-700/70 hover:border-zinc-300 dark:hover:border-zinc-600 shadow-xs',
-    danger: 'bg-gradient-to-b from-red-500 to-red-600 hover:from-red-400 hover:to-red-500 text-white shadow-sm shadow-red-600/25 active:scale-[0.98]',
-    ghost: 'hover:bg-zinc-100 dark:hover:bg-zinc-800/60 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100',
+    primary: 'bg-brand-300 text-brand-950 hover:bg-brand-200 shadow-sm shadow-brand-500/30 active:scale-[0.98]',
+    secondary: 'bg-[#efeaf6] dark:bg-night-700 hover:bg-[#e4dcf3] dark:hover:bg-[#37333d] text-zinc-900 dark:text-zinc-100 border border-black/10 dark:border-white/10',
+    danger: 'bg-[#dc362e] hover:bg-[#c22c25] text-white dark:bg-[#ffb4ab] dark:hover:bg-[#ffc7c0] dark:text-[#690005] active:scale-[0.98]',
+    ghost: 'hover:bg-black/5 dark:hover:bg-white/10 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100',
   };
 
   const sizes = {

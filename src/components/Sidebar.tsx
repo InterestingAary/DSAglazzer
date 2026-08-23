@@ -37,7 +37,7 @@ export const Sidebar: React.FC = () => {
   ];
 
   return (
-    <aside className="w-64 h-screen sticky top-0 shrink-0 bg-gradient-to-b from-night-900 via-night-800 to-[#0d1230] dark:from-night-900 dark:via-night-800 dark:to-[#0a0f24] border-r border-white/10 flex flex-col text-zinc-100 shadow-2xl shadow-black/30">
+    <aside className="w-64 h-screen sticky top-0 shrink-0 bg-gradient-to-b from-night-900 via-night-800 to-night-950 border-r border-white/10 flex flex-col text-zinc-100 shadow-2xl shadow-black/40">
       {/* Brand Header — custom gem logo */}
       <div className="h-16 px-5 border-b border-white/10 flex items-center justify-between">
         <BrandLogo size={32} />
