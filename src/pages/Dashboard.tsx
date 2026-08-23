@@ -95,9 +95,9 @@ export const Dashboard: React.FC = () => {
       <Reveal>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <span className="inline-flex items-center gap-2 text-[11px] font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest mb-1">Overview <span className="h-px w-8 bg-brand-500/50 hidden sm:inline-block" aria-hidden="true" /></span>
-          <h2 className="font-display text-3xl font-bold tracking-tight text-zinc-950 dark:text-zinc-50">Welcome back, <span className="font-serif italic font-normal text-brand-600 dark:text-brand-400">Developer</span></h2>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1.5 max-w-xl">Here&apos;s your <span className="line">spaced repetition</span> status for today — built like your portfolio, shipped like a product.</p>
+          <span className="inline-flex items-center gap-2 text-[11px] font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest mb-1">Overview <span className="h-px w-8 bg-gradient-to-r from-brand-500 to-iris-500 hidden sm:inline-block" aria-hidden="true" /></span>
+          <h2 className="font-display text-3xl font-bold tracking-tight text-zinc-950 dark:text-white">Welcome back, <span className="brand-text-gradient">Developer</span></h2>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1.5 max-w-xl">Your <strong className="text-zinc-700 dark:text-zinc-200">spaced repetition</strong> status for today — stay consistent, keep the streak alive.</p>
         </div>
         
         {/* Dynamic call to action button */}

@@ -50,7 +50,6 @@ function AppContent() {
       >
         Skip to main content
       </a>
-      <div className="dot-grid" aria-hidden="true" />
 
       {/* Top bar — hamburger controls drawer */}
       <header
@@ -90,7 +89,7 @@ function AppContent() {
         </div>
       )}
 
-      <div className="flex min-h-screen app-glow text-zinc-900 dark:text-zinc-100 transition-colors duration-150 relative flex-col pt-16">
+      <div className="app-glow flex min-h-screen text-zinc-900 dark:text-zinc-100 transition-colors duration-150 relative flex-col pt-16">
         {/* Top grid — sections on the top */}
         <div id="top" className="px-4 pt-4 md:px-8 md:pt-6">
           <TopGrid />

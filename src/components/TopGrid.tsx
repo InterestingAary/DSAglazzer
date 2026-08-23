@@ -28,8 +28,10 @@ export default function TopGrid() {
               key={it.to}
               to={it.to}
               className={({ isActive }) =>
-                `group relative rounded-xl border bg-white/80 dark:bg-zinc-900/60 backdrop-blur p-3.5 card-lift overflow-hidden ${
-                  isActive ? "border-brand-500/40 shadow-brand-600/10" : "border-zinc-200/80 dark:border-zinc-800/70"
+                `group relative rounded-xl border p-3.5 card-lift overflow-hidden ${
+                  isActive
+                    ? "ring-gradient border-transparent bg-gradient-to-br from-brand-500/10 to-iris-500/10"
+                    : "border-zinc-200/70 dark:border-white/10 bg-white/85 dark:bg-night-800/70 backdrop-blur"
                 }`
               }
             >

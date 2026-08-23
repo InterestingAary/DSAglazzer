@@ -28,7 +28,7 @@ export const Sidebar: React.FC = () => {
       name: 'Today\'s Revision', 
       icon: ListChecks, 
       badge: pendingCount > 0 ? pendingCount : undefined,
-      badgeColor: stats.overdueCount > 0 ? 'bg-rose-500/90 text-white' : 'bg-brand-500 text-zinc-950'
+      badgeColor: stats.overdueCount > 0 ? 'bg-rose-500 text-white' : 'bg-brand-500 text-white'
     },
     { to: '/questions', name: 'All Questions', icon: ClipboardList },
     { to: '/calendar', name: 'Calendar', icon: Calendar },
@@ -37,14 +37,14 @@ export const Sidebar: React.FC = () => {
   ];
 
   return (
-    <aside className="w-64 bg-zinc-950 dark:bg-[#0a0a0d] border-r border-zinc-800/70 dark:border-zinc-800/50 flex flex-col h-screen sticky top-0 shrink-0 text-zinc-100">
-      {/* Brand Header — custom logo */}
-      <div className="h-16 px-5 border-b border-zinc-800/70 dark:border-zinc-800/50 flex items-center justify-between">
+    <aside className="w-64 h-screen sticky top-0 shrink-0 bg-gradient-to-b from-night-900 via-night-800 to-[#0d1230] dark:from-night-900 dark:via-night-800 dark:to-[#0a0f24] border-r border-white/10 flex flex-col text-zinc-100 shadow-2xl shadow-black/30">
+      {/* Brand Header — custom gem logo */}
+      <div className="h-16 px-5 border-b border-white/10 flex items-center justify-between">
         <BrandLogo size={32} />
       </div>
 
       {/* Navigation Links */}
-      <nav className="flex-1 px-3 py-6 space-y-1 overflow-y-auto">
+      <nav className="flex-1 px-3 py-5 space-y-1.5 overflow-y-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
           return (
@@ -52,23 +52,21 @@ export const Sidebar: React.FC = () => {
               key={item.to}
               to={item.to}
               className={({ isActive }) => 
-                `group relative flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 cursor-pointer ${
+                `group relative flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-150 cursor-pointer ${
                   isActive 
-                    ? 'bg-white/[0.07] text-white' 
-                    : 'text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200'
+                    ? 'brand-gradient text-white shadow-lg shadow-brand-600/25' 
+                    : 'text-zinc-400 hover:bg-white/[0.06] hover:text-zinc-100'
                 }`
               }
             >
               {({ isActive }) => (
                 <>
-                  {/* Active indicator bar */}
-                  <span className={`absolute left-0 top-1/2 -translate-y-1/2 h-5 w-0.5 rounded-full bg-brand-400 transition-opacity duration-150 ${isActive ? 'opacity-100' : 'opacity-0'}`} />
                   <div className="flex items-center gap-3">
-                    <Icon size={18} className={`transition-colors ${isActive ? 'text-brand-400' : 'text-zinc-500 group-hover:text-zinc-300'}`} />
+                    <Icon size={18} className={isActive ? 'text-white' : 'text-zinc-500 group-hover:text-brand-300 transition-colors'} />
                     <span>{item.name}</span>
                   </div>
                   {item.badge !== undefined && (
-                    <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${item.badgeColor}`}>
+                    <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${isActive ? 'bg-white/20 text-white' : item.badgeColor}`}>
                       {item.badge}
                     </span>
                   )}
@@ -80,16 +78,16 @@ export const Sidebar: React.FC = () => {
       </nav>
 
       {/* Streak Widget & Footer theme switch */}
-      <div className="p-4 border-t border-zinc-800/70 dark:border-zinc-800/50 flex flex-col gap-4">
+      <div className="p-4 border-t border-white/10 flex flex-col gap-3.5">
         {/* Active Streak Display */}
         {stats.currentStreak > 0 && (
-          <div className="p-3 bg-brand-500/[0.08] border border-brand-500/15 rounded-xl flex items-center gap-3">
-            <div className="h-8 w-8 rounded-lg bg-brand-500/15 flex items-center justify-center text-brand-400">
+          <div className="p-3 rounded-xl bg-gradient-to-r from-orange-500/15 to-amber-400/10 border border-orange-400/25 flex items-center gap-3 animate-pulse-subtle">
+            <div className="h-9 w-9 rounded-lg bg-orange-500/20 flex items-center justify-center text-orange-300">
               <Flame size={18} fill="currentColor" />
             </div>
             <div>
-              <div className="text-[11px] text-zinc-500 font-medium">Current Streak</div>
-              <div className="text-sm font-bold text-white leading-tight">
+              <div className="text-[11px] text-zinc-400 font-medium">Current Streak</div>
+              <div className="text-sm font-bold text-orange-200 leading-tight">
                 {stats.currentStreak} {stats.currentStreak === 1 ? 'Day' : 'Days'}
               </div>
             </div>
@@ -97,10 +95,10 @@ export const Sidebar: React.FC = () => {
         )}
 
         <div className="flex items-center justify-between">
-          <span className="text-xs text-zinc-500 font-medium">Theme</span>
+          <span className="text-xs text-zinc-500 font-medium">Appearance</span>
           <button
             onClick={toggleTheme}
-            className="h-8 w-8 rounded-lg border border-zinc-800 flex items-center justify-center text-zinc-400 hover:bg-white/[0.06] hover:text-zinc-200 transition-colors cursor-pointer"
+            className="h-9 w-9 rounded-xl border border-white/10 bg-white/[0.04] flex items-center justify-center text-zinc-300 hover:bg-brand-500/15 hover:text-brand-300 hover:border-brand-500/40 transition-colors cursor-pointer"
             aria-label="Toggle theme"
           >
             {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
