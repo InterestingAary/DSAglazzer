@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useDatabase } from '../context/DatabaseContext';
 import { useTheme } from '../context/ThemeContext';
+import BrandLogo from './BrandLogo';
 
 export const Sidebar: React.FC = () => {
   const { stats } = useDatabase();
@@ -37,17 +38,9 @@ export const Sidebar: React.FC = () => {
 
   return (
     <aside className="w-64 bg-zinc-950 dark:bg-[#0a0a0d] border-r border-zinc-800/70 dark:border-zinc-800/50 flex flex-col h-screen sticky top-0 shrink-0 text-zinc-100">
-      {/* Brand Header */}
+      {/* Brand Header — custom logo */}
       <div className="h-16 px-5 border-b border-zinc-800/70 dark:border-zinc-800/50 flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="h-8 w-8 rounded-lg brand-gradient flex items-center justify-center text-white font-bold text-lg shadow-md shadow-brand-900/40">
-            D
-          </div>
-          <div>
-            <h1 className="text-sm font-semibold text-white leading-none tracking-tight">DSA Revise</h1>
-            <span className="text-[10px] text-zinc-500 font-medium">Spaced Repetition</span>
-          </div>
-        </div>
+        <BrandLogo size={32} />
       </div>
 
       {/* Navigation Links */}

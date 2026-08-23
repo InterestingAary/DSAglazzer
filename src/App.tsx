@@ -6,6 +6,9 @@ import { ThemeProvider } from './context/ThemeContext';
 import Sidebar from './components/Sidebar';
 import ScrollProgress from './components/ScrollProgress';
 import SmoothScroll from './components/SmoothScroll';
+import TopGrid from './components/TopGrid';
+import NeedleThread from './components/NeedleThread';
+import BrandLogo from './components/BrandLogo';
 import Dashboard from './pages/Dashboard';
 import TodayRevision from './pages/TodayRevision';
 import AllQuestions from './pages/AllQuestions';
@@ -69,12 +72,7 @@ function AppContent() {
         
         {/* Mobile Header Bar */}
         <header className="h-16 px-6 border-b border-zinc-800/70 dark:border-zinc-800/50 bg-zinc-950 flex items-center justify-between md:hidden shrink-0 sticky top-0 z-30 shadow-sm">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg brand-gradient flex items-center justify-center text-white font-bold text-lg">
-              D
-            </div>
-            <span className="text-sm font-semibold text-white tracking-tight">DSA Revise</span>
-          </div>
+          <BrandLogo size={30} />
           <button
             onClick={() => setIsMobileMenuOpen(true)}
             className="p-2 rounded-lg border border-zinc-800 text-zinc-400 hover:bg-white/[0.06] hover:text-zinc-200 cursor-pointer"
@@ -84,8 +82,16 @@ function AppContent() {
           </button>
         </header>
 
+        {/* Top grid — sections on the top */}
+        <div id="top" className="px-4 pt-4 md:px-8 md:pt-6">
+          <TopGrid />
+        </div>
+
+        {/* Needle thread follows up */}
+        <NeedleThread />
+
         {/* View Frame */}
-        <main id="main-content" className="flex-1 overflow-y-auto px-4 py-6 md:px-8 md:py-8">
+        <main id="main-content" className="flex-1 overflow-y-auto px-4 py-6 md:px-8 md:py-8 relative">
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/today" element={<TodayRevision />} />

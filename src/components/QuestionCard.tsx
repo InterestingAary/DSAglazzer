@@ -71,9 +71,11 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ question, onEdit, is
     return 'other';
   };
 
+  const tapeColor = question.difficulty === "Easy" ? "rgba(16,185,129,0.18)" : question.difficulty === "Medium" ? "rgba(251,191,36,0.18)" : "rgba(20,184,166,0.18)";
   return (
-    <div className="bg-white dark:bg-zinc-900/70 border border-zinc-200/80 dark:border-zinc-800/80 rounded-xl p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_-16px_rgba(0,0,0,0.12)] dark:shadow-none hover:border-brand-500/40 dark:hover:border-brand-400/30 hover:shadow-lg hover:shadow-brand-600/5 dark:hover:shadow-none hover:-translate-y-[2px] transition-all duration-200 group flex flex-col justify-between h-full gap-4">
-      <div>
+    <div className="relative bg-white dark:bg-zinc-900/70 border border-zinc-200/80 dark:border-zinc-800/80 rounded-xl p-5 pt-6 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_-16px_rgba(0,0,0,0.12)] dark:shadow-none hover:border-brand-500/40 dark:hover:border-brand-400/30 hover:shadow-lg hover:shadow-brand-600/5 dark:hover:shadow-none hover:-translate-y-[2px] transition-all duration-200 group flex flex-col justify-between h-full gap-0 overflow-hidden card-lift">
+      <span className="absolute -top-1 left-1/2 h-3.5 w-16 -translate-x-1/2 -rotate-2 rounded-sm border border-black/5 shadow-sm" style={{ background: `repeating-linear-gradient(90deg, ${tapeColor} 0 6px, transparent 6px 12px)` }} aria-hidden="true" />
+      <div className="pb-3 border-b border-zinc-100/80 dark:border-zinc-800/60 mb-3">
         {/* Card Header: Platform, Difficulty, Selection & Favorite Star */}
         <div className="flex items-center justify-between gap-2 mb-3">
           <div className="flex items-center gap-1.5 overflow-hidden">
