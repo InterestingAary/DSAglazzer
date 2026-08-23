@@ -64,7 +64,7 @@ export function App() {
   return (
     <ThemeProvider>
       <DatabaseProvider>
-        <BrowserRouter>
+        <BrowserRouter basename={import.meta.env.BASE_URL}>
           <ErrorBoundary>
             <AppContent />
           </ErrorBoundary>
