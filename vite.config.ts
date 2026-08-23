@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import { copyFileSync } from 'node:fs'
 
-const base = '/'
+const base = '/DSAglazzer/'
 
 const copy404 = () => ({
   name: 'copy-404',
@@ -55,7 +55,7 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,svg,woff2}'],
         cleanupOutdatedCaches: true,
-        navigateFallback: '/index.html',
+        navigateFallback: '/DSAglazzer/index.html',
         navigateFallbackDenylist: [/^\/_/, /\/[^/?]+\.[^/]+$/],
         skipWaiting: true,
         clientsClaim: true,

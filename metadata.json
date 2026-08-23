@@ -1,6 +1,6 @@
 {
   "name": "DSAglazzer",
-  "description": "Spaced repetition command center for DSA problems and revision tracking",
+  "description": "High-performance DSA Command Center, Spaced Repetition SRS, Interactive IDE, and Engineering Portfolio (ALGO_ELITE)",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
