@@ -2,13 +2,15 @@ import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   AlertTriangle,
+  AlertCircle,
   ArrowRight,
+  ArrowUpRight,
   Award,
+  Check,
   CheckCircle2,
-  XCircle
+  RotateCw
 } from 'lucide-react';
 import { useDatabase } from '../context/DatabaseContext';
-import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import Heatmap from '../components/Heatmap';
 import ShaderBackground from '../components/ShaderBackground';
@@ -38,7 +40,7 @@ type FeedItem = { kind: 'done' | 'fail' | 'award'; name: string; at: string };
 type RadarRow = { topic: string; label: string; urgent: boolean };
 
 export const Dashboard: React.FC = () => {
-  const { questions, stats, notificationPermission } = useDatabase();
+  const { questions, stats } = useDatabase();
   const navigate = useNavigate();
   const todayStr = getTodayDateString();
 
@@ -155,58 +157,88 @@ export const Dashboard: React.FC = () => {
 
         {/* ── Right column 25% ── */}
         <aside className="lg:col-span-3 flex flex-col gap-6">
-          {/* Recent Activity */}
+          {/* Recent Activity — perfect private ds copy */}
           <Reveal delay={0.08}>
-            <section className="rounded-lg border border-white/10 bg-[var(--bg-card)] p-4">
-              <h3 className="border-b border-white/10 pb-2 font-display text-base font-semibold tracking-tight text-zinc-900 dark:text-[#e7e0ed]">
-                Recent Activity
-              </h3>
-              <div className="mt-3 flex flex-col gap-3">
-                {feed.length > 0 ? feed.map((f, i) => (
-                  <div key={i} className="flex items-start gap-2">
-                    {f.kind === 'done' && <CheckCircle2 size={15} className="mt-0.5 shrink-0 text-emerald-500 dark:text-[#34d399]" />}
-                    {f.kind === 'fail' && <XCircle size={15} className="mt-0.5 shrink-0 text-rose-500 dark:text-[#ffb4ab]" />}
-                    {f.kind === 'award' && <Award size={15} className="mt-0.5 shrink-0 text-[var(--tertiary)]" />}
-                    <div className="min-w-0">
-                      <p className="truncate text-sm text-zinc-800 dark:text-[#e7e0ed]">
-                        {f.kind === 'done' ? 'Cleared revision — ' : f.kind === 'fail' ? 'Postponed — ' : 'Unlocked '}
-                        <span className="font-mono text-xs">{f.name}</span>
-                      </p>
-                      <span className="font-mono text-[10px] text-zinc-500 dark:text-[#958ea0]">{fmtAgo(f.at)}</span>
+            <section className="border border-[#ffffff15] bg-[#0c0c0c] p-5 sm:p-6 flex flex-col gap-4">
+              <div className="flex items-center justify-between border-b border-[#27272a] pb-3">
+                <h3 className="font-heading text-base font-black uppercase tracking-tight text-[#f5f5f5]">RECENT TELEMETRY</h3>
+                <span className="text-[10px] font-mono text-[#10b981] font-bold uppercase tracking-widest">LIVE</span>
+              </div>
+              <div className="flex flex-col gap-2">
+                {feed.length > 0 ? feed.map((f, i) => {
+                  const isSolved = f.kind === 'done';
+                  const isFailed = f.kind === 'fail';
+                  return (
+                    <div
+                      key={i}
+                      onClick={() => navigate('/questions')}
+                      className={`flex items-start gap-3 p-2.5 border border-transparent transition-all hover:bg-[#161616] hover:border-[#27272a] cursor-pointer group ${isFailed ? 'opacity-85' : ''}`}
+                    >
+                      <div className="mt-0.5 shrink-0">
+                        {isSolved && <CheckCircle2 className="w-4 h-4 text-[#10b981]" />}
+                        {isFailed && <AlertCircle className="w-4 h-4 text-[#ef4444]" />}
+                        {!isSolved && !isFailed && <Award className="w-4 h-4 text-[#ffb869]" />}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-1">
+                          <p className="text-xs font-bold uppercase tracking-tight text-[#f5f5f5] truncate group-hover:text-[#10b981] transition-colors">{f.name}</p>
+                          <ArrowUpRight className="w-3.5 h-3.5 text-[#71717a] opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+                        </div>
+                        <p className="text-[11px] text-[#a1a1aa] line-clamp-1 mt-0.5">{isSolved ? 'Cleared revision' : isFailed ? 'Postponed' : 'Activity'} • {f.name}</p>
+                        <span className="font-mono text-[10px] uppercase text-[#71717a] block mt-1">{fmtAgo(f.at)}</span>
+                      </div>
                     </div>
-                  </div>
-                )) : (
-                  <p className="py-4 text-center font-mono text-xs text-zinc-500 dark:text-[#958ea0]">
-                    No activity logged yet.
-                  </p>
+                  );
+                }) : (
+                  <p className="py-6 text-center font-mono text-xs text-[#71717a]">No telemetry yet.</p>
                 )}
               </div>
             </section>
           </Reveal>
 
-          {/* Revision Radar */}
+          {/* Revision Radar — perfect private ds copy */}
           <Reveal delay={0.12}>
-            <section className="rounded-lg border border-white/10 bg-[var(--bg-card)] p-4">
-              <h3 className="border-b border-white/10 pb-2 font-display text-base font-semibold tracking-tight text-zinc-900 dark:text-[#e7e0ed]">
-                Revision Radar
-              </h3>
-              <div className="mt-2 flex flex-col">
-                {radar.length > 0 ? radar.map((r, i) => (
-                  <div key={i} className={`flex items-center justify-between py-1.5 ${r.urgent ? '' : 'opacity-50'}`}>
-                    <span className={`inline-flex items-center gap-1.5 font-mono text-xs ${r.urgent ? 'text-rose-600 dark:text-[#ffb4ab]' : 'text-emerald-600 dark:text-[#34d399]'}`}>
-                      {r.urgent ? <AlertTriangle size={13} /> : <CheckCircle2 size={13} />} {r.topic}
-                    </span>
-                    <span className="font-mono text-xs text-zinc-500 dark:text-[#958ea0]">{r.label}</span>
-                  </div>
-                )) : (
-                  <p className="py-4 text-center font-mono text-xs text-zinc-500 dark:text-[#958ea0]">Radar clear.</p>
+            <section className="border border-[#ffffff15] bg-[#0c0c0c] p-5 sm:p-6 flex flex-col gap-3">
+              <div className="flex items-center justify-between border-b border-[#27272a] pb-3">
+                <div className="flex items-center gap-2">
+                  <RotateCw className="w-4 h-4 text-[#10b981]" />
+                  <h3 className="font-heading text-base font-black uppercase tracking-tight text-[#f5f5f5]">REVISION RADAR</h3>
+                </div>
+                <button onClick={() => navigate('/today')} className="text-xs font-mono font-bold uppercase tracking-wider text-[#10b981] hover:text-white transition-colors flex items-center gap-1 cursor-pointer">
+                  <span>All</span><ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+              <div className="flex flex-col divide-y divide-[#27272a]">
+                {radar.length > 0 ? radar.map((r, i) => {
+                  const isUrgent = r.urgent;
+                  return (
+                    <div
+                      key={i}
+                      onClick={() => navigate('/today')}
+                      className="py-3 flex items-center justify-between hover:bg-[#161616] px-2 cursor-pointer transition-colors group"
+                    >
+                      <div className="flex items-center gap-3">
+                        {isUrgent ? <AlertTriangle className="w-4 h-4 text-[#ef4444] shrink-0" /> : <Check className="w-4 h-4 text-[#10b981] shrink-0" />}
+                        <div className="flex flex-col">
+                          <span className={`font-mono text-xs font-bold uppercase group-hover:text-[#10b981] transition-colors ${isUrgent ? 'text-[#ef4444]' : 'text-[#f5f5f5]'}`}>{r.topic}</span>
+                          <span className="text-[10px] text-[#71717a] font-mono uppercase tracking-wider">{r.topic}</span>
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-end">
+                        <span className="font-mono text-[10px] uppercase text-[#71717a]">{r.label}</span>
+                        <div className="w-14 h-1.5 bg-[#27272a] mt-1.5 overflow-hidden">
+                          <div className={`h-full ${isUrgent ? 'bg-[#ef4444]' : 'bg-[#10b981]'}`} style={{ width: isUrgent ? '32%' : '78%' }} />
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }) : (
+                  <p className="py-6 text-center font-mono text-xs text-[#71717a]">Radar clear.</p>
                 )}
               </div>
-              <div className="mt-3 border-t border-white/10 pt-3">
-                <Badge variant="default" className="w-full justify-center">
-                  {notificationPermission === 'granted' ? 'Notifications ON' : 'Notifications off'}
-                </Badge>
-              </div>
+              <button onClick={() => navigate('/today')} className="w-full mt-2 py-2.5 bg-[#161616] hover:bg-[#10b981] hover:text-black border border-[#27272a] text-xs font-heading font-black uppercase tracking-wider text-[#f5f5f5] transition-colors flex items-center justify-center gap-2 cursor-pointer">
+                <span>Launch Spaced Repetition SRS</span>
+              </button>
             </section>
           </Reveal>
         </aside>
