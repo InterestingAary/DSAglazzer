@@ -7,7 +7,6 @@ import Sidebar from './components/Sidebar';
 import ScrollProgress from './components/ScrollProgress';
 import SmoothScroll from './components/SmoothScroll';
 import TopGrid from './components/TopGrid';
-import NeedleThread from './components/NeedleThread';
 import BrandLogo from './components/BrandLogo';
 import Dashboard from './pages/Dashboard';
 import TodayRevision from './pages/TodayRevision';
@@ -94,9 +93,6 @@ function AppContent() {
         <div id="top" className="px-4 pt-4 md:px-8 md:pt-6">
           <TopGrid />
         </div>
-
-        {/* Needle thread follows up */}
-        <NeedleThread />
 
         {/* View Frame */}
         <main id="main-content" className="flex-1 px-4 py-6 md:px-8 md:py-8 relative">
