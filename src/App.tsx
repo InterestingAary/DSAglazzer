@@ -77,7 +77,7 @@ export function App() {
   return (
     <ThemeProvider>
       <DatabaseProvider>
-        <BrowserRouter>
+        <BrowserRouter basename="/DSAglazzer">
           <ErrorBoundary>
             <AppContent />
           </ErrorBoundary>

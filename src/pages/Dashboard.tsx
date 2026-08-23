@@ -5,7 +5,6 @@ import {
   ArrowRight,
   Award,
   CheckCircle2,
-  Sparkles,
   XCircle
 } from 'lucide-react';
 import { useDatabase } from '../context/DatabaseContext';
@@ -15,6 +14,7 @@ import Heatmap from '../components/Heatmap';
 import ShaderBackground from '../components/ShaderBackground';
 import ProgressRing from '../components/ProgressRing';
 import Reveal from '../components/Reveal';
+import UniverseMap from '../components/UniverseMap';
 import type { Question } from '../types';
 import { getTodayDateString } from '../utils/dateUtils';
 
@@ -74,13 +74,6 @@ export const Dashboard: React.FC = () => {
       .sort((a, b) => b.count - a.count)
       .slice(0, 4);
   }, [questions, todayStr]);
-
-  const activeIdx = useMemo(() => {
-    const withDue = topics.findIndex(t => t.due > 0);
-    if (withDue >= 0) return withDue;
-    const partial = topics.findIndex(t => t.pct > 0 && t.pct < 100);
-    return partial >= 0 ? partial : Math.min(2, Math.max(0, topics.length - 1));
-  }, [topics]);
 
   /* ── Recent activity feed ─────────────────────────────── */
   const feed = useMemo<FeedItem[]>(() => {
@@ -147,67 +140,16 @@ export const Dashboard: React.FC = () => {
             </section>
           </Reveal>
 
-          {/* DSA Universe */}
+          {/* DSA Universe — perfect private ds copy */}
           <Reveal delay={0.06}>
-            <section className="group relative flex min-h-[400px] flex-col overflow-hidden rounded-lg border border-white/10">
-              <ShaderBackground className="absolute inset-0 opacity-60 mix-blend-screen transition-opacity duration-500 group-hover:opacity-90" />
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[var(--bg-app)] via-transparent to-[var(--bg-app)]/40" aria-hidden="true" />
-              <header className="relative z-10 flex items-center justify-between border-b border-white/10 bg-black/30 px-4 py-3 backdrop-blur-md">
-                <h2 className="font-display text-xl font-semibold tracking-tight text-zinc-100">Your DSA Universe</h2>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => navigate('/questions')}
-                  className="border-brand-500/50 !bg-brand-500/15 !text-brand-300 shadow-[0_0_12px_rgba(160,120,255,0.18)] hover:!bg-brand-500/25"
-                >
-                  Explore Practice
-                </Button>
-              </header>
-              <div className="relative z-10 flex flex-grow items-center justify-center p-6">
-                {topics.length > 0 ? (
-                  <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
-                    {topics.map((t, i) => {
-                      const active = i === activeIdx;
-                      const dim = t.pct === 0 && !active;
-                      return (
-                        <React.Fragment key={t.name}>
-                          {i > 0 && <span className="hidden h-px w-7 bg-white/20 sm:block" aria-hidden="true" />}
-                          <div className="relative flex flex-col items-center gap-2">
-                            {active && <span className="absolute inset-x-2 top-2 aspect-square rounded-full bg-brand-500/30 blur-lg animate-pulse-subtle" aria-hidden="true" />}
-                            <div
-                              className={`relative z-10 flex items-center justify-center rounded-full border font-mono bg-black/70 ${
-                                active
-                                  ? 'h-16 w-16 border-2 border-brand-300 text-brand-200 text-sm shadow-[0_0_22px_rgba(160,120,255,0.45)]'
-                                  : dim
-                                    ? 'h-12 w-12 border-white/15 text-zinc-500'
-                                    : 'h-12 w-12 border-brand-500/60 text-brand-300 shadow-[0_0_14px_rgba(160,120,255,0.15)]'
-                              }`}
-                            >
-                              {t.pct}%
-                            </div>
-                            <span className={`font-mono text-xs ${active ? 'font-bold text-brand-300' : dim ? 'text-zinc-600' : 'text-zinc-400'}`}>{t.name}</span>
-                            {active && (
-                              <button
-                                onClick={() => navigate(t.due > 0 ? '/today' : '/questions')}
-                                className="absolute top-full mt-2 whitespace-nowrap rounded bg-brand-300 px-3 py-1 text-xs font-bold text-brand-950 hover:bg-brand-200 cursor-pointer"
-                              >
-                                Continue Practice
-                              </button>
-                            )}
-                          </div>
-                        </React.Fragment>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center gap-3 text-center">
-                    <Sparkles size={26} className="text-brand-300" />
-                    <p className="font-display text-lg font-semibold text-zinc-200">Your universe is empty</p>
-                    <Button variant="primary" size="sm" onClick={() => navigate('/questions')}>Add your first problem</Button>
-                  </div>
-                )}
-              </div>
-            </section>
+            <UniverseMap
+              topics={topics}
+              onSelectTopic={(name) => {
+                const q = questions.find((qq) => qq.topic.toLowerCase() === name.toLowerCase());
+                if (q) navigate(`/questions`); else navigate('/calendar');
+              }}
+              onExploreRoadmap={() => navigate('/calendar')}
+            />
           </Reveal>
         </div>
 

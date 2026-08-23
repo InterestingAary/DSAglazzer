@@ -2,8 +2,16 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
+import { copyFileSync } from 'node:fs'
 
 const base = '/DSAglazzer/'
+
+const copy404 = () => ({
+  name: 'copy-404',
+  closeBundle() {
+    try { copyFileSync('dist/index.html', 'dist/404.html'); } catch {}
+  },
+});
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -11,6 +19,7 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
+    copy404(),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'robots.txt', 'icon-192.svg', 'icon-512.svg'],
@@ -18,8 +27,8 @@ export default defineConfig({
         name: 'DSA Revision Tracker',
         short_name: 'DSA Revise',
         description: 'Track and revise Data Structures and Algorithms questions with spaced repetition',
-        theme_color: '#0d9488',
-        background_color: '#f7f7f8',
+        theme_color: '#15121b',
+        background_color: '#15121b',
         display: 'standalone',
         scope: base,
         start_url: base,
