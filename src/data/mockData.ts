@@ -346,9 +346,7 @@ testCases: [
     title: 'Course Schedule II',
     slug: 'course-schedule-ii',
     difficulty: 'Hard',
-topic: 'Topological Sort',
-// @ts-ignore
-// @ts-ignore
+    topic: 'Graphs',
     acceptanceRate: '44.9%',
     description: 'There are a total of n courses you have to take, labeled from 0 to n-1. Some courses may have prerequisites.',
     examples: [
@@ -440,8 +438,7 @@ export const recentActivities: AActivityItem[] = [
 export const revisionRadarItems: ARevisionItem[] = [
   { id: 'r1', problemId: 'p007', title: 'Maximum Subarray', topic: 'Two Pointers', difficulty: 'Easy', daysAgo: 0, urgency: 'normal', retention: 92, intervalDays: 14 },
   { id: 'r2', problemId: 'p002', title: 'Longest Substring Without Repeating Characters', topic: 'Strings', difficulty: 'Medium', daysAgo: 2, urgency: 'warning', retention: 67, intervalDays: 7 },
-  { id: 'r3', problemId: 'p009', title: 'Course Schedule II', // @ts-ignore
-    topic: 'Topological Sort', difficulty: 'Hard', daysAgo: 5, urgency: 'urgent', retention: 31, intervalDays: 2 },
+  { id: 'r3', problemId: 'p009', title: 'Course Schedule II', topic: 'Graphs', difficulty: 'Hard', daysAgo: 5, urgency: 'urgent', retention: 31, intervalDays: 2 },
   { id: 'r4', problemId: 'p006', title: 'Valid Sudoku', topic: 'Backtracking', difficulty: 'Medium', daysAgo: 1, urgency: 'normal', retention: 88, intervalDays: 10 },
 ];
 

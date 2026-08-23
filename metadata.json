@@ -1,0 +1,6 @@
+{
+  "name": "DSAglazzer",
+  "description": "Spaced repetition command center for DSA problems and revision tracking",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
