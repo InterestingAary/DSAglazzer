@@ -1,237 +1,267 @@
 import React, { useState } from 'react';
-import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Compass,
-  Code2,
-  RotateCcw,
-  BarChart3,
-  Globe,
-  Flame,
-  Zap,
-  Bell,
-  Menu,
-  X,
-  Trophy,
-  LayoutDashboard,
+  Flame, Bell, Code2, Compass, BarChart3, RotateCcw,
+  GitFork, Globe, Terminal, ExternalLink, CheckCircle2,
+  Menu, X, User
 } from 'lucide-react';
-import { DailyBlitzModal } from './DailyBlitzModal';
+import { UserStats } from '../types';
 
-const NAV_ITEMS = [
-  { id: 'dashboard', label: 'DASHBOARD', icon: LayoutDashboard, path: '/' },
-  { id: 'practice', label: 'PRACTICE', icon: Code2, path: '/practice' },
-  { id: 'roadmap', label: 'ROADMAP', icon: Compass, path: '/roadmap' },
-  { id: 'telemetry', label: 'TELEMETRY', icon: BarChart3, path: '/telemetry' },
-  { id: 'revision', label: 'REVISION', icon: RotateCcw, path: '/revision' },
-  { id: 'portfolio', label: 'PORTFOLIO', icon: Globe, path: '/portfolio' },
-];
+interface NavigationProps {
+  currentTab: string;
+  onSelectTab: (tab: string) => void;
+  userStats: UserStats;
+  onOpenDailyChallenge: () => void;
+  onOpenPortfolioModal: () => void;
+}
 
-export const Navigation: React.FC = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
+export const Navigation: React.FC<NavigationProps> = ({currentTab, onSelectTab, userStats, onOpenDailyChallenge, onOpenPortfolioModal}) => {
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [blitzModalOpen, setBlitzModalOpen] = useState(false);
-  const [notificationsOpen, setNotificationsOpen] = useState(false);
 
-  const isActive = (path: string) => {
-    if (path === '/') {
-      return location.pathname === '/' || location.pathname === '/universe';
-    }
-    return location.pathname.startsWith(path);
-  };
+  const navItems = [
+    { id: 'dashboard', label: 'Dashboard', icon: Terminal },
+    { id: 'practice', label: 'Practice', icon: Code2 },
+    { id: 'roadmap', label: 'Roadmap', icon: Compass },
+    { id: 'progress', label: 'Progress', icon: BarChart3 },
+    { id: 'revision', label: 'Revision', icon: RotateCcw },
+    { id: 'portfolio', label: 'Portfolio', icon: Globe },
+  ];
 
   return (
-    <>
-      <nav className="sticky top-0 z-50 w-full bg-[#080808]/90 backdrop-blur-md border-b border-[#27272a]">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          {/* Brand & Title */}
-          <div className="flex items-center gap-6 lg:gap-10">
-            <NavLink
-              to="/"
-              className="flex items-center gap-2 group text-left cursor-pointer transition-transform hover:scale-105"
-            >
-              <div className="w-8 h-8 rounded bg-[#10b981]/10 border border-[#10b981]/40 flex items-center justify-center text-[#10b981]">
-                <Code2 className="w-4 h-4" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-lg sm:text-xl font-black tracking-tight text-white font-display">
-                  ALGO<span className="text-[#10b981]">.</span>ELITE
-                </span>
-                <span className="text-[9px] font-mono text-zinc-400 tracking-wider uppercase -mt-1 hidden sm:block">
-                  DSA Command Center
-                </span>
-              </div>
-            </NavLink>
-
-            {/* Desktop Navigation links */}
-            <div className="hidden lg:flex items-center gap-1 xl:gap-2 text-xs font-semibold tracking-wider text-zinc-400">
-              {NAV_ITEMS.map((item) => {
-                const active = isActive(item.path);
-                const Icon = item.icon;
-                return (
-                  <NavLink
-                    key={item.id}
-                    to={item.path}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-mono font-medium transition-all ${
-                      active
-                        ? 'bg-[#161616] text-[#10b981] border border-[#10b981]/30 shadow-sm shadow-[#10b981]/10 font-bold'
-                        : 'text-zinc-400 hover:text-white hover:bg-[#121212]'
-                    }`}
-                  >
-                    <Icon className="w-3.5 h-3.5" />
-                    <span>{item.label}</span>
-                  </NavLink>
-                );
-              })}
+    <nav className="sticky top-0 z-50 w-full glass-panel-heavy border-b-0 rounded-none">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-8 h-16 flex items-center justify-between">
+        <div className="flex items-center gap-8 lg:gap-12">
+          <button
+            onClick={() => onSelectTab('dashboard')}
+            className="flex items-center gap-2 group text-left cursor-pointer"
+          >
+            <div className="text-xl sm:text-2xl font-black tracking-tighter text-text-primary group-hover:glow-text-accent transition-all">
+              ALGO<span className="text-accent">.</span>ELITE
             </div>
-          </div>
+          </button>
 
-          {/* Right Section / Stats / CTAs */}
-          <div className="flex items-center gap-2.5 sm:gap-3.5">
-            {/* Daily Streak Badge */}
-            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 bg-[#121212] border border-[#27272a] rounded">
-              <Flame className="w-3.5 h-3.5 text-[#ffb869] fill-[#ffb869]/20 animate-bounce" />
-              <span className="font-mono text-xs font-bold tracking-wide text-zinc-200">
-                12D <span className="text-zinc-500 font-normal text-[10px]">STREAK</span>
-              </span>
-            </div>
-
-            {/* Elo Rating Badge */}
-            <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 bg-[#121212] border border-[#27272a] rounded">
-              <Trophy className="w-3.5 h-3.5 text-[#10b981]" />
-              <span className="font-mono text-xs font-bold text-[#10b981]">
-                1842 <span className="text-zinc-500 font-normal text-[10px]">ELO</span>
-              </span>
-            </div>
-
-            {/* Daily Blitz Button */}
-            <button
-              onClick={() => setBlitzModalOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#10b981]/10 hover:bg-[#10b981]/20 border border-[#10b981]/40 text-[#10b981] rounded text-xs font-mono font-bold uppercase tracking-wider transition-all hover:scale-105 cursor-pointer shadow-sm shadow-[#10b981]/10"
-            >
-              <Zap className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Daily Blitz</span>
-              <span className="sm:hidden">Blitz</span>
-            </button>
-
-            {/* Notifications toggle */}
-            <div className="relative">
-              <button
-                onClick={() => setNotificationsOpen(!notificationsOpen)}
-                className="p-2 text-zinc-400 hover:text-white border border-[#27272a] bg-[#121212] hover:bg-[#161616] rounded transition-colors relative cursor-pointer"
-                aria-label="Notifications"
-              >
-                <Bell className="w-4 h-4" />
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#10b981] rounded-full animate-pip" />
-              </button>
-
-              {notificationsOpen && (
-                <div className="absolute right-0 mt-2 w-72 sm:w-80 bg-[#0c0c0c] border border-[#27272a] rounded-lg shadow-2xl p-3 z-50 animate-fadeIn">
-                  <div className="flex items-center justify-between pb-2 border-b border-[#27272a]">
-                    <span className="text-xs font-mono font-bold text-white uppercase">
-                      SRS Flashcard Alerts
-                    </span>
-                    <span className="text-[10px] font-mono px-1.5 py-0.5 bg-[#ef4444]/20 text-[#ef4444] rounded">
-                      2 Overdue
-                    </span>
-                  </div>
-                  <div className="py-2 space-y-2 text-xs">
-                    <div
-                      onClick={() => {
-                        setNotificationsOpen(false);
-                        navigate('/revision');
-                      }}
-                      className="p-2 bg-[#161616] border border-[#27272a] rounded hover:border-[#10b981]/40 cursor-pointer transition-colors"
-                    >
-                      <div className="flex items-center justify-between text-[11px] font-mono">
-                        <span className="text-white font-bold">Course Schedule II</span>
-                        <span className="text-[#ef4444]">32% Retention</span>
-                      </div>
-                      <p className="text-[10px] text-zinc-400 mt-1">
-                        Kahn&#39;s BFS in-degree invariant due for review.
-                      </p>
-                    </div>
-                    <div
-                      onClick={() => {
-                        setNotificationsOpen(false);
-                        navigate('/revision');
-                      }}
-                      className="p-2 bg-[#161616] border border-[#27272a] rounded hover:border-[#10b981]/40 cursor-pointer transition-colors"
-                    >
-                      <div className="flex items-center justify-between text-[11px] font-mono">
-                        <span className="text-white font-bold">Trapping Rain Water</span>
-                        <span className="text-[#ffb869]">45% Retention</span>
-                      </div>
-                      <p className="text-[10px] text-zinc-400 mt-1">
-                        Two-pointer bottleneck proof due for review.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Profile Pill */}
-            <NavLink
-              to="/portfolio"
-              className="flex items-center gap-2 p-1 sm:px-2.5 sm:py-1 border border-[#27272a] hover:border-[#10b981]/50 bg-[#121212] rounded transition-all cursor-pointer"
-            >
-              <div className="w-6 h-6 rounded bg-[#10b981] flex items-center justify-center font-black text-xs text-black">
-                A
-              </div>
-              <div className="hidden md:flex flex-col text-left">
-                <span className="text-xs font-mono font-bold text-zinc-200 tracking-tight">
-                  InterestingAary
-                </span>
-                <span className="text-[9px] font-mono text-[#10b981] uppercase -mt-0.5">
-                  Guardian
-                </span>
-              </div>
-            </NavLink>
-
-            {/* Mobile hamburger button */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 border border-[#27272a] bg-[#121212] text-zinc-400 hover:text-white rounded"
-              aria-label="Toggle navigation"
-            >
-              {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Drawer */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden bg-[#0c0c0c] border-b border-[#27272a] px-4 py-3 space-y-1 animate-fadeIn">
-            {NAV_ITEMS.map((item) => {
-              const active = isActive(item.path);
-              const Icon = item.icon;
+          <div className="hidden md:flex items-center gap-1">
+            {navItems.map((item) => {
+              const isActive = currentTab === item.id;
               return (
                 <button
                   key={item.id}
-                  onClick={() => {
-                    navigate(item.path);
-                    setMobileMenuOpen(false);
-                  }}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded text-xs font-mono font-bold uppercase tracking-wider ${
-                    active
-                      ? 'bg-[#161616] text-[#10b981] border-l-2 border-[#10b981]'
-                      : 'text-zinc-400 hover:text-white hover:bg-[#121212]'
+                  onClick={() => onSelectTab(item.id)}
+                  className={`relative px-3 py-2 text-xs font-semibold uppercase tracking-widest transition-all duration-200 rounded-xl cursor-pointer ${
+                    isActive
+                      ? 'text-text-primary bg-glass-bg'
+                      : 'text-text-secondary hover:text-text-primary hover:bg-glass-bg/50'
                   }`}
                 >
-                  <div className="flex items-center gap-2.5">
-                    <Icon className="w-4 h-4" />
-                    <span>{item.label}</span>
-                  </div>
-                  {active && <span className="text-[10px] text-[#10b981]">ACTIVE</span>}
+                  {item.label}
+                  {isActive && (
+                    <motion.span
+                      layoutId="nav-indicator"
+                      className="absolute bottom-0 left-2 right-2 h-[2px] bg-accent rounded-full"
+                      style={{ boxShadow: '0 0 12px rgba(99,102,241,0.5)' }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                    />
+                  )}
                 </button>
               );
             })}
           </div>
-        )}
-      </nav>
+        </div>
 
-      {/* Daily Blitz Modal */}
-      <DailyBlitzModal isOpen={blitzModalOpen} onClose={() => setBlitzModalOpen(false)} />
-    </>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 glass-surface rounded-xl">
+            <span className="w-2 h-2 bg-accent-emerald rounded-full animate-glow-pulse" />
+            <span className="font-mono text-[11px] font-bold tracking-wider uppercase text-text-primary">
+              {userStats.streak}D STREAK
+            </span>
+          </div>
+
+          <button
+            onClick={onOpenDailyChallenge}
+            className="spatial-btn px-4 py-1.5 text-xs uppercase font-bold tracking-widest text-accent cursor-pointer"
+          >
+            Blitz
+          </button>
+
+          <div className="relative">
+            <button
+              onClick={() => {
+                setShowNotifications(!showNotifications);
+                setShowProfileMenu(false);
+              }}
+              className="p-2 text-text-secondary hover:text-text-primary glass-surface rounded-xl transition-colors relative cursor-pointer"
+              aria-label="Notifications"
+            >
+              <Bell className="w-3.5 h-3.5" />
+              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-accent rounded-full animate-glow-pulse" />
+            </button>
+
+            <AnimatePresence>
+              {showNotifications && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: -4 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: -4 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute right-0 mt-2 w-80 spatial-card p-4 z-50"
+                >
+                  <div className="flex items-center justify-between border-b border-glass-border pb-2 mb-3">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
+                      System Telemetry
+                    </span>
+                    <span className="text-[10px] text-accent font-mono">3 New Alerts</span>
+                  </div>
+                  <div className="space-y-2 max-h-64 overflow-y-auto pr-1 font-mono text-xs">
+                    {[
+                      { icon: CheckCircle2, color: 'text-accent-emerald', title: 'Merge Intervals Verified', detail: 'All 38 test suites executed successfully.' },
+                      { icon: RotateCcw, color: 'text-accent-amber', title: 'DP Review Due', detail: '18 days since last Knapsack practice.' },
+                      { icon: Flame, color: 'text-accent-emerald', title: 'Streak Milestone', detail: 'Consistency Machine badge unlocked.' },
+                    ].map((alert, i) => (
+                      <div key={i} className="p-2.5 glass-surface rounded-xl text-xs flex gap-2.5 items-start">
+                        <alert.icon className={`w-3.5 h-3.5 ${alert.color} mt-0.5 shrink-0`} />
+                        <div>
+                          <p className="text-text-primary font-bold uppercase tracking-wide text-[11px]">{alert.title}</p>
+                          <p className="text-[10px] text-text-muted">{alert.detail}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <div className="relative">
+            <button
+              onClick={() => {
+                setShowProfileMenu(!showProfileMenu);
+                setShowNotifications(false);
+              }}
+              className="flex items-center gap-2 px-2.5 py-1 glass-surface rounded-xl hover:border-accent/30 transition-all cursor-pointer"
+            >
+              <div className="w-5 h-5 bg-accent rounded-lg flex items-center justify-center font-bold text-[10px] text-white">
+                A
+              </div>
+              <span className="hidden sm:inline text-xs font-mono font-bold text-text-primary">
+                {userStats.handle}
+              </span>
+            </button>
+
+            <AnimatePresence>
+              {showProfileMenu && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: -4 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: -4 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute right-0 mt-2 w-64 spatial-card p-4 z-50"
+                >
+                  <div className="flex items-center gap-3 pb-3 border-b border-glass-border">
+                    <div className="w-9 h-9 bg-accent rounded-xl flex items-center justify-center font-black text-sm text-white">
+                      A
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-bold text-text-primary uppercase tracking-tight">{userStats.name}</span>
+                      <span className="text-xs font-mono text-text-muted">@{userStats.handle}</span>
+                      <span className="text-[10px] text-accent font-mono uppercase tracking-wider font-bold">
+                        {userStats.rank}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="py-2 space-y-1 font-mono text-xs">
+                    <button
+                      onClick={() => {
+                        onOpenPortfolioModal();
+                        setShowProfileMenu(false);
+                      }}
+                      className="w-full text-left px-2.5 py-2 glass-surface rounded-xl text-text-secondary hover:text-text-primary flex items-center justify-between transition-colors cursor-pointer"
+                    >
+                      <span className="flex items-center gap-2">
+                        <User className="w-3.5 h-3.5 text-accent" /> Bio & Projects
+                      </span>
+                    </button>
+
+                    <a
+                      href="https://github.com/InterestingAary"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="w-full px-2.5 py-2 glass-surface rounded-xl text-text-secondary hover:text-text-primary flex items-center justify-between transition-colors"
+                    >
+                      <span className="flex items-center gap-2">
+                        <GitFork className="w-3.5 h-3.5 text-accent" /> GitHub Profile
+                      </span>
+                      <ExternalLink className="w-3 h-3 text-text-muted" />
+                    </a>
+
+                    <a
+                      href="https://interestingaary.github.io/"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="w-full px-2.5 py-2 glass-surface rounded-xl text-text-secondary hover:text-text-primary flex items-center justify-between transition-colors"
+                    >
+                      <span className="flex items-center gap-2">
+                        <Globe className="w-3.5 h-3.5 text-accent" /> Live Portfolio
+                      </span>
+                      <ExternalLink className="w-3 h-3 text-text-muted" />
+                    </a>
+                  </div>
+
+                  <div className="pt-3 border-t border-glass-border flex justify-between items-center text-[10px] text-text-muted font-mono uppercase tracking-wider">
+                    <span>Rating: <strong className="text-text-primary">{userStats.rating}</strong></span>
+                    <span className="text-accent font-bold">{userStats.totalSolved} SOLVED</span>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 glass-surface rounded-xl text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
+            aria-label="Toggle navigation"
+          >
+            {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+          </button>
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden glass-surface border-t border-glass-border overflow-hidden"
+          >
+            <div className="px-4 py-4 space-y-2">
+              {navItems.map((item) => {
+                const isActive = currentTab === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      onSelectTab(item.id);
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`w-full flex items-center justify-between px-4 py-3 text-xs font-bold uppercase tracking-widest rounded-xl transition-all cursor-pointer ${
+                      isActive
+                        ? 'glass-surface text-accent'
+                        : 'text-text-secondary hover:text-text-primary hover:bg-glass-bg'
+                    }`}
+                  >
+                    <span>{item.label}</span>
+                    {isActive && <span className="text-[10px] font-mono text-accent">ACTIVE</span>}
+                  </button>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </nav>
   );
 };

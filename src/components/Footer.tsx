@@ -1,66 +1,70 @@
-import { ArrowRight, Globe, Terminal } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { X, Menu } from 'lucide-react';
 
-const GithubIcon = () => (
-  <svg
-    className="w-3.5 h-3.5"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-    />
-  </svg>
-);
+interface FooterProps {
+  onSelectTab: (tab: string) => void;
+}
 
-export default function Footer() {
+export const Footer: React.FC<FooterProps> = ({onSelectTab}) => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const navItems = [
+    { id: 'dashboard', label: 'Dashboard' },
+    { id: 'practice', label: 'Practice' },
+    { id: 'roadmap', label: 'Roadmap' },
+    { id: 'progress', label: 'Progress' },
+    { id: 'revision', label: 'Revision' },
+    { id: 'portfolio', label: 'Portfolio' },
+  ];
+
   return (
-    <footer className="mt-auto w-full border-t border-[#1f1f23] bg-[#080808] py-8">
-      <div className="mx-auto flex max-w-[1360px] flex-col items-center gap-4 px-4 sm:px-6 text-center">
-        <p className="font-display text-sm sm:text-base font-bold text-white tracking-wide">
-          “Consistency beats intensity when intensity doesn't last.”
-        </p>
+    <footer className="glass-panel-heavy border-t border-glass-border mt-auto">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-8 py-8 pb-6">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-2">
+            <div className="text-xl sm:text-2xl font-black tracking-tighter text-text-primary">
+              ALGO<span className="text-accent">.</span>ELITE
+            </div>
+          </div>
 
-        <Link
-          to="/revision"
-          className="inline-flex items-center gap-1.5 font-mono text-xs text-[#10b981] hover:underline cursor-pointer"
-        >
-          <span>Launch Spaced Repetition SRS Flashcards</span>
-          <ArrowRight className="w-3.5 h-3.5" />
-        </Link>
+          <div className="hidden md:flex items-center gap-8 text-xs font-semibold uppercase tracking-widest text-text-secondary">
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => onSelectTab(item.id)}
+                className="py-1 transition-all duration-200 cursor-pointer text-text-secondary hover:text-text-primary"
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
 
-        <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 font-mono text-xs text-zinc-400">
-          <a
-            href="https://github.com/InterestingAary/DSAglazzer"
-            target="_blank"
-            rel="noreferrer"
-            className="hover:text-white flex items-center gap-1 transition-colors"
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 glass-surface rounded-xl text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
+            aria-label="Toggle navigation"
           >
-            <GithubIcon /> GitHub Repository
-          </a>
-          <a
-            href="https://interestingaary.github.io/portfolio/"
-            target="_blank"
-            rel="noreferrer"
-            className="hover:text-white flex items-center gap-1 transition-colors"
-          >
-            <Globe className="w-3.5 h-3.5" /> Portfolio
-          </a>
-          <Link
-            to="/portfolio"
-            className="hover:text-[#10b981] flex items-center gap-1 transition-colors"
-          >
-            <Terminal className="w-3.5 h-3.5" /> Live Terminal
-          </Link>
+            {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+          </button>
         </div>
 
-        <p className="font-mono text-[11px] text-zinc-600">
-          © {new Date().getFullYear()} ALGO_ELITE COMMAND CENTER · CRAFTED BY AARYAN · ALL INVARIANTS VERIFIED
-        </p>
+        {mobileMenuOpen && (
+          <div className="md:hidden glass-surface rounded-xl mt-4 px-4 py-4 space-y-2">
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => {
+                  onSelectTab(item.id);
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full flex items-center justify-between px-3 py-2.5 text-xs font-bold uppercase tracking-widest rounded-xl text-text-secondary hover:text-text-primary hover:bg-glass-bg transition-all cursor-pointer"
+              >
+                <span>{item.label}</span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </footer>
   );
-}
+};

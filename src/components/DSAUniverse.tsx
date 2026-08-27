@@ -1,213 +1,165 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import {
-  Compass,
-  Search,
-  CheckCircle2,
-  Play,
-} from 'lucide-react';
-import { sampleProblems, universeNodes } from '../data/mockData';
-import type { ALDifficulty } from '../data/mockData';
+import React, { useRef, useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { UniverseNode, Problem } from '../types';
 
-export const DSAUniverse: React.FC = () => {
-  const navigate = useNavigate();
-  const [selectedTopic, setSelectedTopic] = useState<string>('All');
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [difficultyFilter, setDifficultyFilter] = useState<string>('All');
+interface DSAUniverseProps {
+  nodes: UniverseNode[];
+  problems: Problem[];
+  onSelectProblem: (problem: Problem) => void;
+}
 
-  const topicsList = ['All', ...universeNodes.map((n) => n.topic)];
+export const DSAUniverse: React.FC<DSAUniverseProps> = ({nodes, problems, onSelectProblem}) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [selectedNode, setSelectedNode] = useState<UniverseNode | null>(null);
 
-  const filteredProblems = sampleProblems.filter((p) => {
-    const matchesTopic = selectedTopic === 'All' || p.topic === selectedTopic;
-    const matchesDiff = difficultyFilter === 'All' || p.difficulty === difficultyFilter;
-    const matchesSearch =
-      p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.topic.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.timeComplexity.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesTopic && matchesDiff && matchesSearch;
-  });
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-  const getDifficultyColor = (diff: ALDifficulty) => {
-    switch (diff) {
-      case 'Easy':
-        return 'text-[#10b981] bg-[#10b981]/10 border-[#10b981]/30';
-      case 'Medium':
-        return 'text-[#ffb869] bg-[#ffb869]/10 border-[#ffb869]/30';
-      case 'Hard':
-        return 'text-[#ef4444] bg-[#ef4444]/10 border-[#ef4444]/30';
-    }
-  };
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const cx = x * scaleX;
+      const cy = y * scaleY;
+      setSelectedNode(nodes.find(node => {
+        const dx = cx - node.position.x;
+        const dy = cy - node.position.y;
+        return dx * dx + dy * dy < 2500;
+      }) || null);
+    };
+
+    const handleClick = () => {
+      if (selectedNode) {
+        const problem = problems.find(p => p.topic === selectedNode.topic);
+        if (problem) onSelectProblem(problem);
+      }
+    };
+
+    canvas.addEventListener('mousemove', handleMouseMove);
+    canvas.addEventListener('click', handleClick);
+    canvas.style.cursor = selectedNode ? 'pointer' : 'default';
+
+    return () => {
+      canvas.removeEventListener('mousemove', handleMouseMove);
+      canvas.removeEventListener('click', handleClick);
+    };
+  }, [nodes, problems, onSelectProblem, selectedNode]);
+
+  // Simple 2D orbital layout
+  const angle = Date.now() * 0.0001;
+  const nodes3D = nodes.map((node, i) => ({
+    ...node,
+    theta: (i * 0.628) + angle,
+    radius: 120 + Math.sin(i * 0.5 + angle) * 20,
+  }));
+
+  const projectedNodes = nodes3D.map(node => ({
+    ...node,
+    x: node.radius * Math.cos(node.theta) + 400,
+    y: node.radius * Math.sin(node.theta) + 300,
+  }));
 
   return (
-    <div className="space-y-8">
-      {/* ── Universe Domain Matrix ─────────────────────────── */}
-      <div className="space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div>
-            <h2 className="text-xl font-bold font-display text-white flex items-center gap-2">
-              <Compass className="w-5 h-5 text-[#10b981]" />
-              <span>DSA Domain Universe</span>
-            </h2>
-            <p className="text-xs text-zinc-400 font-mono">
-              Core conceptual nodes with mastery metrics and asymptotic bounds.
-            </p>
-          </div>
-          <button
-            onClick={() => navigate('/roadmap')}
-            className="text-xs font-mono font-bold uppercase tracking-wider text-[#10b981] hover:text-white flex items-center gap-1 cursor-pointer"
-          >
-            <span>View Full Roadmap</span> →
-          </button>
-        </div>
-
-        {/* Domain Matrix Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-          {universeNodes.map((node) => {
-            const isSelected = selectedTopic === node.topic;
-            return (
-              <div
-                key={node.id}
-                onClick={() => setSelectedTopic(isSelected ? 'All' : node.topic)}
-                className={`p-3.5 rounded-xl border transition-all cursor-pointer flex flex-col justify-between ${
-                  isSelected
-                    ? 'bg-[#161616] border-[#10b981] shadow-lg shadow-[#10b981]/10 scale-[1.02]'
-                    : 'bg-[#0c0c0c] border-[#27272a] hover:border-[#10b981]/40 hover:bg-[#121212]'
-                }`}
-              >
-                <div>
-                  <div className="flex items-center justify-between text-[11px] font-mono text-zinc-500 mb-1">
-                    <span>{node.tier}</span>
-                    <span className="text-[#10b981] font-bold">{node.progress}%</span>
-                  </div>
-                  <h3 className="text-xs font-bold font-display text-white truncate">
-                    {node.topic}
-                  </h3>
-                </div>
-
-                <div className="mt-3 space-y-1">
-                  <div className="w-full h-1 bg-[#1f1f23] rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-[#10b981] rounded-full"
-                      style={{ width: `${node.progress}%` }}
-                    />
-                  </div>
-                  <div className="flex justify-between text-[9px] font-mono text-zinc-500">
-                    <span>{node.solvedProblems} Solved</span>
-                    <span>{node.totalProblems} Total</span>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* ── Problem Arsenal Filter & List ───────────────────── */}
-      <div className="space-y-4">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 p-4 bg-[#0c0c0c] border border-[#27272a] rounded-xl">
-          {/* Search bar */}
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-            <input
-              type="text"
-              placeholder="Search problems, patterns, time complexity (e.g. O(N), Two Pointers)..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-[#121212] border border-[#27272a] focus:border-[#10b981] rounded-lg text-xs font-mono text-white placeholder-zinc-500 outline-none transition-colors"
-            />
-          </div>
-
-          {/* Filters */}
-          <div className="flex flex-wrap items-center gap-2">
-            {/* Topic Filter */}
-            <select
-              value={selectedTopic}
-              onChange={(e) => setSelectedTopic(e.target.value)}
-              className="px-3 py-2 bg-[#121212] border border-[#27272a] text-xs font-mono text-zinc-200 rounded-lg outline-none cursor-pointer hover:border-[#10b981]/40"
+    <div className="relative spatial-card p-4 overflow-hidden">
+      <canvas
+        ref={canvasRef}
+        width={800}
+        height={600}
+        className="w-full h-auto rounded-2xl"
+        style={{ background: 'rgba(5,5,16,0.6)' }}
+      />
+      <div className="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none">
+        {projectedNodes.map((node) => {
+          const scaleRatio = (node.radius / 140);
+          const leftPct = (node.x / 800) * 100;
+          const topPct = (node.y / 600) * 100;
+          return (
+            <div
+              key={node.id}
+              className={`absolute pointer-events-auto transition-all duration-300 ${
+                selectedNode?.id === node.id ? 'z-20' : 'z-10'
+              }`}
+              style={{
+                left: `${leftPct}%`,
+                top: `${topPct}%`,
+                transform: `translate(-50%, -50%) scale(${selectedNode?.id === node.id ? 1.3 : scaleRatio})`,
+              }}
+              onClick={() => {
+                const problem = problems.find(p => p.topic === node.topic);
+                if (problem) onSelectProblem(problem);
+              }}
             >
-              {topicsList.map((t) => (
-                <option key={t} value={t}>
-                  Topic: {t}
-                </option>
-              ))}
-            </select>
-
-            {/* Difficulty Filter */}
-            <div className="flex items-center bg-[#121212] border border-[#27272a] rounded-lg p-0.5">
-              {['All', 'Easy', 'Medium', 'Hard'].map((diff) => (
-                <button
-                  key={diff}
-                  onClick={() => setDifficultyFilter(diff)}
-                  className={`px-2.5 py-1 text-xs font-mono uppercase rounded transition-colors cursor-pointer ${
-                    difficultyFilter === diff
-                      ? 'bg-[#27272a] text-white font-bold'
-                      : 'text-zinc-400 hover:text-zinc-200'
-                  }`}
-                >
-                  {diff}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Problem Arsenal Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
-          {filteredProblems.map((problem) => {
-            const isSolved = problem.status === 'solved';
-            return (
-              <div
-                key={problem.id}
-                onClick={() => navigate(`/practice?id=${problem.id}`)}
-                className="p-4 bg-[#0c0c0c] hover:bg-[#121212] border border-[#27272a] hover:border-[#10b981]/50 rounded-xl transition-all cursor-pointer flex flex-col justify-between group shadow-md"
-              >
-                <div>
-                  <div className="flex items-center justify-between gap-2 mb-2">
-                    <span
-                      className={`text-[10px] font-mono font-bold px-2 py-0.5 border rounded ${getDifficultyColor(
-                        problem.difficulty
-                      )}`}
-                    >
-                      {problem.difficulty}
-                    </span>
-                    <span className="text-[10px] font-mono text-zinc-500">
-                      {problem.acceptanceRate} Pass
-                    </span>
+              <div className={`relative group w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-xs transition-all duration-300 ${
+                node.status === 'completed'
+                  ? 'bg-accent text-white glow-accent'
+                  : node.status === 'in_progress'
+                  ? 'bg-accent-amber/20 text-accent-amber border border-accent-amber/30'
+                  : 'bg-glass-bg text-text-muted border border-glass-border'
+              }`}>
+                {node.solvedProblems}/{node.totalProblems}
+                {node.status === 'completed' && (
+                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-accent-emerald rounded-full flex items-center justify-center text-[8px] text-white">
+                    ✓
                   </div>
-
-                  <h3 className="text-sm font-bold font-display text-white group-hover:text-[#10b981] transition-colors">
-                    {problem.title}
-                  </h3>
-
-                  <p className="text-xs text-zinc-400 font-mono line-clamp-2 mt-1.5 leading-relaxed">
-                    {problem.description}
-                  </p>
-                </div>
-
-                <div className="pt-3 mt-3 border-t border-[#1f1f23] flex items-center justify-between text-xs font-mono">
-                  <div className="flex items-center gap-2">
-                    <span className="text-zinc-500">T: {problem.timeComplexity}</span>
-                    <span className="text-zinc-600">/</span>
-                    <span className="text-zinc-500">S: {problem.spaceComplexity}</span>
-                  </div>
-
-                  <div className="flex items-center gap-1.5 text-[#10b981]">
-                    {isSolved ? (
-                      <span className="flex items-center gap-1 text-[11px] font-bold text-[#10b981]">
-                        <CheckCircle2 className="w-3.5 h-3.5" /> Solved
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-1 text-[11px] font-bold text-zinc-400 group-hover:text-[#10b981]">
-                        <Play className="w-3 h-3 fill-current" /> Solve
-                      </span>
-                    )}
-                  </div>
-                </div>
+                )}
               </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
+
+        {/* Connection lines via SVG overlay */}
+        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 800 600">
+          {projectedNodes.map((node, i) =>
+            projectedNodes.slice(i + 1).map((conn) => {
+              if (!node.connections.includes(conn.id)) return null;
+              return (
+                <line
+                  key={`${node.id}-${conn.id}`}
+                  x1={node.x} y1={node.y}
+                  x2={conn.x} y2={conn.y}
+                  stroke="rgba(99,102,241,0.2)"
+                  strokeWidth="1"
+                  strokeDasharray="4 4"
+                />
+              );
+            })
+          )}
+        </svg>
       </div>
+
+      <AnimatePresence>
+        {selectedNode && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 10 }}
+            transition={{ duration: 0.2 }}
+            className="absolute bottom-4 left-4 right-4 spatial-card-heavy p-5 rounded-2xl z-30"
+          >
+            <h3 className="font-heading text-lg font-bold text-text-primary mb-1">
+              {selectedNode.topic}
+            </h3>
+            <p className="text-[10px] text-text-muted uppercase tracking-widest mb-3 font-bold">
+              Progress: {Math.round(selectedNode.progress * 100)}%
+            </p>
+            <p className="text-sm text-text-secondary mb-4 line-clamp-2">
+              {selectedNode.description}
+            </p>
+            <button
+              onClick={() => {
+                const problem = problems.find(p => p.topic === selectedNode.topic);
+                if (problem) onSelectProblem(problem);
+              }}
+              className="spatial-btn-solid px-5 py-2.5 text-sm font-bold uppercase tracking-wider cursor-pointer"
+            >
+              Start {selectedNode.topic}
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

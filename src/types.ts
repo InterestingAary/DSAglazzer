@@ -1,6 +1,21 @@
-export type ALDifficulty = 'Easy' | 'Medium' | 'Hard';
+export type Difficulty = 'Easy' | 'Medium' | 'Hard';
 
-export interface ATestCase {
+export type Topic = 
+  | 'Arrays' 
+  | 'Strings' 
+  | 'Two Pointers'
+  | 'Linked Lists' 
+  | 'Stack & Queue'
+  | 'Binary Search' 
+  | 'Trees' 
+  | 'Heaps' 
+  | 'Graphs' 
+  | 'Dynamic Programming' 
+  | 'Backtracking' 
+  | 'Tries' 
+  | 'Bit Manipulation';
+
+export interface TestCase {
   id: string;
   input: string;
   expectedOutput: string;
@@ -8,12 +23,12 @@ export interface ATestCase {
   isCustom?: boolean;
 }
 
-export interface AProblem {
+export interface Problem {
   id: string;
   title: string;
   slug: string;
-  difficulty: ALDifficulty;
-  topic: string;
+  difficulty: Difficulty;
+  topic: Topic;
   acceptanceRate: string;
   description: string;
   examples: {
@@ -37,16 +52,16 @@ export interface AProblem {
   timeComplexity: string;
   spaceComplexity: string;
   hints: string[];
-  testCases: ATestCase[];
+  testCases: TestCase[];
   status: 'solved' | 'failed' | 'unattempted';
   lastAttempted?: string;
   nextRevisionDate?: string;
   tags: string[];
 }
 
-export interface AUniverseNode {
+export interface UniverseNode {
   id: string;
-  topic: string;
+  topic: Topic;
   progress: number;
   totalProblems: number;
   solvedProblems: number;
@@ -56,30 +71,29 @@ export interface AUniverseNode {
   connections: string[];
 }
 
-export interface AActivityItem {
+export interface ActivityItem {
   id: string;
   type: 'solved' | 'failed' | 'badge' | 'streak' | 'revision';
   title: string;
   detail: string;
   timeAgo: string;
-  difficulty?: ALDifficulty;
+  difficulty?: Difficulty;
   problemId?: string;
-  topic: string;
 }
 
-export interface ARevisionItem {
+export interface RevisionItem {
   id: string;
   problemId: string;
   title: string;
-  topic: string;
-  difficulty: ALDifficulty;
+  topic: Topic;
+  difficulty: Difficulty;
   daysAgo: number;
   urgency: 'urgent' | 'warning' | 'normal';
-  retention: number; // percentage
+  retention: number;
   intervalDays: number;
 }
 
-export interface AUserStats {
+export interface UserStats {
   name: string;
   handle: string;
   streak: number;
@@ -98,7 +112,7 @@ export interface AUserStats {
   rating: number;
 }
 
-export interface AProjectInfo {
+export interface ProjectInfo {
   id: string;
   title: string;
   description: string;

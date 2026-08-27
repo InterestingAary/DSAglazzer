@@ -1,77 +1,216 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { DatabaseProvider } from './context/DatabaseContext';
-import { ThemeProvider } from './context/ThemeContext';
-import ScrollProgress from './components/ScrollProgress';
-import SmoothScroll from './components/SmoothScroll';
-import Footer from './components/Footer';
-import Dashboard from './pages/Dashboard';
-import TodayRevision from './pages/TodayRevision';
-import AllQuestions from './pages/AllQuestions';
-import Calendar from './pages/Calendar';
-import Progress from './pages/Progress';
-import Settings from './pages/Settings';
-import { ErrorBoundary } from './components/ErrorBoundary';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { initialUserStats, universeNodes, sampleProblems, recentActivities, revisionRadarItems } from './data/mockData';
+import { Problem, UserStats, ProjectInfo } from './types';
 import { Navigation } from './components/Navigation';
-import { UniversePage } from './pages/UniversePage';
-import { RoadmapPage } from './pages/RoadmapPage';
-import { RevisionPage } from './pages/RevisionPage';
-import { TelemetryPage } from './pages/TelemetryPage';
-import { PortfolioPage } from './pages/PortfolioPage';
-import { PracticePage } from './pages/PracticePage';
-import './App.css';
+import { HeroSection } from './components/HeroSection';
+import { DSAUniverse } from './components/DSAUniverse';
+import { CodeEditorWorkspace } from './components/CodeEditorWorkspace';
+import { ProgressAnalytics } from './components/ProgressAnalytics';
+import { RevisionRadar } from './components/RevisionRadar';
+import { RevisionView } from './components/RevisionView';
+import { RoadmapView } from './components/RoadmapView';
+import { PortfolioView } from './components/PortfolioView';
+import { ActivityFeed } from './components/ActivityFeed';
+import { DailyChallengeModal } from './components/DailyChallengeModal';
+import { CosmicBackground } from './components/CosmicBackground';
+import { Footer } from './components/Footer';
 
-function AppContent() {
+const pageVariants = {
+  initial: { opacity: 0, y: 12 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] as const } },
+  exit: { opacity: 0, y: -12, transition: { duration: 0.2 } },
+};
+
+export const App: React.FC = () => {
+  const [currentTab, setCurrentTab] = useState<string>('dashboard');
+  const [activeProblem, setActiveProblem] = useState<Problem | null>(sampleProblems[0]);
+  const [userStats, setUserStats] = useState<UserStats>(initialUserStats);
+  const [isDailyChallengeOpen, setIsDailyChallengeOpen] = useState<boolean>(false);
+  const [isPortfolioModalOpen, setIsPortfolioModalOpen] = useState<boolean>(false);
+
+  const handleSelectProblem = (problem: Problem) => {
+    setActiveProblem(problem);
+    setCurrentTab('practice');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleSelectProblemById = (problemId: string) => {
+    const found = sampleProblems.find(p => p.id === problemId);
+    if (found) {
+      handleSelectProblem(found);
+    }
+  };
+
+  const handleProblemSolved = (problemId: string) => {
+    setUserStats(prev => ({
+      ...prev,
+      totalSolved: prev.totalSolved + 1,
+      problemsThisWeek: prev.problemsThisWeek + 1,
+    }));
+  };
+
+  const portfolioProjects: ProjectInfo[] = [
+    {
+      id: 'proj-1',
+      title: 'DSAglazzer',
+      description: 'Offline-first spaced repetition DSA tracker with heatmap, streaks, and analytics',
+      tech: ['React 19', 'TypeScript', 'Vite', 'Tailwind'],
+      githubUrl: 'https://github.com/InterestingAary/DSAglazzer',
+      liveUrl: 'https://interestingaary.github.io/DSAglazzer/',
+      featured: true,
+    },
+    {
+      id: 'proj-2',
+      title: 'Algorithm Visualizer',
+      description: 'Interactive algorithm visualizations for DSA',
+      tech: ['D3.js', 'React', 'Canvas'],
+      githubUrl: 'https://github.com/InterestingAary/algorithm-visualizer',
+    },
+    {
+      id: 'proj-3',
+      title: 'Code Challenges Bot',
+      description: 'Telegram bot for daily coding problems',
+      tech: ['Node.js', 'Python', 'API'],
+      githubUrl: 'https://github.com/InterestingAary/code-bot',
+    },
+  ];
+
   return (
-    <>
-      <Navigation />
-      <ScrollProgress />
-      <SmoothScroll />
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 z-[80] rounded-lg bg-[#10b981] px-4 py-2 text-black font-mono font-bold"
-      >
-        Skip to main content
-      </a>
+    <div className="min-h-screen bg-deep text-text-primary flex flex-col selection:bg-accent/40 selection:text-white">
+      <CosmicBackground />
 
-      <div className="relative flex min-h-screen flex-col pt-16 bg-[#080808] text-zinc-100 selection:bg-[#10b981]/30 selection:text-[#10b981]">
-        <main id="main-content" className="mx-auto w-full max-w-[1360px] flex-1 px-4 py-6 md:px-6 md:py-8">
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/practice" element={<PracticePage />} />
-            <Route path="/universe" element={<UniversePage />} />
-            <Route path="/roadmap" element={<RoadmapPage />} />
-            <Route path="/revision" element={<RevisionPage />} />
-            <Route path="/telemetry" element={<TelemetryPage />} />
-            <Route path="/portfolio" element={<PortfolioPage />} />
+      <Navigation
+        currentTab={currentTab}
+        onSelectTab={setCurrentTab}
+        userStats={userStats}
+        onOpenDailyChallenge={() => setIsDailyChallengeOpen(true)}
+        onOpenPortfolioModal={() => setIsPortfolioModalOpen(true)}
+      />
 
-            {/* Preserved Secondary Views */}
-            <Route path="/today" element={<TodayRevision />} />
-            <Route path="/questions" element={<AllQuestions />} />
-            <Route path="/calendar" element={<Calendar />} />
-            <Route path="/progress" element={<Progress />} />
-            <Route path="/settings" element={<Settings />} />
+      <main className="flex-1 w-full max-w-[1280px] mx-auto px-4 sm:px-8 py-6 flex flex-col gap-6 relative z-10">
+        <AnimatePresence mode="wait">
+          {currentTab === 'dashboard' && (
+            <motion.div key="dashboard" variants={pageVariants} initial="initial" animate="animate" exit="exit" className="flex flex-col gap-6">
+              <HeroSection userStats={userStats} />
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                <div className="lg:col-span-2">
+                  <DSAUniverse
+                    nodes={universeNodes}
+                    problems={sampleProblems}
+                    onSelectProblem={handleSelectProblem}
+                  />
+                </div>
+                <div className="flex flex-col gap-5">
+                  <RevisionRadar
+                    items={revisionRadarItems}
+                    onReviewItem={(problemId) => handleSelectProblemById(problemId)}
+                  />
+                  <ActivityFeed
+                    activities={recentActivities}
+                    onSelectProblemById={handleSelectProblemById}
+                  />
+                </div>
+              </div>
+            </motion.div>
+          )}
 
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </>
+          {currentTab === 'practice' && (
+            <motion.div key="practice" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <CodeEditorWorkspace
+                problem={activeProblem || sampleProblems[0]}
+                onProblemSolved={handleProblemSolved}
+              />
+            </motion.div>
+          )}
+
+          {currentTab === 'roadmap' && (
+            <motion.div key="roadmap" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <RoadmapView
+                nodes={universeNodes}
+                onSelectProblemById={handleSelectProblemById}
+              />
+            </motion.div>
+          )}
+
+          {currentTab === 'progress' && (
+            <motion.div key="progress" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <ProgressAnalytics
+                userStats={userStats}
+                nodes={universeNodes}
+              />
+            </motion.div>
+          )}
+
+          {currentTab === 'revision' && (
+            <motion.div key="revision" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <RevisionView
+                items={revisionRadarItems}
+                onReviewProblem={handleSelectProblemById}
+              />
+            </motion.div>
+          )}
+
+          {currentTab === 'portfolio' && (
+            <motion.div key="portfolio" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <PortfolioView projects={portfolioProjects} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </main>
+
+      <Footer onSelectTab={setCurrentTab} />
+
+      <AnimatePresence>
+        {isDailyChallengeOpen && (
+          <DailyChallengeModal
+            problem={sampleProblems[0]}
+            onClose={() => setIsDailyChallengeOpen(false)}
+            onStartChallenge={(problem) => {
+              setIsDailyChallengeOpen(false);
+              handleSelectProblem(problem);
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {isPortfolioModalOpen && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <div
+              className="absolute inset-0 bg-deep/80 backdrop-blur-xl"
+              onClick={() => setIsPortfolioModalOpen(false)}
+            />
+            <motion.div
+              className="relative spatial-card-heavy max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto rounded-3xl"
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] as const }}
+            >
+              <div className="flex justify-between items-center pb-4 border-b border-glass-border mb-4">
+                <h2 className="text-xl font-bold uppercase tracking-tight text-text-primary gradient-text">Aaryan Mittal • Bio & Profile</h2>
+                <button
+                  onClick={() => setIsPortfolioModalOpen(false)}
+                  className="spatial-btn px-3 py-1.5 text-xs uppercase font-bold text-text-secondary cursor-pointer"
+                >
+                  Close
+                </button>
+              </div>
+              <div className="py-2">
+                <PortfolioView projects={portfolioProjects} />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
-}
-
-export function App() {
-  return (
-    <ThemeProvider>
-      <DatabaseProvider>
-        <BrowserRouter basename={import.meta.env.BASE_URL}>
-          <ErrorBoundary>
-            <AppContent />
-          </ErrorBoundary>
-        </BrowserRouter>
-      </DatabaseProvider>
-    </ThemeProvider>
-  );
-}
+};
 
 export default App;
