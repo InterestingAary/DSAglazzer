@@ -14,25 +14,23 @@ export const Footer: React.FC<FooterProps> = ({onSelectTab}) => {
     { id: 'roadmap', label: 'Roadmap' },
     { id: 'progress', label: 'Progress' },
     { id: 'revision', label: 'Revision' },
-    { id: 'portfolio', label: 'Portfolio' },
   ];
 
   return (
-    <footer className="glass-panel-heavy border-t border-glass-border mt-auto">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-8 py-8 pb-6">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-2">
-            <div className="text-xl sm:text-2xl font-black tracking-tighter text-text-primary">
-              ALGO<span className="text-accent">.</span>ELITE
-            </div>
+    <footer className="bg-[var(--color-surface)] border-t border-[var(--color-border-subtle)] mt-auto">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-6">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-1.5">
+            <span className="text-sm font-bold text-[var(--color-text-primary)]">DSA</span>
+            <span className="text-sm font-bold text-[var(--color-accent)]">GLAZZER</span>
           </div>
 
-          <div className="hidden md:flex items-center gap-8 text-xs font-semibold uppercase tracking-widest text-text-secondary">
+          <div className="hidden md:flex items-center gap-6 text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
             {navItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => onSelectTab(item.id)}
-                className="py-1 transition-all duration-200 cursor-pointer text-text-secondary hover:text-text-primary"
+                className="py-1 transition-colors duration-150 cursor-pointer text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]"
               >
                 {item.label}
               </button>
@@ -41,7 +39,7 @@ export const Footer: React.FC<FooterProps> = ({onSelectTab}) => {
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 glass-surface rounded-xl text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
+            className="md:hidden p-2 rounded-md text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-elevated)] transition-colors cursor-pointer"
             aria-label="Toggle navigation"
           >
             {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
@@ -49,7 +47,7 @@ export const Footer: React.FC<FooterProps> = ({onSelectTab}) => {
         </div>
 
         {mobileMenuOpen && (
-          <div className="md:hidden glass-surface rounded-xl mt-4 px-4 py-4 space-y-2">
+          <div className="md:hidden bg-[var(--color-surface-elevated)] rounded-lg mt-3 px-3 py-3 space-y-1">
             {navItems.map((item) => (
               <button
                 key={item.id}
@@ -57,13 +55,19 @@ export const Footer: React.FC<FooterProps> = ({onSelectTab}) => {
                   onSelectTab(item.id);
                   setMobileMenuOpen(false);
                 }}
-                className="w-full flex items-center justify-between px-3 py-2.5 text-xs font-bold uppercase tracking-widest rounded-xl text-text-secondary hover:text-text-primary hover:bg-glass-bg transition-all cursor-pointer"
+                className="w-full flex items-center justify-between px-3 py-2 text-[11px] font-semibold uppercase tracking-wider rounded-md text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] transition-all cursor-pointer"
               >
                 <span>{item.label}</span>
               </button>
             ))}
           </div>
         )}
+
+        <div className="mt-4 pt-4 border-t border-[var(--color-border-subtle)] text-center">
+          <p className="text-[10px] text-[var(--color-text-muted)] font-mono">
+            © 2024 DSAglazzer · Built with React, TypeScript, Vite
+          </p>
+        </div>
       </div>
     </footer>
   );

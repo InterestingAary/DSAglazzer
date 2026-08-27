@@ -2,6 +2,7 @@ import React, { createContext, useContext, useReducer, useEffect, useCallback } 
 import { AppState, UserStats, ProblemStatus, RevisionItem, ActivityItem, Language, Difficulty, Topic } from '../types';
 import { loadState, saveState, updateProblemStatus, addActivity, updateStats } from '../utils/storage';
 import { calculateSM2, ratingToQuality } from '../utils/spacedRepetition';
+import { problems } from '../data/problems';
 
 interface AppContextType {
   state: AppState;
@@ -151,9 +152,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, [state.problemStatuses]);
 
   const getTopicProgress = useCallback((topic: Topic) => {
-    const statuses = Object.values(state.problemStatuses);
-    const solved = statuses.filter(s => s.status === 'solved').length;
-    return { solved, total: 0 };
+    const topicProblems = problems.filter(p => p.topic === topic);
+    const total = topicProblems.length;
+    const solved = topicProblems.filter(p => state.problemStatuses[p.id]?.status === 'solved').length;
+    return { solved, total };
   }, [state.problemStatuses]);
 
   return (

@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Flame, Bell, Code2, Compass, BarChart3, RotateCcw,
-  GitFork, Globe, Terminal, ExternalLink, CheckCircle2,
-  Menu, X, User
+  GitFork, Globe, ExternalLink, CheckCircle2,
+  Menu, X, User, Search, ChevronDown
 } from 'lucide-react';
 import { UserStats } from '../types';
 
@@ -19,49 +19,53 @@ export const Navigation: React.FC<NavigationProps> = ({currentTab, onSelectTab, 
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchFocused, setSearchFocused] = useState(false);
 
   const navItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: Terminal },
+    { id: 'dashboard', label: 'Dashboard', icon: Compass },
     { id: 'practice', label: 'Practice', icon: Code2 },
     { id: 'roadmap', label: 'Roadmap', icon: Compass },
     { id: 'progress', label: 'Progress', icon: BarChart3 },
     { id: 'revision', label: 'Revision', icon: RotateCcw },
-    { id: 'portfolio', label: 'Portfolio', icon: Globe },
   ];
 
   return (
-    <nav className="sticky top-0 z-50 w-full glass-panel-heavy border-b-0 rounded-none">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-8 h-16 flex items-center justify-between">
-        <div className="flex items-center gap-8 lg:gap-12">
+    <nav className="sticky top-0 z-50 w-full bg-[var(--color-surface)]/95 backdrop-blur-md border-b border-[var(--color-border-subtle)]">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+        {/* Left: Logo + Nav */}
+        <div className="flex items-center gap-6">
           <button
             onClick={() => onSelectTab('dashboard')}
-            className="flex items-center gap-2 group text-left cursor-pointer"
+            className="flex items-center gap-1.5 group text-left cursor-pointer shrink-0"
           >
-            <div className="text-xl sm:text-2xl font-black tracking-tighter text-text-primary group-hover:glow-text-accent transition-all">
-              ALGO<span className="text-accent">.</span>ELITE
-            </div>
+            <span className="text-base font-bold tracking-tight text-[var(--color-text-primary)]">
+              DSA
+            </span>
+            <span className="text-base font-bold tracking-tight text-[var(--color-accent)]">
+              GLAZZER
+            </span>
           </button>
 
-          <div className="hidden md:flex items-center gap-1">
+          {/* Desktop nav */}
+          <div className="hidden md:flex items-center gap-0.5">
             {navItems.map((item) => {
               const isActive = currentTab === item.id;
               return (
                 <button
                   key={item.id}
                   onClick={() => onSelectTab(item.id)}
-                  className={`relative px-3 py-2 text-xs font-semibold uppercase tracking-widest transition-all duration-200 rounded-xl cursor-pointer ${
+                  className={`relative px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider transition-all duration-150 rounded-md cursor-pointer ${
                     isActive
-                      ? 'text-text-primary bg-glass-bg'
-                      : 'text-text-secondary hover:text-text-primary hover:bg-glass-bg/50'
+                      ? 'text-[var(--color-text-primary)] bg-[var(--color-accent)]/10'
+                      : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-elevated)]'
                   }`}
                 >
                   {item.label}
                   {isActive && (
                     <motion.span
                       layoutId="nav-indicator"
-                      className="absolute bottom-0 left-2 right-2 h-[2px] bg-accent rounded-full"
-                      style={{ boxShadow: '0 0 12px rgba(99,102,241,0.5)' }}
-                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                      className="absolute bottom-0 left-3 right-3 h-[2px] bg-[var(--color-accent)] rounded-full"
+                      transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                     />
                   )}
                 </button>
@@ -70,157 +74,172 @@ export const Navigation: React.FC<NavigationProps> = ({currentTab, onSelectTab, 
           </div>
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-3">
-          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 glass-surface rounded-xl">
-            <span className="w-2 h-2 bg-accent-emerald rounded-full animate-glow-pulse" />
-            <span className="font-mono text-[11px] font-bold tracking-wider uppercase text-text-primary">
-              {userStats.streak}D STREAK
+        {/* Right: Streak, Search, Blitz, Notifications, Profile */}
+        <div className="flex items-center gap-2">
+          {/* Streak badge */}
+          <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[var(--color-surface-elevated)] border border-[var(--color-border-subtle)]">
+            <Flame className="w-3 h-3 text-[var(--color-accent-amber)]" />
+            <span className="font-mono text-[11px] font-semibold text-[var(--color-text-primary)]">
+              {userStats.streak}D
             </span>
           </div>
 
+          {/* Search (placeholder) */}
+          <button
+            className="hidden sm:flex p-2 rounded-md text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-elevated)] transition-colors cursor-pointer"
+            aria-label="Search"
+          >
+            <Search className="w-4 h-4" />
+          </button>
+
+          {/* Daily Blitz */}
           <button
             onClick={onOpenDailyChallenge}
-            className="spatial-btn px-4 py-1.5 text-xs uppercase font-bold tracking-widest text-accent cursor-pointer"
+            className="spatial-btn px-3 py-1.5 text-[11px] uppercase font-semibold tracking-wider text-[var(--color-accent)] cursor-pointer"
           >
             Blitz
           </button>
 
+          {/* Notifications */}
           <div className="relative">
             <button
               onClick={() => {
                 setShowNotifications(!showNotifications);
                 setShowProfileMenu(false);
               }}
-              className="p-2 text-text-secondary hover:text-text-primary glass-surface rounded-xl transition-colors relative cursor-pointer"
+              className="p-2 rounded-md text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-elevated)] transition-colors relative cursor-pointer"
               aria-label="Notifications"
             >
-              <Bell className="w-3.5 h-3.5" />
-              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-accent rounded-full animate-glow-pulse" />
+              <Bell className="w-4 h-4" />
+              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-[var(--color-accent)] rounded-full" />
             </button>
 
             <AnimatePresence>
               {showNotifications && (
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.95, y: -4 }}
+                  initial={{ opacity: 0, scale: 0.96, y: -4 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95, y: -4 }}
-                  transition={{ duration: 0.15 }}
-                  className="absolute right-0 mt-2 w-80 spatial-card p-4 z-50"
+                  exit={{ opacity: 0, scale: 0.96, y: -4 }}
+                  transition={{ duration: 0.12 }}
+                  className="absolute right-0 mt-2 w-80 card-elevated p-4 z-50"
                 >
-                  <div className="flex items-center justify-between border-b border-glass-border pb-2 mb-3">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
-                      System Telemetry
+                  <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] pb-2 mb-3">
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
+                      Notifications
                     </span>
-                    <span className="text-[10px] text-accent font-mono">3 New Alerts</span>
                   </div>
-                  <div className="space-y-2 max-h-64 overflow-y-auto pr-1 font-mono text-xs">
-                    {[
-                      { icon: CheckCircle2, color: 'text-accent-emerald', title: 'Merge Intervals Verified', detail: 'All 38 test suites executed successfully.' },
-                      { icon: RotateCcw, color: 'text-accent-amber', title: 'DP Review Due', detail: '18 days since last Knapsack practice.' },
-                      { icon: Flame, color: 'text-accent-emerald', title: 'Streak Milestone', detail: 'Consistency Machine badge unlocked.' },
-                    ].map((alert, i) => (
-                      <div key={i} className="p-2.5 glass-surface rounded-xl text-xs flex gap-2.5 items-start">
-                        <alert.icon className={`w-3.5 h-3.5 ${alert.color} mt-0.5 shrink-0`} />
-                        <div>
-                          <p className="text-text-primary font-bold uppercase tracking-wide text-[11px]">{alert.title}</p>
-                          <p className="text-[10px] text-text-muted">{alert.detail}</p>
-                        </div>
-                      </div>
-                    ))}
+                  <div className="space-y-2 max-h-64 overflow-y-auto">
+                    {userStats.totalSolved === 0 && userStats.streak === 0 ? (
+                      <p className="text-[11px] text-[var(--color-text-muted)] text-center py-3">No notifications yet.</p>
+                    ) : (
+                      <>
+                        {userStats.totalSolved > 0 && (
+                          <div className="p-2.5 rounded-lg bg-[var(--color-surface-elevated)] text-xs flex gap-2.5 items-start">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-[var(--color-accent-emerald)] mt-0.5 shrink-0" />
+                            <div>
+                              <p className="text-[var(--color-text-primary)] font-semibold text-[11px]">Problems Solved</p>
+                              <p className="text-[10px] text-[var(--color-text-muted)]">{userStats.totalSolved} problems solved so far.</p>
+                            </div>
+                          </div>
+                        )}
+                        {userStats.streak > 0 && (
+                          <div className="p-2.5 rounded-lg bg-[var(--color-surface-elevated)] text-xs flex gap-2.5 items-start">
+                            <Flame className="w-3.5 h-3.5 text-[var(--color-accent-emerald)] mt-0.5 shrink-0" />
+                            <div>
+                              <p className="text-[var(--color-text-primary)] font-semibold text-[11px]">Streak Active</p>
+                              <p className="text-[10px] text-[var(--color-text-muted)]">{userStats.streak}-day streak.</p>
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    )}
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
 
+          {/* Profile */}
           <div className="relative">
             <button
               onClick={() => {
                 setShowProfileMenu(!showProfileMenu);
                 setShowNotifications(false);
               }}
-              className="flex items-center gap-2 px-2.5 py-1 glass-surface rounded-xl hover:border-accent/30 transition-all cursor-pointer"
+              className="flex items-center gap-2 px-2 py-1 rounded-md hover:bg-[var(--color-surface-elevated)] transition-colors cursor-pointer"
             >
-              <div className="w-5 h-5 bg-accent rounded-lg flex items-center justify-center font-bold text-[10px] text-white">
+              <div className="w-6 h-6 bg-[var(--color-accent)] rounded-md flex items-center justify-center font-bold text-[10px] text-white">
                 A
               </div>
-              <span className="hidden sm:inline text-xs font-mono font-bold text-text-primary">
-                {userStats.handle}
-              </span>
+              <ChevronDown className="w-3 h-3 text-[var(--color-text-muted)] hidden sm:block" />
             </button>
 
             <AnimatePresence>
               {showProfileMenu && (
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.95, y: -4 }}
+                  initial={{ opacity: 0, scale: 0.96, y: -4 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95, y: -4 }}
-                  transition={{ duration: 0.15 }}
-                  className="absolute right-0 mt-2 w-64 spatial-card p-4 z-50"
+                  exit={{ opacity: 0, scale: 0.96, y: -4 }}
+                  transition={{ duration: 0.12 }}
+                  className="absolute right-0 mt-2 w-56 card-elevated p-3 z-50"
                 >
-                  <div className="flex items-center gap-3 pb-3 border-b border-glass-border">
-                    <div className="w-9 h-9 bg-accent rounded-xl flex items-center justify-center font-black text-sm text-white">
+                  <div className="flex items-center gap-2.5 pb-2.5 border-b border-[var(--color-border-subtle)] mb-2">
+                    <div className="w-8 h-8 bg-[var(--color-accent)] rounded-lg flex items-center justify-center font-bold text-xs text-white">
                       A
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-sm font-bold text-text-primary uppercase tracking-tight">{userStats.name}</span>
-                      <span className="text-xs font-mono text-text-muted">@{userStats.handle}</span>
-                      <span className="text-[10px] text-accent font-mono uppercase tracking-wider font-bold">
-                        {userStats.rank}
-                      </span>
+                      <span className="text-xs font-semibold text-[var(--color-text-primary)]">{userStats.name}</span>
+                      <span className="text-[10px] font-mono text-[var(--color-text-muted)]">@{userStats.handle}</span>
                     </div>
                   </div>
 
-                  <div className="py-2 space-y-1 font-mono text-xs">
+                  <div className="space-y-0.5 text-[11px]">
                     <button
                       onClick={() => {
                         onOpenPortfolioModal();
                         setShowProfileMenu(false);
                       }}
-                      className="w-full text-left px-2.5 py-2 glass-surface rounded-xl text-text-secondary hover:text-text-primary flex items-center justify-between transition-colors cursor-pointer"
+                      className="w-full text-left px-2.5 py-2 rounded-md text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-elevated)] flex items-center gap-2 transition-colors cursor-pointer"
                     >
-                      <span className="flex items-center gap-2">
-                        <User className="w-3.5 h-3.5 text-accent" /> Bio & Projects
-                      </span>
+                      <User className="w-3.5 h-3.5 text-[var(--color-accent)]" /> Bio & Projects
                     </button>
-
                     <a
                       href="https://github.com/InterestingAary"
                       target="_blank"
                       rel="noreferrer"
-                      className="w-full px-2.5 py-2 glass-surface rounded-xl text-text-secondary hover:text-text-primary flex items-center justify-between transition-colors"
+                      className="w-full px-2.5 py-2 rounded-md text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-elevated)] flex items-center justify-between transition-colors"
                     >
                       <span className="flex items-center gap-2">
-                        <GitFork className="w-3.5 h-3.5 text-accent" /> GitHub Profile
+                        <GitFork className="w-3.5 h-3.5 text-[var(--color-accent)]" /> GitHub
                       </span>
-                      <ExternalLink className="w-3 h-3 text-text-muted" />
+                      <ExternalLink className="w-3 h-3 text-[var(--color-text-muted)]" />
                     </a>
-
                     <a
                       href="https://interestingaary.github.io/"
                       target="_blank"
                       rel="noreferrer"
-                      className="w-full px-2.5 py-2 glass-surface rounded-xl text-text-secondary hover:text-text-primary flex items-center justify-between transition-colors"
+                      className="w-full px-2.5 py-2 rounded-md text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-elevated)] flex items-center justify-between transition-colors"
                     >
                       <span className="flex items-center gap-2">
-                        <Globe className="w-3.5 h-3.5 text-accent" /> Live Portfolio
+                        <Globe className="w-3.5 h-3.5 text-[var(--color-accent)]" /> Portfolio
                       </span>
-                      <ExternalLink className="w-3 h-3 text-text-muted" />
+                      <ExternalLink className="w-3 h-3 text-[var(--color-text-muted)]" />
                     </a>
                   </div>
 
-                  <div className="pt-3 border-t border-glass-border flex justify-between items-center text-[10px] text-text-muted font-mono uppercase tracking-wider">
-                    <span>Rating: <strong className="text-text-primary">{userStats.rating}</strong></span>
-                    <span className="text-accent font-bold">{userStats.totalSolved} SOLVED</span>
+                  <div className="pt-2 mt-2 border-t border-[var(--color-border-subtle)] flex justify-between items-center text-[10px] text-[var(--color-text-muted)] font-mono">
+                    <span>Rating: <strong className="text-[var(--color-text-primary)]">{userStats.rating}</strong></span>
+                    <span className="text-[var(--color-accent)] font-semibold">{userStats.totalSolved} solved</span>
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
 
+          {/* Mobile menu toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 glass-surface rounded-xl text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
+            className="md:hidden p-2 rounded-md text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-elevated)] transition-colors cursor-pointer"
             aria-label="Toggle navigation"
           >
             {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
@@ -228,16 +247,17 @@ export const Navigation: React.FC<NavigationProps> = ({currentTab, onSelectTab, 
         </div>
       </div>
 
+      {/* Mobile menu */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2 }}
-            className="md:hidden glass-surface border-t border-glass-border overflow-hidden"
+            transition={{ duration: 0.15 }}
+            className="md:hidden bg-[var(--color-surface)] border-t border-[var(--color-border-subtle)] overflow-hidden"
           >
-            <div className="px-4 py-4 space-y-2">
+            <div className="px-4 py-3 space-y-1">
               {navItems.map((item) => {
                 const isActive = currentTab === item.id;
                 return (
@@ -247,14 +267,14 @@ export const Navigation: React.FC<NavigationProps> = ({currentTab, onSelectTab, 
                       onSelectTab(item.id);
                       setMobileMenuOpen(false);
                     }}
-                    className={`w-full flex items-center justify-between px-4 py-3 text-xs font-bold uppercase tracking-widest rounded-xl transition-all cursor-pointer ${
+                    className={`w-full flex items-center justify-between px-3 py-2.5 text-[11px] font-semibold uppercase tracking-wider rounded-md transition-all cursor-pointer ${
                       isActive
-                        ? 'glass-surface text-accent'
-                        : 'text-text-secondary hover:text-text-primary hover:bg-glass-bg'
+                        ? 'text-[var(--color-accent)] bg-[var(--color-accent)]/10'
+                        : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-elevated)]'
                     }`}
                   >
                     <span>{item.label}</span>
-                    {isActive && <span className="text-[10px] font-mono text-accent">ACTIVE</span>}
+                    {isActive && <span className="text-[10px] font-mono text-[var(--color-accent)]">ACTIVE</span>}
                   </button>
                 );
               })}

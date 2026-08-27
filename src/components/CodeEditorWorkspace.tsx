@@ -24,9 +24,9 @@ const LANG_MAP: Record<Language, { label: string; ext: any }> = {
 };
 
 const DIFFICULTY_COLORS: Record<string, string> = {
-  Easy: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20',
-  Medium: 'text-amber-400 bg-amber-400/10 border-amber-400/20',
-  Hard: 'text-rose-400 bg-rose-400/10 border-rose-400/20',
+  Easy: 'text-[var(--color-accent-emerald)] bg-[var(--color-accent-emerald)]/10 border-[var(--color-accent-emerald)]/20',
+  Medium: 'text-[var(--color-accent-amber)] bg-[var(--color-accent-amber)]/10 border-[var(--color-accent-amber)]/20',
+  Hard: 'text-[var(--color-accent-danger)] bg-[var(--color-accent-danger)]/10 border-[var(--color-accent-danger)]/20',
 };
 
 export const CodeEditorWorkspace: React.FC<CodeEditorWorkspaceProps> = ({ problem, onBack }) => {
@@ -90,31 +90,31 @@ export const CodeEditorWorkspace: React.FC<CodeEditorWorkspaceProps> = ({ proble
 
   return (
     <motion.section
-      className="spatial-card p-4 sm:p-6 noise-overlay gradient-border"
-      initial={{ opacity: 0, y: 20 }}
+      className="card p-4 sm:p-6"
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.4 }}
     >
       <div className="relative z-10">
         {/* Header */}
-        <div className="flex items-center gap-3 mb-4">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-4">
           <button
             onClick={onBack}
             className="spatial-btn px-3 py-1.5 text-xs uppercase font-bold text-text-secondary cursor-pointer"
           >
             ← Back
           </button>
-          <div className="flex-1">
-            <div className="flex items-center gap-3">
+          <div className="flex-1 min-w-0">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               <h2 className="text-lg font-bold text-text-primary">{problem.title}</h2>
               <span className={`px-2 py-0.5 text-xs font-bold rounded-full border ${DIFFICULTY_COLORS[problem.difficulty]}`}>
                 {problem.difficulty}
               </span>
-              <span className="px-2 py-0.5 text-xs font-mono text-text-muted bg-glass-surface rounded-full">
+              <span className="px-2 py-0.5 text-xs font-mono text-[var(--color-text-muted)] bg-[var(--color-surface-elevated)] rounded-full border border-[var(--color-border-subtle)]">
                 {problem.topic}
               </span>
               {solved && (
-                <span className="px-2 py-0.5 text-xs font-bold text-emerald-400 bg-emerald-400/10 rounded-full border border-emerald-400/20">
+                <span className="px-2 py-0.5 text-xs font-bold text-[var(--color-accent-emerald)] bg-[var(--color-accent-emerald)]/10 rounded-full border border-[var(--color-accent-emerald)]/20">
                   ✓ Solved
                 </span>
               )}
@@ -125,12 +125,12 @@ export const CodeEditorWorkspace: React.FC<CodeEditorWorkspaceProps> = ({ proble
         {/* Main Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Left: Problem Description */}
-          <div className="glass-surface rounded-2xl p-4 max-h-[70vh] overflow-y-auto">
-            <div className="flex gap-2 mb-4 border-b border-glass-border pb-2">
+          <div className="bg-[var(--color-surface-elevated)] rounded-xl p-4 max-h-[70vh] overflow-y-auto">
+            <div className="flex gap-2 mb-4 border-b border-[var(--color-border-subtle)] pb-2">
               <button
                 onClick={() => setActiveTestTab('description')}
                 className={`px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-lg transition-colors cursor-pointer ${
-                  activeTestTab === 'description' ? 'bg-accent/20 text-accent' : 'text-text-muted hover:text-text-secondary'
+                  activeTestTab === 'description' ? 'bg-[var(--color-accent)]/20 text-[var(--color-accent)]' : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]'
                 }`}
               >
                 Description
@@ -138,7 +138,7 @@ export const CodeEditorWorkspace: React.FC<CodeEditorWorkspaceProps> = ({ proble
               <button
                 onClick={() => setActiveTestTab('submissions')}
                 className={`px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-lg transition-colors cursor-pointer ${
-                  activeTestTab === 'submissions' ? 'bg-accent/20 text-accent' : 'text-text-muted hover:text-text-secondary'
+                  activeTestTab === 'submissions' ? 'bg-[var(--color-accent)]/20 text-[var(--color-accent)]' : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]'
                 }`}
               >
                 Submissions {testResults ? `(${testResults.passed}/${testResults.passed + testResults.failed})` : ''}
@@ -150,8 +150,8 @@ export const CodeEditorWorkspace: React.FC<CodeEditorWorkspaceProps> = ({ proble
                 <p className="text-sm text-text-secondary leading-relaxed whitespace-pre-wrap">{problem.description}</p>
 
                 {problem.examples.map((ex, idx) => (
-                  <div key={idx} className="glass-surface rounded-xl p-3">
-                    <p className="font-bold text-accent text-xs uppercase tracking-wider">Example {idx + 1}</p>
+                  <div key={idx} className="bg-[var(--color-surface-elevated)] rounded-xl p-3 border border-[var(--color-border-subtle)]">
+                    <p className="font-bold text-[var(--color-accent)] text-xs uppercase tracking-wider">Example {idx + 1}</p>
                     <div className="mt-2 space-y-1 font-mono text-xs">
                       <div><span className="text-text-muted">Input:</span> <span className="text-text-primary">{ex.input}</span></div>
                       <div><span className="text-text-muted">Output:</span> <span className="text-text-primary">{ex.output}</span></div>
@@ -169,7 +169,7 @@ export const CodeEditorWorkspace: React.FC<CodeEditorWorkspaceProps> = ({ proble
                   </ul>
                 </div>
 
-                <div className="flex gap-2 pt-2 border-t border-glass-border">
+                <div className="flex gap-2 pt-2 border-t border-[var(--color-border-subtle)]">
                   <span className="text-xs text-text-muted">Time: {problem.timeComplexity}</span>
                   <span className="text-xs text-text-muted">Space: {problem.spaceComplexity}</span>
                 </div>
@@ -188,10 +188,10 @@ export const CodeEditorWorkspace: React.FC<CodeEditorWorkspaceProps> = ({ proble
                       exit={{ height: 0, opacity: 0 }}
                       className="overflow-hidden"
                     >
-                      <div className="glass-surface rounded-xl p-3 space-y-2">
+                      <div className="bg-[var(--color-surface-elevated)] rounded-xl p-3 space-y-2 border border-[var(--color-border-subtle)]">
                         {problem.hints.map((hint, i) => (
                           <div key={i} className="text-xs text-text-secondary">
-                            <span className="text-accent font-bold">Hint {i + 1}:</span> {hint}
+                            <span className="text-[var(--color-accent)] font-bold">Hint {i + 1}:</span> {hint}
                           </div>
                         ))}
                       </div>
@@ -204,14 +204,14 @@ export const CodeEditorWorkspace: React.FC<CodeEditorWorkspaceProps> = ({ proble
                 {testResults ? (
                   <>
                     <div className="flex gap-4 text-sm font-bold">
-                      <span className="text-emerald-400">✓ {testResults.passed} Passed</span>
-                      <span className="text-rose-400">✗ {testResults.failed} Failed</span>
+                      <span className="text-[var(--color-accent-emerald)]">✓ {testResults.passed} Passed</span>
+                      <span className="text-[var(--color-accent-danger)]">✗ {testResults.failed} Failed</span>
                       {executionTime && <span className="text-text-muted">{executionTime}ms</span>}
                     </div>
                     {testResults.results.map((r) => (
-                      <div key={r.id} className={`glass-surface rounded-xl p-3 border ${r.passed ? 'border-emerald-400/20' : 'border-rose-400/20'}`}>
+                      <div key={r.id} className={`bg-[var(--color-surface-elevated)] rounded-xl p-3 border ${r.passed ? 'border-[var(--color-accent-emerald)]/20' : 'border-[var(--color-accent-danger)]/20'}`}>
                         <div className="flex items-center gap-2 mb-1">
-                          <span className={r.passed ? 'text-emerald-400' : 'text-rose-400'}>
+                          <span className={r.passed ? 'text-[var(--color-accent-emerald)]' : 'text-[var(--color-accent-danger)]'}>
                             {r.passed ? '✓' : '✗'}
                           </span>
                           <span className="text-xs font-bold text-text-primary">Test {r.id}</span>
@@ -219,9 +219,9 @@ export const CodeEditorWorkspace: React.FC<CodeEditorWorkspaceProps> = ({ proble
                         {!r.passed && (
                           <div className="mt-2 space-y-1 font-mono text-xs">
                             <div><span className="text-text-muted">Input:</span> <span className="text-text-primary">{r.input}</span></div>
-                            <div><span className="text-text-muted">Expected:</span> <span className="text-emerald-400">{r.expected}</span></div>
-                            <div><span className="text-text-muted">Got:</span> <span className="text-rose-400">{r.actual}</span></div>
-                            {r.error && <div><span className="text-text-muted">Error:</span> <span className="text-rose-400">{r.error}</span></div>}
+                            <div><span className="text-text-muted">Expected:</span> <span className="text-[var(--color-accent-emerald)]">{r.expected}</span></div>
+                            <div><span className="text-text-muted">Got:</span> <span className="text-[var(--color-accent-danger)]">{r.actual}</span></div>
+                            {r.error && <div><span className="text-text-muted">Error:</span> <span className="text-[var(--color-accent-danger)]">{r.error}</span></div>}
                           </div>
                         )}
                       </div>
@@ -244,7 +244,7 @@ export const CodeEditorWorkspace: React.FC<CodeEditorWorkspaceProps> = ({ proble
                     onClick={() => handleLanguageChange(lang)}
                     className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider rounded-lg transition-all cursor-pointer ${
                       selectedLanguage === lang
-                        ? 'bg-accent/20 text-accent border border-accent/30'
+                        ? 'bg-accent/20 text-[var(--color-accent)] border border-accent/30'
                         : 'text-text-muted hover:text-text-secondary border border-transparent'
                     }`}
                   >
@@ -254,7 +254,7 @@ export const CodeEditorWorkspace: React.FC<CodeEditorWorkspaceProps> = ({ proble
               </div>
             </div>
 
-            <div className="glass-surface rounded-2xl overflow-hidden border border-glass-border" style={{ minHeight: '400px' }}>
+            <div className="bg-[var(--color-surface-elevated)] rounded-xl overflow-hidden border border-[var(--color-border-subtle)]" style={{ minHeight: '400px' }}>
               <CodeMirror
                 value={code}
                 height="400px"

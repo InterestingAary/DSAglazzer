@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { UniverseNode, Problem } from '../types';
+import { ArrowRight } from 'lucide-react';
 
 interface DSAUniverseProps {
   nodes: UniverseNode[];
@@ -48,7 +49,7 @@ export const DSAUniverse: React.FC<DSAUniverseProps> = ({nodes, problems, onSele
     };
   }, [nodes, problems, onSelectProblem, selectedNode]);
 
-  // Simple 2D orbital layout
+  // Orbital layout
   const angle = Date.now() * 0.0001;
   const nodes3D = nodes.map((node, i) => ({
     ...node,
@@ -63,53 +64,70 @@ export const DSAUniverse: React.FC<DSAUniverseProps> = ({nodes, problems, onSele
   }));
 
   return (
-    <div className="relative spatial-card p-4 overflow-hidden">
+    <div className="relative card p-3 overflow-hidden">
+      <div className="flex items-center justify-between mb-3 px-2">
+        <div className="flex items-center gap-2">
+          <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">DSA Universe</h2>
+          <span className="text-[10px] font-mono text-[var(--color-text-muted)]">{nodes.length} topics</span>
+        </div>
+        <div className="flex flex-wrap items-center gap-3 text-[10px] font-mono text-[var(--color-text-muted)]">
+          <span className="flex items-center gap-1">
+            <span className="w-2 h-2 rounded-full bg-[var(--color-accent)]" /> In Progress
+          </span>
+          <span className="flex items-center gap-1">
+            <span className="w-2 h-2 rounded-full bg-[var(--color-accent-emerald)]" /> Completed
+          </span>
+          <span className="flex items-center gap-1">
+            <span className="w-2 h-2 rounded-full bg-[var(--color-border-default)]" /> Not Started
+          </span>
+        </div>
+      </div>
+
       <canvas
         ref={canvasRef}
         width={800}
         height={600}
-        className="w-full h-auto rounded-2xl"
-        style={{ background: 'rgba(5,5,16,0.6)' }}
+        className="w-full h-auto rounded-lg"
+        style={{ background: 'rgba(8,9,14,0.8)' }}
       />
-      <div className="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none">
+      <div className="absolute inset-0 overflow-hidden rounded-lg pointer-events-none">
         {projectedNodes.map((node) => {
           const scaleRatio = (node.radius / 140);
           const leftPct = (node.x / 800) * 100;
           const topPct = (node.y / 600) * 100;
+          const statusColors = {
+            completed: 'bg-[var(--color-accent-emerald)] text-white',
+            in_progress: 'bg-[var(--color-accent)]/20 text-[var(--color-accent)] border border-[var(--color-accent)]/30',
+            locked: 'bg-[var(--color-surface-elevated)] text-[var(--color-text-muted)] border border-[var(--color-border-subtle)]',
+          };
           return (
             <div
               key={node.id}
-              className={`absolute pointer-events-auto transition-all duration-300 ${
+              className={`absolute pointer-events-auto transition-all duration-200 ${
                 selectedNode?.id === node.id ? 'z-20' : 'z-10'
               }`}
               style={{
                 left: `${leftPct}%`,
                 top: `${topPct}%`,
-                transform: `translate(-50%, -50%) scale(${selectedNode?.id === node.id ? 1.3 : scaleRatio})`,
+                transform: `translate(-50%, -50%) scale(${selectedNode?.id === node.id ? 1.25 : scaleRatio})`,
               }}
               onClick={() => {
                 const problem = problems.find(p => p.topic === node.topic);
                 if (problem) onSelectProblem(problem);
               }}
             >
-              <div className={`relative group w-14 h-14 rounded-2xl flex flex-col items-center justify-center font-bold text-[10px] transition-all duration-300 ${
-                node.status === 'completed'
-                  ? 'bg-accent text-white glow-accent'
-                  : node.status === 'in_progress'
-                  ? 'bg-accent-amber/20 text-accent-amber border border-accent-amber/30'
-                  : 'bg-glass-bg text-text-muted border border-glass-border'
-              }`}>
-                <span className="text-[8px] uppercase tracking-wider leading-none mb-0.5">{node.topic.split(' ')[0]}</span>
-                <span className="text-xs font-black leading-none">{node.solvedProblems}/{node.totalProblems}</span>
+              <div className={`relative group w-14 h-14 rounded-xl flex flex-col items-center justify-center font-bold text-[10px] transition-all duration-200 ${statusColors[node.status]}`}>
+                <span className="text-[8px] uppercase tracking-wider leading-none mb-0.5 opacity-70">{node.topic.split(' ')[0]}</span>
+                <span className="text-xs font-bold leading-none">{node.solvedProblems}/{node.totalProblems}</span>
                 {node.status === 'completed' && (
-                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-accent-emerald rounded-full flex items-center justify-center text-[8px] text-white">✓</div>
+                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-[var(--color-accent-emerald)] rounded-full flex items-center justify-center text-[8px] text-white">✓</div>
                 )}
               </div>
             </div>
           );
         })}
 
-        {/* Connection lines via SVG overlay */}
+        {/* Connection lines */}
         <svg className="absolute inset-0 w-full h-full" viewBox="0 0 800 600">
           {projectedNodes.map((node, i) =>
             projectedNodes.slice(i + 1).map((conn) => {
@@ -119,9 +137,9 @@ export const DSAUniverse: React.FC<DSAUniverseProps> = ({nodes, problems, onSele
                   key={`${node.id}-${conn.id}`}
                   x1={node.x} y1={node.y}
                   x2={conn.x} y2={conn.y}
-                  stroke="rgba(99,102,241,0.2)"
+                  stroke="rgba(99,102,241,0.15)"
                   strokeWidth="1"
-                  strokeDasharray="4 4"
+                  strokeDasharray="3 3"
                 />
               );
             })
@@ -129,33 +147,35 @@ export const DSAUniverse: React.FC<DSAUniverseProps> = ({nodes, problems, onSele
         </svg>
       </div>
 
+      {/* Selected node detail */}
       <AnimatePresence>
         {selectedNode && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 10 }}
-            transition={{ duration: 0.2 }}
-            className="absolute bottom-4 left-4 right-4 spatial-card-heavy p-5 rounded-2xl z-30"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.15 }}
+            className="absolute bottom-3 left-3 right-3 card-elevated p-4 rounded-lg z-30"
           >
-            <h3 className="font-heading text-lg font-bold text-text-primary mb-1">
-              {selectedNode.topic}
-            </h3>
-            <p className="text-[10px] text-text-muted uppercase tracking-widest mb-3 font-bold">
-              Progress: {Math.round(selectedNode.progress)}%
-            </p>
-            <p className="text-sm text-text-secondary mb-4 line-clamp-2">
-              {selectedNode.description}
-            </p>
-            <button
-              onClick={() => {
-                const problem = problems.find(p => p.topic === selectedNode.topic);
-                if (problem) onSelectProblem(problem);
-              }}
-              className="spatial-btn-solid px-5 py-2.5 text-sm font-bold uppercase tracking-wider cursor-pointer"
-            >
-              Start {selectedNode.topic}
-            </button>
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-semibold text-[var(--color-text-primary)]">
+                  {selectedNode.topic}
+                </h3>
+                <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mt-0.5">
+                  {Math.round(selectedNode.progress)}% complete · {selectedNode.description}
+                </p>
+              </div>
+              <button
+                onClick={() => {
+                  const problem = problems.find(p => p.topic === selectedNode.topic);
+                  if (problem) onSelectProblem(problem);
+                }}
+                className="spatial-btn-solid px-4 py-2 text-[11px] font-semibold uppercase tracking-wider cursor-pointer flex items-center gap-1.5"
+              >
+                Start <ArrowRight className="w-3 h-3" />
+              </button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

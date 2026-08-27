@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Problem } from '../types';
+import { X, ArrowRight, Target } from 'lucide-react';
 
 interface DailyChallengeModalProps {
   problem: Problem;
@@ -9,6 +10,12 @@ interface DailyChallengeModalProps {
 }
 
 export const DailyChallengeModal: React.FC<DailyChallengeModalProps> = ({problem, onClose, onStartChallenge}) => {
+  const difficultyColors = {
+    Easy: 'bg-[var(--color-accent-emerald)]/10 text-[var(--color-accent-emerald)] border-[var(--color-accent-emerald)]/20',
+    Medium: 'bg-[var(--color-accent-amber)]/10 text-[var(--color-accent-amber)] border-[var(--color-accent-amber)]/20',
+    Hard: 'bg-[var(--color-accent-danger)]/10 text-[var(--color-accent-danger)] border-[var(--color-accent-danger)]/20',
+  };
+
   return (
     <motion.div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -18,52 +25,60 @@ export const DailyChallengeModal: React.FC<DailyChallengeModalProps> = ({problem
     >
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-deep/80 backdrop-blur-xl"
+        className="absolute inset-0 bg-[var(--color-deep)]/80 backdrop-blur-sm"
         onClick={onClose}
       />
 
       {/* Modal */}
       <motion.div
-        className="relative spatial-card-heavy max-w-md w-full p-8 max-h-[90vh] overflow-y-auto rounded-3xl"
-        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        className="relative card-elevated max-w-md w-full p-6 max-h-[90vh] overflow-y-auto rounded-xl"
+        initial={{ opacity: 0, scale: 0.96, y: 12 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.9, y: 20 }}
-        transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+        exit={{ opacity: 0, scale: 0.96, y: 12 }}
+        transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
       >
-        <div className="flex justify-between items-center mb-6 border-b border-glass-border pb-4">
-          <h2 className="text-xl font-bold uppercase tracking-tight text-text-primary gradient-text">
-            Daily Challenge
-          </h2>
+        <div className="flex justify-between items-center mb-5 border-b border-[var(--color-border-subtle)] pb-4">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-[var(--color-accent)]/10 flex items-center justify-center">
+              <Target className="w-4 h-4 text-[var(--color-accent)]" />
+            </div>
+            <h2 className="text-base font-semibold text-[var(--color-text-primary)]">Daily Challenge</h2>
+          </div>
           <button
             onClick={onClose}
-            className="text-text-muted hover:text-text-primary transition-colors text-lg cursor-pointer"
+            className="p-1.5 rounded-md text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-elevated)] transition-colors cursor-pointer"
           >
-            ✕
+            <X className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="glass-surface rounded-2xl p-5 mb-6">
-          <h3 className="font-heading text-lg font-bold text-text-primary mb-3">
-            {problem.title}
-          </h3>
-          <p className="text-[10px] text-text-muted uppercase tracking-wider mb-4 font-mono">
-            {problem.difficulty} • {problem.topic}
+        <div className="bg-[var(--color-surface-elevated)] rounded-lg p-4 mb-5 border border-[var(--color-border-subtle)]">
+          <div className="flex items-center gap-2 mb-2">
+            <h3 className="font-semibold text-[var(--color-text-primary)] text-sm">
+              {problem.title}
+            </h3>
+            <span className={`text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded border ${difficultyColors[problem.difficulty]}`}>
+              {problem.difficulty}
+            </span>
+          </div>
+          <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mb-3 font-mono">
+            {problem.topic}
           </p>
 
-          <p className="text-sm text-text-secondary leading-relaxed mb-6">
+          <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed mb-4">
             {problem.description}
           </p>
 
-          <div className="grid grid-cols-2 gap-4 mb-6">
+          <div className="grid grid-cols-2 gap-3 mb-4">
             <div>
-              <p className="text-[10px] text-text-muted uppercase tracking-widest mb-2 font-bold">Constraints</p>
-              <p className="text-xs text-text-secondary">{problem.constraints.join('. ')}.</p>
+              <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mb-1.5 font-semibold">Constraints</p>
+              <p className="text-[11px] text-[var(--color-text-secondary)]">{problem.constraints.join('. ')}.</p>
             </div>
             <div>
-              <p className="text-[10px] text-text-muted uppercase tracking-widest mb-2 font-bold">Tags</p>
-              <div className="flex flex-wrap gap-1.5">
+              <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mb-1.5 font-semibold">Tags</p>
+              <div className="flex flex-wrap gap-1">
                 {problem.tags.map((tag) => (
-                  <span key={tag} className="text-[9px] rounded-lg glass-surface px-2 py-1 text-text-secondary">
+                  <span key={tag} className="text-[9px] rounded-md bg-[var(--color-surface-overlay)] border border-[var(--color-border-subtle)] px-1.5 py-0.5 text-[var(--color-text-secondary)]">
                     {tag}
                   </span>
                 ))}
@@ -72,28 +87,28 @@ export const DailyChallengeModal: React.FC<DailyChallengeModalProps> = ({problem
           </div>
 
           <div>
-            <p className="text-[10px] text-text-muted uppercase tracking-widest mb-2 font-bold">Example</p>
+            <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mb-1.5 font-semibold">Example</p>
             {problem.examples.slice(0, 1).map((ex, i) => (
-              <div key={i} className="glass-surface rounded-xl p-3 mt-2">
-                <p className="font-bold text-accent text-xs">Input:</p>
-                <p className="mt-1 break-all text-xs text-text-primary font-mono">{ex.input}</p>
-                <p className="font-bold text-accent mt-2 text-xs">Output:</p>
-                <p className="mt-1 break-all text-xs text-text-primary font-mono">{ex.output}</p>
+              <div key={i} className="bg-[var(--color-surface)] rounded-lg p-3 mt-1 border border-[var(--color-border-subtle)]">
+                <p className="font-semibold text-[var(--color-accent)] text-[11px]">Input:</p>
+                <p className="mt-0.5 break-all text-[11px] text-[var(--color-text-primary)] font-mono">{ex.input}</p>
+                <p className="font-semibold text-[var(--color-accent)] mt-2 text-[11px]">Output:</p>
+                <p className="mt-0.5 break-all text-[11px] text-[var(--color-text-primary)] font-mono">{ex.output}</p>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="pt-4 space-y-3">
+        <div className="space-y-2">
           <button
             onClick={() => onStartChallenge(problem)}
-            className="w-full spatial-btn-solid py-3 text-sm uppercase font-bold tracking-wider cursor-pointer"
+            className="w-full spatial-btn-solid py-2.5 text-[11px] uppercase font-semibold tracking-wider cursor-pointer flex items-center justify-center gap-2"
           >
-            Start Challenge
+            Start Challenge <ArrowRight className="w-3.5 h-3.5" />
           </button>
           <button
             onClick={onClose}
-            className="w-full spatial-btn py-3 text-sm uppercase font-bold tracking-wider text-text-secondary cursor-pointer"
+            className="w-full spatial-btn py-2.5 text-[11px] uppercase font-semibold tracking-wider text-[var(--color-text-secondary)] cursor-pointer"
           >
             Skip
           </button>

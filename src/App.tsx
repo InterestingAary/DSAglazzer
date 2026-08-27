@@ -17,11 +17,12 @@ import { DailyChallengeModal } from './components/DailyChallengeModal';
 import { CosmicBackground } from './components/CosmicBackground';
 import { Footer } from './components/Footer';
 import { ProjectInfo } from './types';
+import { Target, ArrowRight, Zap, Flame, BookOpen } from 'lucide-react';
 
 const pageVariants = {
-  initial: { opacity: 0, y: 12 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] as const } },
-  exit: { opacity: 0, y: -12, transition: { duration: 0.2 } },
+  initial: { opacity: 0, y: 8 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.4, 0, 0.2, 1] as const } },
+  exit: { opacity: 0, y: -8, transition: { duration: 0.15 } },
 };
 
 const AppContent: React.FC = () => {
@@ -57,12 +58,18 @@ const AppContent: React.FC = () => {
     });
   }, [state.problemStatuses]);
 
-  const recentActivities = useMemo(() => state.activities.slice(0, 8), [state.activities]);
+  const recentActivities = useMemo(() => state.activities.slice(0, 6), [state.activities]);
 
   const revisionItems = useMemo(() =>
     state.revisions.filter(r => r.nextReview <= Date.now() + 7 * 24 * 60 * 60 * 1000),
     [state.revisions]
   );
+
+  const todayMissionProblems = useMemo(() => {
+    const unsolved = problems.filter(p => !state.problemStatuses[p.id] || state.problemStatuses[p.id].status !== 'solved');
+    const shuffled = [...unsolved].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, 3);
+  }, [state.problemStatuses]);
 
   const handleSelectProblem = (problem: Problem) => {
     setActiveProblem(problem);
@@ -85,24 +92,10 @@ const AppContent: React.FC = () => {
       liveUrl: 'https://interestingaary.github.io/DSAglazzer/',
       featured: true,
     },
-    {
-      id: 'proj-2',
-      title: 'Algorithm Visualizer',
-      description: 'Interactive algorithm visualizations for DSA',
-      tech: ['D3.js', 'React', 'Canvas'],
-      githubUrl: 'https://github.com/InterestingAary/algorithm-visualizer',
-    },
-    {
-      id: 'proj-3',
-      title: 'Code Challenges Bot',
-      description: 'Telegram bot for daily coding problems',
-      tech: ['Node.js', 'Python', 'API'],
-      githubUrl: 'https://github.com/InterestingAary/code-bot',
-    },
   ];
 
   return (
-    <div className="min-h-screen bg-deep text-text-primary flex flex-col selection:bg-accent/40 selection:text-white">
+    <div className="min-h-screen bg-[var(--color-deep)] text-[var(--color-text-primary)] flex flex-col selection:bg-[var(--color-accent)]/30 selection:text-white">
       <CosmicBackground />
       <Navigation
         currentTab={currentTab}
@@ -112,11 +105,78 @@ const AppContent: React.FC = () => {
         onOpenPortfolioModal={() => setIsPortfolioModalOpen(true)}
       />
 
-      <main className="flex-1 w-full max-w-[1280px] mx-auto px-4 sm:px-8 py-6 flex flex-col gap-6 relative z-10">
+      <main className="flex-1 w-full max-w-[1280px] mx-auto px-4 sm:px-6 py-5 flex flex-col gap-5 relative z-10">
         <AnimatePresence mode="wait">
           {currentTab === 'dashboard' && (
-            <motion.div key="dashboard" variants={pageVariants} initial="initial" animate="animate" exit="exit" className="flex flex-col gap-6">
+            <motion.div key="dashboard" variants={pageVariants} initial="initial" animate="animate" exit="exit" className="flex flex-col gap-5">
               <HeroSection userStats={state.stats} />
+
+              {/* Today's Mission */}
+              <motion.section
+                className="card p-5 sm:p-6"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1, duration: 0.4 }}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-lg bg-[var(--color-accent)]/10 flex items-center justify-center">
+                      <Target className="w-4 h-4 text-[var(--color-accent)]" />
+                    </div>
+                    <div>
+                      <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">Today's Mission</h2>
+                      <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider">Recommended problems</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setIsDailyChallengeOpen(true)}
+                    className="text-[11px] font-semibold text-[var(--color-accent)] hover:text-[var(--color-accent-secondary)] transition-colors cursor-pointer flex items-center gap-1"
+                  >
+                    Daily Challenge <ArrowRight className="w-3 h-3" />
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {todayMissionProblems.map((problem, i) => {
+                    const status = getProblemStatus(problem.id);
+                    const isSolved = status?.status === 'solved';
+                    const difficultyColors = {
+                      Easy: 'bg-[var(--color-accent-emerald)]/10 text-[var(--color-accent-emerald)] border-[var(--color-accent-emerald)]/20',
+                      Medium: 'bg-[var(--color-accent-amber)]/10 text-[var(--color-accent-amber)] border-[var(--color-accent-amber)]/20',
+                      Hard: 'bg-[var(--color-accent-danger)]/10 text-[var(--color-accent-danger)] border-[var(--color-accent-danger)]/20',
+                    };
+                    return (
+                      <button
+                        key={problem.id}
+                        onClick={() => handleSelectProblem(problem)}
+                        className="text-left p-3.5 rounded-lg bg-[var(--color-surface-elevated)] border border-[var(--color-border-subtle)] hover:border-[var(--color-border-default)] hover:bg-[var(--color-surface-overlay)] transition-all cursor-pointer group"
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <span className={`text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded border ${difficultyColors[problem.difficulty]}`}>
+                            {problem.difficulty}
+                          </span>
+                          {isSolved && (
+                            <span className="text-[10px] font-semibold text-[var(--color-accent-emerald)]">Solved</span>
+                          )}
+                        </div>
+                        <h3 className="text-sm font-semibold text-[var(--color-text-primary)] group-hover:text-[var(--color-accent)] transition-colors line-clamp-1">
+                          {problem.title}
+                        </h3>
+                        <p className="text-[10px] text-[var(--color-text-muted)] mt-1 font-mono">{problem.topic}</p>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <button
+                  onClick={() => setCurrentTab('practice')}
+                  className="mt-4 w-full spatial-btn py-2.5 text-[11px] uppercase font-semibold tracking-wider text-[var(--color-accent)] cursor-pointer flex items-center justify-center gap-2"
+                >
+                  Start Practicing <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </motion.section>
+
+              {/* Main grid: DSA Universe + Revision + Activity */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
                 <div className="lg:col-span-2">
                   <DSAUniverse
@@ -207,17 +267,22 @@ const AppContent: React.FC = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <div className="absolute inset-0 bg-deep/80 backdrop-blur-xl" onClick={() => setIsPortfolioModalOpen(false)} />
+            <div className="absolute inset-0 bg-[var(--color-deep)]/80 backdrop-blur-sm" onClick={() => setIsPortfolioModalOpen(false)} />
             <motion.div
-              className="relative spatial-card-heavy max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto rounded-3xl"
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative card-elevated max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto rounded-xl"
+              initial={{ opacity: 0, scale: 0.96, y: 12 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] as const }}
+              exit={{ opacity: 0, scale: 0.96, y: 12 }}
+              transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] as const }}
             >
-              <div className="flex justify-between items-center pb-4 border-b border-glass-border mb-4">
-                <h2 className="text-xl font-bold uppercase tracking-tight text-text-primary gradient-text">Aaryan Mittal</h2>
-                <button onClick={() => setIsPortfolioModalOpen(false)} className="spatial-btn px-3 py-1.5 text-xs uppercase font-bold text-text-secondary cursor-pointer">Close</button>
+              <div className="flex justify-between items-center pb-4 border-b border-[var(--color-border-subtle)] mb-4">
+                <h2 className="text-lg font-bold text-[var(--color-text-primary)]">Aaryan Mittal</h2>
+                <button
+                  onClick={() => setIsPortfolioModalOpen(false)}
+                  className="spatial-btn px-3 py-1.5 text-[11px] uppercase font-semibold text-[var(--color-text-secondary)] cursor-pointer"
+                >
+                  Close
+                </button>
               </div>
               <PortfolioView projects={portfolioProjects} />
             </motion.div>
