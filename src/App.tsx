@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { initialUserStats, universeNodes, sampleProblems, recentActivities, revisionRadarItems } from './data/mockData';
-import { Problem, UserStats, ProjectInfo } from './types';
+import { AppProvider, useApp } from './context/AppContext';
+import { problems } from './data/problems';
+import { Problem, Topic } from './types';
 import { Navigation } from './components/Navigation';
 import { HeroSection } from './components/HeroSection';
 import { DSAUniverse } from './components/DSAUniverse';
@@ -15,6 +16,7 @@ import { ActivityFeed } from './components/ActivityFeed';
 import { DailyChallengeModal } from './components/DailyChallengeModal';
 import { CosmicBackground } from './components/CosmicBackground';
 import { Footer } from './components/Footer';
+import { ProjectInfo } from './types';
 
 const pageVariants = {
   initial: { opacity: 0, y: 12 },
@@ -22,12 +24,45 @@ const pageVariants = {
   exit: { opacity: 0, y: -12, transition: { duration: 0.2 } },
 };
 
-export const App: React.FC = () => {
+const AppContent: React.FC = () => {
+  const { state, dispatch, getProblemStatus, getSolvedCount } = useApp();
   const [currentTab, setCurrentTab] = useState<string>('dashboard');
-  const [activeProblem, setActiveProblem] = useState<Problem | null>(sampleProblems[0]);
-  const [userStats, setUserStats] = useState<UserStats>(initialUserStats);
-  const [isDailyChallengeOpen, setIsDailyChallengeOpen] = useState<boolean>(false);
-  const [isPortfolioModalOpen, setIsPortfolioModalOpen] = useState<boolean>(false);
+  const [activeProblem, setActiveProblem] = useState<Problem>(problems[0]);
+  const [isDailyChallengeOpen, setIsDailyChallengeOpen] = useState(false);
+  const [isPortfolioModalOpen, setIsPortfolioModalOpen] = useState(false);
+
+  const topicNodes = useMemo(() => {
+    const topics: Topic[] = [
+      'Arrays', 'Strings', 'Two Pointers', 'Linked Lists',
+      'Stack & Queue', 'Binary Search', 'Trees', 'Heaps',
+      'Graphs', 'Dynamic Programming', 'Backtracking', 'Tries', 'Bit Manipulation',
+    ];
+    return topics.map((topic, i) => {
+      const topicProblems = problems.filter(p => p.topic === topic);
+      const solvedCount = topicProblems.filter(p => getProblemStatus(p.id)?.status === 'solved').length;
+      const angle = (i / topics.length) * Math.PI * 2 - Math.PI / 2;
+      const radius = 160;
+      return {
+        id: topic.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-'),
+        topic,
+        progress: topicProblems.length > 0 ? (solvedCount / topicProblems.length) * 100 : 0,
+        totalProblems: topicProblems.length,
+        solvedProblems: solvedCount,
+        status: solvedCount === topicProblems.length ? 'completed' as const :
+                solvedCount > 0 ? 'in_progress' as const : 'locked' as const,
+        description: `${solvedCount}/${topicProblems.length} solved`,
+        position: { x: Math.cos(angle) * radius, y: Math.sin(angle) * radius },
+        connections: [],
+      };
+    });
+  }, [state.problemStatuses]);
+
+  const recentActivities = useMemo(() => state.activities.slice(0, 8), [state.activities]);
+
+  const revisionItems = useMemo(() =>
+    state.revisions.filter(r => r.nextReview <= Date.now() + 7 * 24 * 60 * 60 * 1000),
+    [state.revisions]
+  );
 
   const handleSelectProblem = (problem: Problem) => {
     setActiveProblem(problem);
@@ -36,18 +71,8 @@ export const App: React.FC = () => {
   };
 
   const handleSelectProblemById = (problemId: string) => {
-    const found = sampleProblems.find(p => p.id === problemId);
-    if (found) {
-      handleSelectProblem(found);
-    }
-  };
-
-  const handleProblemSolved = (_problemId: string) => {
-    setUserStats(prev => ({
-      ...prev,
-      totalSolved: prev.totalSolved + 1,
-      problemsThisWeek: prev.problemsThisWeek + 1,
-    }));
+    const found = problems.find(p => p.id === problemId);
+    if (found) handleSelectProblem(found);
   };
 
   const portfolioProjects: ProjectInfo[] = [
@@ -79,11 +104,10 @@ export const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-deep text-text-primary flex flex-col selection:bg-accent/40 selection:text-white">
       <CosmicBackground />
-
       <Navigation
         currentTab={currentTab}
         onSelectTab={setCurrentTab}
-        userStats={userStats}
+        userStats={state.stats}
         onOpenDailyChallenge={() => setIsDailyChallengeOpen(true)}
         onOpenPortfolioModal={() => setIsPortfolioModalOpen(true)}
       />
@@ -92,19 +116,19 @@ export const App: React.FC = () => {
         <AnimatePresence mode="wait">
           {currentTab === 'dashboard' && (
             <motion.div key="dashboard" variants={pageVariants} initial="initial" animate="animate" exit="exit" className="flex flex-col gap-6">
-              <HeroSection userStats={userStats} />
+              <HeroSection userStats={state.stats} />
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
                 <div className="lg:col-span-2">
                   <DSAUniverse
-                    nodes={universeNodes}
-                    problems={sampleProblems}
+                    nodes={topicNodes}
+                    problems={problems}
                     onSelectProblem={handleSelectProblem}
                   />
                 </div>
                 <div className="flex flex-col gap-5">
                   <RevisionRadar
-                    items={revisionRadarItems}
-                    onReviewItem={(problemId) => handleSelectProblemById(problemId)}
+                    items={revisionItems}
+                    onReviewItem={handleSelectProblemById}
                   />
                   <ActivityFeed
                     activities={recentActivities}
@@ -118,8 +142,8 @@ export const App: React.FC = () => {
           {currentTab === 'practice' && (
             <motion.div key="practice" variants={pageVariants} initial="initial" animate="animate" exit="exit">
               <CodeEditorWorkspace
-                problem={activeProblem || sampleProblems[0]}
-                onProblemSolved={handleProblemSolved}
+                problem={activeProblem}
+                onBack={() => setCurrentTab('dashboard')}
               />
             </motion.div>
           )}
@@ -127,25 +151,26 @@ export const App: React.FC = () => {
           {currentTab === 'roadmap' && (
             <motion.div key="roadmap" variants={pageVariants} initial="initial" animate="animate" exit="exit">
               <RoadmapView
-                nodes={universeNodes}
+                nodes={topicNodes}
                 onSelectProblemById={handleSelectProblemById}
+                onSelectTopic={(topic) => {
+                  const topicProblem = problems.find(p => p.topic === topic);
+                  if (topicProblem) handleSelectProblem(topicProblem);
+                }}
               />
             </motion.div>
           )}
 
           {currentTab === 'progress' && (
             <motion.div key="progress" variants={pageVariants} initial="initial" animate="animate" exit="exit">
-              <ProgressAnalytics
-                userStats={userStats}
-                nodes={universeNodes}
-              />
+              <ProgressAnalytics userStats={state.stats} nodes={topicNodes} />
             </motion.div>
           )}
 
           {currentTab === 'revision' && (
             <motion.div key="revision" variants={pageVariants} initial="initial" animate="animate" exit="exit">
               <RevisionView
-                items={revisionRadarItems}
+                items={revisionItems}
                 onReviewProblem={handleSelectProblemById}
               />
             </motion.div>
@@ -164,7 +189,7 @@ export const App: React.FC = () => {
       <AnimatePresence>
         {isDailyChallengeOpen && (
           <DailyChallengeModal
-            problem={sampleProblems[0]}
+            problem={problems[Math.floor(Math.random() * problems.length)]}
             onClose={() => setIsDailyChallengeOpen(false)}
             onStartChallenge={(problem) => {
               setIsDailyChallengeOpen(false);
@@ -182,10 +207,7 @@ export const App: React.FC = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <div
-              className="absolute inset-0 bg-deep/80 backdrop-blur-xl"
-              onClick={() => setIsPortfolioModalOpen(false)}
-            />
+            <div className="absolute inset-0 bg-deep/80 backdrop-blur-xl" onClick={() => setIsPortfolioModalOpen(false)} />
             <motion.div
               className="relative spatial-card-heavy max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto rounded-3xl"
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -194,17 +216,10 @@ export const App: React.FC = () => {
               transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] as const }}
             >
               <div className="flex justify-between items-center pb-4 border-b border-glass-border mb-4">
-                <h2 className="text-xl font-bold uppercase tracking-tight text-text-primary gradient-text">Aaryan Mittal • Bio & Profile</h2>
-                <button
-                  onClick={() => setIsPortfolioModalOpen(false)}
-                  className="spatial-btn px-3 py-1.5 text-xs uppercase font-bold text-text-secondary cursor-pointer"
-                >
-                  Close
-                </button>
+                <h2 className="text-xl font-bold uppercase tracking-tight text-text-primary gradient-text">Aaryan Mittal</h2>
+                <button onClick={() => setIsPortfolioModalOpen(false)} className="spatial-btn px-3 py-1.5 text-xs uppercase font-bold text-text-secondary cursor-pointer">Close</button>
               </div>
-              <div className="py-2">
-                <PortfolioView projects={portfolioProjects} />
-              </div>
+              <PortfolioView projects={portfolioProjects} />
             </motion.div>
           </motion.div>
         )}
@@ -212,5 +227,11 @@ export const App: React.FC = () => {
     </div>
   );
 };
+
+export const App: React.FC = () => (
+  <AppProvider>
+    <AppContent />
+  </AppProvider>
+);
 
 export default App;

@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { RevisionItem } from '../types';
+import { getUrgency } from '../utils/spacedRepetition';
 
 interface RevisionRadarProps {
   items: RevisionItem[];
@@ -12,16 +13,17 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] as const } },
 };
 
-export const RevisionRadar: React.FC<RevisionRadarProps> = ({items, onReviewItem: _onReviewItem}) => {
+export const RevisionRadar: React.FC<RevisionRadarProps> = ({ items, onReviewItem }) => {
   const urgencyCounts = items.reduce((acc, item) => {
-    acc[item.urgency] = (acc[item.urgency] || 0) + 1;
+    const u = getUrgency(item.nextReview);
+    acc[u] = (acc[u] || 0) + 1;
     return acc;
-  }, {} as Record<'urgent' | 'warning' | 'normal', number>);
+  }, {} as Record<string, number>);
 
   const buckets = [
-    { key: 'urgent', label: 'Urgent', color: 'accent-danger', borderClass: 'border-accent-danger/40', bgClass: 'bg-accent-danger/10' },
-    { key: 'warning', label: 'Warning', color: 'accent-amber', borderClass: 'border-accent-amber/40', bgClass: 'bg-accent-amber/10' },
-    { key: 'normal', label: 'Normal', color: 'accent', borderClass: 'border-accent/30', bgClass: 'bg-accent/10' },
+    { key: 'overdue', label: 'Overdue', color: 'accent-danger', borderClass: 'border-accent-danger/40', bgClass: 'bg-accent-danger/10' },
+    { key: 'due', label: 'Due Now', color: 'accent-amber', borderClass: 'border-accent-amber/40', bgClass: 'bg-accent-amber/10' },
+    { key: 'upcoming', label: 'Upcoming', color: 'accent', borderClass: 'border-accent/30', bgClass: 'bg-accent/10' },
   ];
 
   return (
@@ -31,11 +33,9 @@ export const RevisionRadar: React.FC<RevisionRadarProps> = ({items, onReviewItem
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
     >
-      <h2 className="font-heading text-lg font-bold text-text-primary mb-5 gradient-text">
-        REVISION RADAR
-      </h2>
+      <h2 className="font-heading text-lg font-bold text-text-primary mb-5 gradient-text">REVISION RADAR</h2>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-3 gap-3">
         {buckets.map((bucket) => (
           <motion.div
             key={bucket.key}
@@ -47,35 +47,39 @@ export const RevisionRadar: React.FC<RevisionRadarProps> = ({items, onReviewItem
             <div className="flex items-center justify-between">
               <span className="text-sm font-semibold text-text-primary">{bucket.label}</span>
               <span className={`text-xs font-bold text-${bucket.color}`}>
-                {urgencyCounts[bucket.key as keyof typeof urgencyCounts] || 0}
+                {urgencyCounts[bucket.key] || 0}
               </span>
             </div>
-            <p className="text-[10px] text-text-muted mt-1">Problems needing review</p>
+            <p className="text-[10px] text-text-muted mt-1">problems</p>
           </motion.div>
         ))}
       </div>
 
       <div className="mt-5 pt-4 border-t border-glass-border">
-        <p className="text-[10px] text-text-muted uppercase tracking-widest mb-3 font-bold">
-          Overall Status
-        </p>
+        <p className="text-[10px] text-text-muted uppercase tracking-widest mb-3 font-bold">Overall Status</p>
         <div className="flex gap-2 flex-wrap items-center">
-          {items.map((item) => (
-            <div
-              key={item.id}
-              className={`w-3 h-3 rounded-full transition-all hover:scale-125 ${
-                item.urgency === 'urgent'
-                  ? 'bg-accent-danger shadow-lg shadow-accent-danger/30'
-                  : item.urgency === 'warning'
-                  ? 'bg-accent-amber shadow-lg shadow-accent-amber/30'
-                  : 'bg-accent shadow-lg shadow-accent/30'
-              }`}
-              title={item.title}
-            />
-          ))}
-          <span className="text-[10px] text-text-muted ml-2 font-mono">
-            {items.length} total due
-          </span>
+          {items.length === 0 && (
+            <span className="text-[10px] text-text-muted font-mono">No reviews scheduled yet</span>
+          )}
+          {items.slice(0, 12).map((item) => {
+            const u = getUrgency(item.nextReview);
+            return (
+              <div
+                key={item.id}
+                className={`w-3 h-3 rounded-full transition-all hover:scale-125 cursor-pointer ${
+                  u === 'overdue' || u === 'due'
+                    ? 'bg-accent-danger shadow-lg shadow-accent-danger/30'
+                    : u === 'upcoming'
+                    ? 'bg-accent-amber shadow-lg shadow-accent-amber/30'
+                    : 'bg-accent shadow-lg shadow-accent/30'
+                }`}
+                title={item.title}
+                onClick={() => onReviewItem(item.problemId)}
+              />
+            );
+          })}
+          {items.length > 12 && <span className="text-[10px] text-text-muted font-mono">+{items.length - 12} more</span>}
+          <span className="text-[10px] text-text-muted ml-2 font-mono">{items.length} total due</span>
         </div>
       </div>
     </motion.section>

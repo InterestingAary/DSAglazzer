@@ -14,7 +14,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ userStats }) => {
     return 'Good evening';
   }, []);
 
-  const percentage = Math.round((userStats.totalSolved / userStats.totalProblems) * 100);
+  const totalProblems = userStats.easyTotal + userStats.mediumTotal + userStats.hardTotal;
+  const percentage = totalProblems > 0 ? Math.round((userStats.totalSolved / totalProblems) * 100) : 0;
   const radius = 44;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (circumference * percentage) / 100;
@@ -22,8 +23,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ userStats }) => {
   const stats = [
     { value: `${userStats.streak}D`, label: 'Day Streak', color: 'text-text-primary' },
     { value: userStats.problemsThisWeek, label: 'Solved / Wk', color: 'text-accent' },
-    { value: `${userStats.accuracy}%`, label: 'Accuracy', color: 'text-text-primary' },
-    { value: `${userStats.totalPracticeHours}h`, label: 'Practice', color: 'text-text-primary' },
+    { value: `${userStats.totalSolved}`, label: 'Total Solved', color: 'text-text-primary' },
+    { value: `${Math.round(userStats.totalPracticeMinutes / 60)}h`, label: 'Practice', color: 'text-text-primary' },
   ];
 
   return (
@@ -93,18 +94,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ userStats }) => {
         >
           <div className="relative w-32 h-32 sm:w-36 sm:h-36 flex items-center justify-center">
             <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
-              <circle
-                cx="50" cy="50" r={radius}
-                fill="none" stroke="rgba(99,102,241,0.1)" strokeWidth="7"
-              />
-              <circle
-                cx="50" cy="50" r={radius}
-                fill="none" stroke="url(#heroGradient)" strokeWidth="7"
-                strokeLinecap="round"
-                strokeDasharray={circumference}
-                strokeDashoffset={strokeDashoffset}
-                className="transition-all duration-1000 ease-out"
-              />
+              <circle cx="50" cy="50" r={radius} fill="none" stroke="rgba(99,102,241,0.1)" strokeWidth="7" />
+              <circle cx="50" cy="50" r={radius} fill="none" stroke="url(#heroGradient)" strokeWidth="7" strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={strokeDashoffset} className="transition-all duration-1000 ease-out" />
               <defs>
                 <linearGradient id="heroGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" stopColor="#6366f1" />
@@ -112,13 +103,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ userStats }) => {
                 </linearGradient>
               </defs>
             </svg>
-
             <div className="flex flex-col items-center justify-center z-10 select-none">
               <span className="font-heading text-2xl sm:text-3xl font-black tracking-tight text-text-primary glow-text-accent">
                 {percentage}%
               </span>
               <span className="font-mono text-[10px] uppercase tracking-widest text-text-muted font-bold mt-1">
-                {userStats.totalSolved}/{userStats.totalProblems}
+                {userStats.totalSolved}/{totalProblems}
               </span>
             </div>
           </div>

@@ -92,18 +92,17 @@ export const DSAUniverse: React.FC<DSAUniverseProps> = ({nodes, problems, onSele
                 if (problem) onSelectProblem(problem);
               }}
             >
-              <div className={`relative group w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-xs transition-all duration-300 ${
+              <div className={`relative group w-14 h-14 rounded-2xl flex flex-col items-center justify-center font-bold text-[10px] transition-all duration-300 ${
                 node.status === 'completed'
                   ? 'bg-accent text-white glow-accent'
                   : node.status === 'in_progress'
                   ? 'bg-accent-amber/20 text-accent-amber border border-accent-amber/30'
                   : 'bg-glass-bg text-text-muted border border-glass-border'
               }`}>
-                {node.solvedProblems}/{node.totalProblems}
+                <span className="text-[8px] uppercase tracking-wider leading-none mb-0.5">{node.topic.split(' ')[0]}</span>
+                <span className="text-xs font-black leading-none">{node.solvedProblems}/{node.totalProblems}</span>
                 {node.status === 'completed' && (
-                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-accent-emerald rounded-full flex items-center justify-center text-[8px] text-white">
-                    ✓
-                  </div>
+                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-accent-emerald rounded-full flex items-center justify-center text-[8px] text-white">✓</div>
                 )}
               </div>
             </div>
@@ -143,7 +142,7 @@ export const DSAUniverse: React.FC<DSAUniverseProps> = ({nodes, problems, onSele
               {selectedNode.topic}
             </h3>
             <p className="text-[10px] text-text-muted uppercase tracking-widest mb-3 font-bold">
-              Progress: {Math.round(selectedNode.progress * 100)}%
+              Progress: {Math.round(selectedNode.progress)}%
             </p>
             <p className="text-sm text-text-secondary mb-4 line-clamp-2">
               {selectedNode.description}
