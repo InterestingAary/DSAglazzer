@@ -42,7 +42,7 @@ export const App: React.FC = () => {
     }
   };
 
-  const handleProblemSolved = (problemId: string) => {
+  const handleProblemSolved = (_problemId: string) => {
     setUserStats(prev => ({
       ...prev,
       totalSolved: prev.totalSolved + 1,
