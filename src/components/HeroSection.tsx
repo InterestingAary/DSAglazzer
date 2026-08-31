@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { UserStats } from '../types';
-import { Flame, Target, Clock, TrendingUp } from 'lucide-react';
+import { Flame, Target, TrendingUp } from 'lucide-react';
 
 interface HeroSectionProps {
   userStats: UserStats;
@@ -22,52 +22,32 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ userStats }) => {
   const strokeDashoffset = circumference - (circumference * percentage) / 100;
 
   const stats = [
-    { icon: Flame, value: `${userStats.streak}D`, label: 'Streak', color: 'text-[var(--color-accent-amber)]' },
+    { icon: Flame, value: `${userStats.streak}d`, label: 'Streak', color: 'text-[var(--color-accent-amber)]' },
     { icon: Target, value: `${userStats.totalSolved}`, label: 'Solved', color: 'text-[var(--color-accent)]' },
     { icon: TrendingUp, value: `${userStats.problemsThisWeek}`, label: 'This Week', color: 'text-[var(--color-accent-emerald)]' },
-    { icon: Clock, value: `${Math.round(userStats.totalPracticeMinutes / 60)}h`, label: 'Practice', color: 'text-[var(--color-text-secondary)]' },
   ];
 
   return (
     <motion.section
-      className="relative overflow-hidden card p-6 sm:p-8"
-      initial={{ opacity: 0, y: 12 }}
+      className="card p-6"
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] as const }}
+      transition={{ duration: 0.3 }}
     >
-      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 relative z-10">
-        {/* Left: Greeting + Stats */}
-        <div className="flex flex-col gap-5 max-w-2xl">
-          {/* Status indicator */}
-          <motion.div
-            className="flex items-center gap-2"
-            initial={{ opacity: 0, x: -8 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.15, duration: 0.4 }}
-          >
-            <span className="w-1.5 h-1.5 bg-[var(--color-accent-emerald)] rounded-full animate-glow-pulse" />
+      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+        <div className="flex flex-col gap-4 max-w-2xl">
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 bg-[var(--color-accent-emerald)] rounded-full" />
             <span className="text-[var(--color-accent-emerald)] font-mono text-[11px] tracking-wider uppercase font-semibold">
               {greeting}, {userStats.name}
             </span>
-          </motion.div>
+          </div>
 
-          {/* Headline */}
-          <motion.h1
-            className="font-heading text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-[var(--color-text-primary)] leading-tight"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-          >
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--color-text-primary)] leading-tight">
             Keep solving. Your next breakthrough is one problem away.
-          </motion.h1>
+          </h1>
 
-          {/* Stats row */}
-          <motion.div
-            className="flex flex-wrap items-center gap-4 sm:gap-6 pt-4 border-t border-[var(--color-border-subtle)]"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35, duration: 0.5 }}
-          >
+          <div className="flex flex-wrap items-center gap-3 sm:gap-5 pt-3 border-t border-[var(--color-border)]">
             {stats.map((stat, i) => (
               <div key={i} className="flex items-center gap-2">
                 <stat.icon className={`w-4 h-4 ${stat.color}`} />
@@ -81,46 +61,31 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ userStats }) => {
                 </div>
               </div>
             ))}
-          </motion.div>
+          </div>
         </div>
 
-        {/* Right: Progress Ring */}
-        <motion.div
-          className="shrink-0 flex items-center justify-center self-center lg:self-auto"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.3, duration: 0.5, ease: [0.4, 0, 0.2, 1] as const }}
-        >
-          <div className="relative w-32 h-32 sm:w-36 sm:h-36 flex items-center justify-center">
-            {/* Progress ring background */}
+        <div className="shrink-0 flex items-center justify-center">
+          <div className="relative w-28 h-28 sm:w-32 sm:h-32 flex items-center justify-center">
             <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
               <circle
                 cx="50" cy="50" r={radius}
                 fill="none"
-                stroke="var(--color-border-subtle)"
-                strokeWidth="6"
+                stroke="var(--color-border)"
+                strokeWidth="4"
               />
               <circle
                 cx="50" cy="50" r={radius}
                 fill="none"
-                stroke="url(#heroGradient)"
-                strokeWidth="6"
+                stroke="var(--color-accent)"
+                strokeWidth="4"
                 strokeLinecap="round"
                 strokeDasharray={circumference}
                 strokeDashoffset={strokeDashoffset}
-                className="transition-all duration-1000 ease-out"
+                className="transition-all duration-700 ease-out"
               />
-              <defs>
-                <linearGradient id="heroGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#6366f1" />
-                  <stop offset="100%" stopColor="#8b5cf6" />
-                </linearGradient>
-              </defs>
             </svg>
-
-            {/* Center text */}
-            <div className="flex flex-col items-center justify-center z-10 select-none">
-              <span className="text-2xl sm:text-3xl font-bold text-[var(--color-text-primary)] font-mono">
+            <div className="flex flex-col items-center justify-center select-none">
+              <span className="text-xl sm:text-2xl font-bold text-[var(--color-text-primary)] font-mono">
                 {percentage}%
               </span>
               <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-medium mt-1">
@@ -128,7 +93,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ userStats }) => {
               </span>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </motion.section>
   );

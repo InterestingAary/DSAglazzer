@@ -49,7 +49,6 @@ export const DSAUniverse: React.FC<DSAUniverseProps> = ({nodes, problems, onSele
     };
   }, [nodes, problems, onSelectProblem, selectedNode]);
 
-  // Orbital layout
   const angle = Date.now() * 0.0001;
   const nodes3D = nodes.map((node, i) => ({
     ...node,
@@ -63,9 +62,15 @@ export const DSAUniverse: React.FC<DSAUniverseProps> = ({nodes, problems, onSele
     y: node.radius * Math.sin(node.theta) + 300,
   }));
 
+  const statusColors = {
+    completed: 'bg-[var(--color-accent-emerald)] text-white',
+    in_progress: 'bg-[var(--color-accent)]/15 text-[var(--color-accent)] border border-[var(--color-accent)]/20',
+    locked: 'bg-[var(--color-surface-elevated)] text-[var(--color-text-muted)] border border-[var(--color-border)]',
+  };
+
   return (
     <div className="relative card p-3 overflow-hidden">
-      <div className="flex items-center justify-between mb-3 px-2">
+      <div className="flex flex-wrap items-center justify-between mb-3 px-2 gap-2">
         <div className="flex items-center gap-2">
           <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">DSA Universe</h2>
           <span className="text-[10px] font-mono text-[var(--color-text-muted)]">{nodes.length} topics</span>
@@ -78,7 +83,7 @@ export const DSAUniverse: React.FC<DSAUniverseProps> = ({nodes, problems, onSele
             <span className="w-2 h-2 rounded-full bg-[var(--color-accent-emerald)]" /> Completed
           </span>
           <span className="flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-[var(--color-border-default)]" /> Not Started
+            <span className="w-2 h-2 rounded-full bg-[var(--color-border)]" /> Not Started
           </span>
         </div>
       </div>
@@ -95,11 +100,6 @@ export const DSAUniverse: React.FC<DSAUniverseProps> = ({nodes, problems, onSele
           const scaleRatio = (node.radius / 140);
           const leftPct = (node.x / 800) * 100;
           const topPct = (node.y / 600) * 100;
-          const statusColors = {
-            completed: 'bg-[var(--color-accent-emerald)] text-white',
-            in_progress: 'bg-[var(--color-accent)]/20 text-[var(--color-accent)] border border-[var(--color-accent)]/30',
-            locked: 'bg-[var(--color-surface-elevated)] text-[var(--color-text-muted)] border border-[var(--color-border-subtle)]',
-          };
           return (
             <div
               key={node.id}
@@ -109,7 +109,7 @@ export const DSAUniverse: React.FC<DSAUniverseProps> = ({nodes, problems, onSele
               style={{
                 left: `${leftPct}%`,
                 top: `${topPct}%`,
-                transform: `translate(-50%, -50%) scale(${selectedNode?.id === node.id ? 1.25 : scaleRatio})`,
+                transform: `translate(-50%, -50%) scale(${selectedNode?.id === node.id ? 1.2 : scaleRatio})`,
               }}
               onClick={() => {
                 const problem = problems.find(p => p.topic === node.topic);
@@ -127,7 +127,6 @@ export const DSAUniverse: React.FC<DSAUniverseProps> = ({nodes, problems, onSele
           );
         })}
 
-        {/* Connection lines */}
         <svg className="absolute inset-0 w-full h-full" viewBox="0 0 800 600">
           {projectedNodes.map((node, i) =>
             projectedNodes.slice(i + 1).map((conn) => {
@@ -137,8 +136,8 @@ export const DSAUniverse: React.FC<DSAUniverseProps> = ({nodes, problems, onSele
                   key={`${node.id}-${conn.id}`}
                   x1={node.x} y1={node.y}
                   x2={conn.x} y2={conn.y}
-                  stroke="rgba(99,102,241,0.15)"
-                  strokeWidth="1"
+                  stroke="rgba(99,102,241,0.08)"
+                  strokeWidth="0.5"
                   strokeDasharray="3 3"
                 />
               );
@@ -147,7 +146,6 @@ export const DSAUniverse: React.FC<DSAUniverseProps> = ({nodes, problems, onSele
         </svg>
       </div>
 
-      {/* Selected node detail */}
       <AnimatePresence>
         {selectedNode && (
           <motion.div
@@ -171,7 +169,7 @@ export const DSAUniverse: React.FC<DSAUniverseProps> = ({nodes, problems, onSele
                   const problem = problems.find(p => p.topic === selectedNode.topic);
                   if (problem) onSelectProblem(problem);
                 }}
-                className="spatial-btn-solid px-4 py-2 text-[11px] font-semibold uppercase tracking-wider cursor-pointer flex items-center gap-1.5"
+                className="btn btn-primary px-4 py-2 text-[11px] font-semibold uppercase tracking-wider cursor-pointer flex items-center gap-1.5"
               >
                 Start <ArrowRight className="w-3 h-3" />
               </button>

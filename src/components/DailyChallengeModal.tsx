@@ -10,10 +10,10 @@ interface DailyChallengeModalProps {
 }
 
 export const DailyChallengeModal: React.FC<DailyChallengeModalProps> = ({problem, onClose, onStartChallenge}) => {
-  const difficultyColors = {
-    Easy: 'bg-[var(--color-accent-emerald)]/10 text-[var(--color-accent-emerald)] border-[var(--color-accent-emerald)]/20',
-    Medium: 'bg-[var(--color-accent-amber)]/10 text-[var(--color-accent-amber)] border-[var(--color-accent-amber)]/20',
-    Hard: 'bg-[var(--color-accent-danger)]/10 text-[var(--color-accent-danger)] border-[var(--color-accent-danger)]/20',
+  const difficultyClasses = {
+    Easy: 'badge-emerald',
+    Medium: 'badge-amber',
+    Hard: 'badge-danger',
   };
 
   return (
@@ -23,21 +23,19 @@ export const DailyChallengeModal: React.FC<DailyChallengeModalProps> = ({problem
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      {/* Backdrop */}
       <div
         className="absolute inset-0 bg-[var(--color-deep)]/80 backdrop-blur-sm"
         onClick={onClose}
       />
 
-      {/* Modal */}
       <motion.div
-        className="relative card-elevated max-w-md w-full p-6 max-h-[90vh] overflow-y-auto rounded-xl"
+        className="relative card max-w-md w-full p-6 max-h-[90vh] overflow-y-auto"
         initial={{ opacity: 0, scale: 0.96, y: 12 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.96, y: 12 }}
-        transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+        transition={{ duration: 0.2 }}
       >
-        <div className="flex justify-between items-center mb-5 border-b border-[var(--color-border-subtle)] pb-4">
+        <div className="flex justify-between items-center mb-5 divider pb-4">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-[var(--color-accent)]/10 flex items-center justify-center">
               <Target className="w-4 h-4 text-[var(--color-accent)]" />
@@ -46,18 +44,18 @@ export const DailyChallengeModal: React.FC<DailyChallengeModalProps> = ({problem
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-md text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-elevated)] transition-colors cursor-pointer"
+            className="p-1.5 rounded-md text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-elevated)] transition-colors cursor-pointer btn btn-ghost btn-icon"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="bg-[var(--color-surface-elevated)] rounded-lg p-4 mb-5 border border-[var(--color-border-subtle)]">
+        <div className="bg-[var(--color-surface-elevated)] rounded-lg p-4 mb-5 divider">
           <div className="flex items-center gap-2 mb-2">
             <h3 className="font-semibold text-[var(--color-text-primary)] text-sm">
               {problem.title}
             </h3>
-            <span className={`text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded border ${difficultyColors[problem.difficulty]}`}>
+            <span className={`text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded border ${difficultyClasses[problem.difficulty]}`}>
               {problem.difficulty}
             </span>
           </div>
@@ -78,7 +76,7 @@ export const DailyChallengeModal: React.FC<DailyChallengeModalProps> = ({problem
               <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mb-1.5 font-semibold">Tags</p>
               <div className="flex flex-wrap gap-1">
                 {problem.tags.map((tag) => (
-                  <span key={tag} className="text-[9px] rounded-md bg-[var(--color-surface-overlay)] border border-[var(--color-border-subtle)] px-1.5 py-0.5 text-[var(--color-text-secondary)]">
+                  <span key={tag} className="text-[9px] rounded-md bg-[var(--color-surface)] border border-[var(--color-border)] px-1.5 py-0.5 text-[var(--color-text-secondary)]">
                     {tag}
                   </span>
                 ))}
@@ -89,7 +87,7 @@ export const DailyChallengeModal: React.FC<DailyChallengeModalProps> = ({problem
           <div>
             <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mb-1.5 font-semibold">Example</p>
             {problem.examples.slice(0, 1).map((ex, i) => (
-              <div key={i} className="bg-[var(--color-surface)] rounded-lg p-3 mt-1 border border-[var(--color-border-subtle)]">
+              <div key={i} className="bg-[var(--color-surface)] rounded-lg p-3 mt-1 divider">
                 <p className="font-semibold text-[var(--color-accent)] text-[11px]">Input:</p>
                 <p className="mt-0.5 break-all text-[11px] text-[var(--color-text-primary)] font-mono">{ex.input}</p>
                 <p className="font-semibold text-[var(--color-accent)] mt-2 text-[11px]">Output:</p>
@@ -102,13 +100,13 @@ export const DailyChallengeModal: React.FC<DailyChallengeModalProps> = ({problem
         <div className="space-y-2">
           <button
             onClick={() => onStartChallenge(problem)}
-            className="w-full spatial-btn-solid py-2.5 text-[11px] uppercase font-semibold tracking-wider cursor-pointer flex items-center justify-center gap-2"
+            className="w-full btn btn-primary py-2.5 text-[11px] uppercase font-semibold tracking-wider cursor-pointer flex items-center justify-center gap-2"
           >
             Start Challenge <ArrowRight className="w-3.5 h-3.5" />
           </button>
           <button
             onClick={onClose}
-            className="w-full spatial-btn py-2.5 text-[11px] uppercase font-semibold tracking-wider text-[var(--color-text-secondary)] cursor-pointer"
+            className="w-full btn btn-ghost py-2.5 text-[11px] uppercase font-semibold tracking-wider text-[var(--color-text-secondary)] cursor-pointer"
           >
             Skip
           </button>

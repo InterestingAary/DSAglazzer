@@ -17,11 +17,11 @@ import { DailyChallengeModal } from './components/DailyChallengeModal';
 import { CosmicBackground } from './components/CosmicBackground';
 import { Footer } from './components/Footer';
 import { ProjectInfo } from './types';
-import { Target, ArrowRight, Zap, Flame, BookOpen } from 'lucide-react';
+import { Target, ArrowRight } from 'lucide-react';
 
 const pageVariants = {
   initial: { opacity: 0, y: 8 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.4, 0, 0.2, 1] as const } },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.3 } },
   exit: { opacity: 0, y: -8, transition: { duration: 0.15 } },
 };
 
@@ -94,6 +94,12 @@ const AppContent: React.FC = () => {
     },
   ];
 
+  const DIFFICULTY_CLASSES: Record<string, string> = {
+    Easy: 'badge-emerald',
+    Medium: 'badge-amber',
+    Hard: 'badge-danger',
+  };
+
   return (
     <div className="min-h-screen bg-[var(--color-deep)] text-[var(--color-text-primary)] flex flex-col selection:bg-[var(--color-accent)]/30 selection:text-white">
       <CosmicBackground />
@@ -111,12 +117,11 @@ const AppContent: React.FC = () => {
             <motion.div key="dashboard" variants={pageVariants} initial="initial" animate="animate" exit="exit" className="flex flex-col gap-5">
               <HeroSection userStats={state.stats} />
 
-              {/* Today's Mission */}
               <motion.section
                 className="card p-5 sm:p-6"
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1, duration: 0.4 }}
+                transition={{ delay: 0.1, duration: 0.3 }}
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2.5">
@@ -130,7 +135,7 @@ const AppContent: React.FC = () => {
                   </div>
                   <button
                     onClick={() => setIsDailyChallengeOpen(true)}
-                    className="text-[11px] font-semibold text-[var(--color-accent)] hover:text-[var(--color-accent-secondary)] transition-colors cursor-pointer flex items-center gap-1"
+                    className="text-[11px] font-semibold text-[var(--color-accent)] hover:text-[var(--color-accent)]/80 transition-colors cursor-pointer flex items-center gap-1 btn btn-ghost"
                   >
                     Daily Challenge <ArrowRight className="w-3 h-3" />
                   </button>
@@ -140,19 +145,14 @@ const AppContent: React.FC = () => {
                   {todayMissionProblems.map((problem, i) => {
                     const status = getProblemStatus(problem.id);
                     const isSolved = status?.status === 'solved';
-                    const difficultyColors = {
-                      Easy: 'bg-[var(--color-accent-emerald)]/10 text-[var(--color-accent-emerald)] border-[var(--color-accent-emerald)]/20',
-                      Medium: 'bg-[var(--color-accent-amber)]/10 text-[var(--color-accent-amber)] border-[var(--color-accent-amber)]/20',
-                      Hard: 'bg-[var(--color-accent-danger)]/10 text-[var(--color-accent-danger)] border-[var(--color-accent-danger)]/20',
-                    };
                     return (
                       <button
                         key={problem.id}
                         onClick={() => handleSelectProblem(problem)}
-                        className="text-left p-3.5 rounded-lg bg-[var(--color-surface-elevated)] border border-[var(--color-border-subtle)] hover:border-[var(--color-border-default)] hover:bg-[var(--color-surface-overlay)] transition-all cursor-pointer group"
+                        className="text-left p-3.5 rounded-lg bg-[var(--color-surface-elevated)] border border-[var(--color-border)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-overlay)] transition-all cursor-pointer group"
                       >
                         <div className="flex items-center justify-between mb-2">
-                          <span className={`text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded border ${difficultyColors[problem.difficulty]}`}>
+                          <span className={`text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded border ${DIFFICULTY_CLASSES[problem.difficulty]}`}>
                             {problem.difficulty}
                           </span>
                           {isSolved && (
@@ -170,13 +170,12 @@ const AppContent: React.FC = () => {
 
                 <button
                   onClick={() => setCurrentTab('practice')}
-                  className="mt-4 w-full spatial-btn py-2.5 text-[11px] uppercase font-semibold tracking-wider text-[var(--color-accent)] cursor-pointer flex items-center justify-center gap-2"
+                  className="mt-4 w-full btn btn-primary py-2.5 text-[11px] uppercase font-semibold tracking-wider cursor-pointer flex items-center justify-center gap-2"
                 >
                   Start Practicing <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </motion.section>
 
-              {/* Main grid: DSA Universe + Revision + Activity */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
                 <div className="lg:col-span-2">
                   <DSAUniverse
@@ -269,17 +268,17 @@ const AppContent: React.FC = () => {
           >
             <div className="absolute inset-0 bg-[var(--color-deep)]/80 backdrop-blur-sm" onClick={() => setIsPortfolioModalOpen(false)} />
             <motion.div
-              className="relative card-elevated max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto rounded-xl"
+              className="relative card max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto"
               initial={{ opacity: 0, scale: 0.96, y: 12 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 12 }}
-              transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] as const }}
+              transition={{ duration: 0.25 }}
             >
-              <div className="flex justify-between items-center pb-4 border-b border-[var(--color-border-subtle)] mb-4">
+              <div className="flex justify-between items-center pb-4 divider mb-4">
                 <h2 className="text-lg font-bold text-[var(--color-text-primary)]">Aaryan Mittal</h2>
                 <button
                   onClick={() => setIsPortfolioModalOpen(false)}
-                  className="spatial-btn px-3 py-1.5 text-[11px] uppercase font-semibold text-[var(--color-text-secondary)] cursor-pointer"
+                  className="btn btn-ghost px-3 py-1.5 text-[11px] uppercase font-semibold cursor-pointer"
                 >
                   Close
                 </button>

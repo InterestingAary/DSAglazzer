@@ -19,7 +19,6 @@ export const Navigation: React.FC<NavigationProps> = ({currentTab, onSelectTab, 
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [searchFocused, setSearchFocused] = useState(false);
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Compass },
@@ -30,9 +29,8 @@ export const Navigation: React.FC<NavigationProps> = ({currentTab, onSelectTab, 
   ];
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-[var(--color-surface)]/95 backdrop-blur-md border-b border-[var(--color-border-subtle)]">
+    <nav className="sticky top-0 z-50 w-full bg-[var(--color-surface)]/95 backdrop-blur-sm border-b border-[var(--color-border)]">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-        {/* Left: Logo + Nav */}
         <div className="flex items-center gap-6">
           <button
             onClick={() => onSelectTab('dashboard')}
@@ -46,7 +44,6 @@ export const Navigation: React.FC<NavigationProps> = ({currentTab, onSelectTab, 
             </span>
           </button>
 
-          {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-0.5">
             {navItems.map((item) => {
               const isActive = currentTab === item.id;
@@ -54,53 +51,35 @@ export const Navigation: React.FC<NavigationProps> = ({currentTab, onSelectTab, 
                 <button
                   key={item.id}
                   onClick={() => onSelectTab(item.id)}
-                  className={`relative px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider transition-all duration-150 rounded-md cursor-pointer ${
+                  className={`relative px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider transition-colors duration-150 rounded-md cursor-pointer ${
                     isActive
-                      ? 'text-[var(--color-text-primary)] bg-[var(--color-accent)]/10'
+                      ? 'text-[var(--color-accent)] bg-[var(--color-accent)]/10'
                       : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-elevated)]'
                   }`}
                 >
                   {item.label}
-                  {isActive && (
-                    <motion.span
-                      layoutId="nav-indicator"
-                      className="absolute bottom-0 left-3 right-3 h-[2px] bg-[var(--color-accent)] rounded-full"
-                      transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-                    />
-                  )}
+                  {isActive && <span className="absolute bottom-0 left-3 right-3 h-[2px] bg-[var(--color-accent)] rounded-full" />}
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* Right: Streak, Search, Blitz, Notifications, Profile */}
         <div className="flex items-center gap-2">
-          {/* Streak badge */}
-          <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[var(--color-surface-elevated)] border border-[var(--color-border-subtle)]">
+          <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[var(--color-surface-elevated)] border border-[var(--color-border)]">
             <Flame className="w-3 h-3 text-[var(--color-accent-amber)]" />
             <span className="font-mono text-[11px] font-semibold text-[var(--color-text-primary)]">
-              {userStats.streak}D
+              {userStats.streak}d
             </span>
           </div>
 
-          {/* Search (placeholder) */}
-          <button
-            className="hidden sm:flex p-2 rounded-md text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-elevated)] transition-colors cursor-pointer"
-            aria-label="Search"
-          >
-            <Search className="w-4 h-4" />
-          </button>
-
-          {/* Daily Blitz */}
           <button
             onClick={onOpenDailyChallenge}
-            className="spatial-btn px-3 py-1.5 text-[11px] uppercase font-semibold tracking-wider text-[var(--color-accent)] cursor-pointer"
+            className="btn btn-primary px-3 py-1.5 text-[11px] uppercase font-semibold tracking-wider"
           >
             Blitz
           </button>
 
-          {/* Notifications */}
           <div className="relative">
             <button
               onClick={() => {
@@ -123,7 +102,7 @@ export const Navigation: React.FC<NavigationProps> = ({currentTab, onSelectTab, 
                   transition={{ duration: 0.12 }}
                   className="absolute right-0 mt-2 w-80 card-elevated p-4 z-50"
                 >
-                  <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] pb-2 mb-3">
+                  <div className="flex items-center justify-between divider pb-2 mb-3">
                     <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
                       Notifications
                     </span>
@@ -159,7 +138,6 @@ export const Navigation: React.FC<NavigationProps> = ({currentTab, onSelectTab, 
             </AnimatePresence>
           </div>
 
-          {/* Profile */}
           <div className="relative">
             <button
               onClick={() => {
@@ -183,7 +161,7 @@ export const Navigation: React.FC<NavigationProps> = ({currentTab, onSelectTab, 
                   transition={{ duration: 0.12 }}
                   className="absolute right-0 mt-2 w-56 card-elevated p-3 z-50"
                 >
-                  <div className="flex items-center gap-2.5 pb-2.5 border-b border-[var(--color-border-subtle)] mb-2">
+                  <div className="flex items-center gap-2.5 pb-2.5 divider mb-2">
                     <div className="w-8 h-8 bg-[var(--color-accent)] rounded-lg flex items-center justify-center font-bold text-xs text-white">
                       A
                     </div>
@@ -227,7 +205,7 @@ export const Navigation: React.FC<NavigationProps> = ({currentTab, onSelectTab, 
                     </a>
                   </div>
 
-                  <div className="pt-2 mt-2 border-t border-[var(--color-border-subtle)] flex justify-between items-center text-[10px] text-[var(--color-text-muted)] font-mono">
+                  <div className="pt-2 mt-2 divider flex justify-between items-center text-[10px] text-[var(--color-text-muted)] font-mono">
                     <span>Rating: <strong className="text-[var(--color-text-primary)]">{userStats.rating}</strong></span>
                     <span className="text-[var(--color-accent)] font-semibold">{userStats.totalSolved} solved</span>
                   </div>
@@ -236,7 +214,6 @@ export const Navigation: React.FC<NavigationProps> = ({currentTab, onSelectTab, 
             </AnimatePresence>
           </div>
 
-          {/* Mobile menu toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden p-2 rounded-md text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-elevated)] transition-colors cursor-pointer"
@@ -247,7 +224,6 @@ export const Navigation: React.FC<NavigationProps> = ({currentTab, onSelectTab, 
         </div>
       </div>
 
-      {/* Mobile menu */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -255,7 +231,7 @@ export const Navigation: React.FC<NavigationProps> = ({currentTab, onSelectTab, 
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.15 }}
-            className="md:hidden bg-[var(--color-surface)] border-t border-[var(--color-border-subtle)] overflow-hidden"
+            className="md:hidden bg-[var(--color-surface)] border-t border-[var(--color-border)] overflow-hidden"
           >
             <div className="px-4 py-3 space-y-1">
               {navItems.map((item) => {
@@ -267,7 +243,7 @@ export const Navigation: React.FC<NavigationProps> = ({currentTab, onSelectTab, 
                       onSelectTab(item.id);
                       setMobileMenuOpen(false);
                     }}
-                    className={`w-full flex items-center justify-between px-3 py-2.5 text-[11px] font-semibold uppercase tracking-wider rounded-md transition-all cursor-pointer ${
+                    className={`w-full flex items-center justify-between px-3 py-2.5 text-[11px] font-semibold uppercase tracking-wider rounded-md transition-colors cursor-pointer ${
                       isActive
                         ? 'text-[var(--color-accent)] bg-[var(--color-accent)]/10'
                         : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-elevated)]'

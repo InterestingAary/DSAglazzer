@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { UniverseNode, Topic, Problem } from '../types';
 import { problems } from '../data/problems';
 import { useApp } from '../context/AppContext';
-import { Compass, ChevronDown, ChevronUp, ArrowRight } from 'lucide-react';
+import { Compass, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface RoadmapViewProps {
   nodes: UniverseNode[];
@@ -22,8 +22,8 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({ nodes, onSelectProblem
   const [expandedTopic, setExpandedTopic] = useState<Topic | null>(null);
 
   return (
-    <motion.section className="space-y-5" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
-      <div className="flex items-center gap-2.5">
+    <motion.section className="space-y-6" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+      <div className="flex items-center gap-2">
         <Compass className="w-5 h-5 text-[var(--color-accent)]" />
         <h2 className="text-base font-semibold text-[var(--color-text-primary)]">Curriculum Roadmap</h2>
       </div>
@@ -34,20 +34,16 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({ nodes, onSelectProblem
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {nodes.map((node) => {
-          const statusConfig = {
-            completed: { border: 'border-[var(--color-accent-emerald)]/20', badge: 'bg-[var(--color-accent-emerald)]/10 text-[var(--color-accent-emerald)]' },
-            in_progress: { border: 'border-[var(--color-accent)]/20', badge: 'bg-[var(--color-accent)]/10 text-[var(--color-accent)]' },
-            locked: { border: 'border-[var(--color-border-subtle)]', badge: 'bg-[var(--color-surface-elevated)] text-[var(--color-text-muted)]' },
-          };
-          const cfg = statusConfig[node.status];
+          const isCompleted = node.status === 'completed';
+          const isInProgress = node.status === 'in_progress';
           const isExpanded = expandedTopic === node.topic;
           const topicProblems = problems.filter(p => p.topic === node.topic);
 
           return (
-            <div key={node.id} className={`card p-4 ${cfg.border}`}>
+            <div key={node.id} className="card p-4">
               <div className="flex items-center justify-between mb-2.5">
                 <span className="text-sm font-semibold text-[var(--color-text-primary)]">{node.topic}</span>
-                <span className={`text-[10px] font-bold font-mono px-1.5 py-0.5 rounded ${cfg.badge}`}>
+                <span className={`badge ${isCompleted ? 'badge-emerald' : isInProgress ? 'badge-accent' : ''}`}>
                   {Math.round(node.progress)}%
                 </span>
               </div>
@@ -57,11 +53,11 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({ nodes, onSelectProblem
                   className="h-full rounded-full transition-all duration-500"
                   style={{
                     width: `${node.progress}%`,
-                    background: node.status === 'completed'
+                    background: isCompleted
                       ? 'var(--color-accent-emerald)'
-                      : node.status === 'in_progress'
+                      : isInProgress
                       ? 'var(--color-accent)'
-                      : 'var(--color-border-default)',
+                      : 'var(--color-border)',
                   }}
                 />
               </div>
@@ -70,7 +66,7 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({ nodes, onSelectProblem
 
               <button
                 onClick={() => setExpandedTopic(isExpanded ? null : node.topic)}
-                className="w-full flex items-center justify-between px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-[var(--color-accent)] bg-[var(--color-accent)]/5 hover:bg-[var(--color-accent)]/10 rounded-md transition-colors cursor-pointer"
+                className="w-full flex items-center justify-between px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-[var(--color-accent)] hover:bg-[var(--color-accent)]/5 rounded-md transition-colors cursor-pointer btn btn-ghost"
               >
                 <span>{isExpanded ? 'Collapse' : `View ${node.topic}`}</span>
                 {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
@@ -85,7 +81,7 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({ nodes, onSelectProblem
                     transition={{ duration: 0.15 }}
                     className="overflow-hidden"
                   >
-                    <div className="mt-3 space-y-1.5 pt-3 border-t border-[var(--color-border-subtle)]">
+                    <div className="mt-3 space-y-1.5 pt-3 divider">
                       {topicProblems.map((problem) => {
                         const status = getProblemStatus(problem.id);
                         const isSolved = status?.status === 'solved';
@@ -93,10 +89,10 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({ nodes, onSelectProblem
                           <button
                             key={problem.id}
                             onClick={() => onSelectProblemById(problem.id)}
-                            className={`w-full text-left p-2.5 rounded-md text-xs transition-all cursor-pointer flex items-center justify-between ${
+                            className={`w-full text-left p-2.5 rounded-md text-xs transition-colors cursor-pointer flex items-center justify-between ${
                               isSolved
                                 ? 'bg-[var(--color-accent-emerald)]/5 border border-[var(--color-accent-emerald)]/15'
-                                : 'bg-[var(--color-surface-elevated)] hover:bg-[var(--color-surface-overlay)] border border-[var(--color-border-subtle)]'
+                                : 'bg-[var(--color-surface-elevated)] hover:bg-[var(--color-surface-overlay)] border border-[var(--color-border)]'
                             }`}
                           >
                             <span className={`font-medium ${isSolved ? 'text-[var(--color-accent-emerald)]' : 'text-[var(--color-text-primary)]'}`}>
