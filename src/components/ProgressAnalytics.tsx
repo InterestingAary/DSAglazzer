@@ -16,9 +16,9 @@ export const ProgressAnalytics: React.FC<ProgressAnalyticsProps> = ({ userStats,
   return (
     <motion.section
       className="space-y-6"
-      initial={{ opacity: 0, y: 8 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.4 }}
     >
       <div className="flex items-center gap-2">
         <BarChart3 className="w-5 h-5 text-[var(--color-accent)]" />
@@ -27,17 +27,17 @@ export const ProgressAnalytics: React.FC<ProgressAnalyticsProps> = ({ userStats,
 
       {!hasData ? (
         <motion.div
-          className="card p-8 text-center"
-          initial={{ opacity: 0, y: 8 }}
+          className="card p-10 text-center"
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <div className="w-12 h-12 rounded-lg bg-[var(--color-accent)]/10 flex items-center justify-center mx-auto mb-3">
-            <Target className="w-6 h-6 text-[var(--color-accent)]" />
+          <div className="w-14 h-14 rounded-xl bg-[var(--color-accent)]/10 flex items-center justify-center mx-auto mb-4">
+            <Target className="w-7 h-7 text-[var(--color-accent)]" />
           </div>
-          <h3 className="text-base font-semibold text-[var(--color-text-primary)] mb-1">Start Your Journey</h3>
+          <h3 className="text-lg font-semibold text-[var(--color-text-primary)] mb-2">Start Your Journey</h3>
           <p className="text-sm text-[var(--color-text-muted)] max-w-md mx-auto">
-            Solve your first problem to see progress analytics here.
+            Solve your first problem to see progress analytics here. Track accuracy, difficulty distribution, and topic mastery over time.
           </p>
         </motion.div>
       ) : (
@@ -62,13 +62,19 @@ export const ProgressAnalytics: React.FC<ProgressAnalyticsProps> = ({ userStats,
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div className="card p-5">
               <h3 className="text-[11px] uppercase tracking-wider text-[var(--color-text-muted)] mb-4 font-semibold">Accuracy</h3>
-              <div className="relative h-36 flex items-center justify-center">
-                <svg className="w-28 h-28 -rotate-90" viewBox="0 0 100 100">
-                  <circle cx="50" cy="50" r="40" fill="none" stroke="var(--color-border)" strokeWidth="6" />
-                  <circle cx="50" cy="50" r="40" fill="none" stroke="var(--color-accent)" strokeWidth="6" strokeLinecap="round" strokeDasharray={251.2} strokeDashoffset={251.2 - (251.2 * accuracy) / 100} className="transition-all duration-500 ease-out" />
+              <div className="relative h-40 flex items-center justify-center">
+                <svg className="w-32 h-32 -rotate-90" viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="var(--color-border)" strokeWidth="7" />
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="url(#gaugeGradient)" strokeWidth="7" strokeLinecap="round" strokeDasharray={251.2} strokeDashoffset={251.2 - (251.2 * accuracy) / 100} className="transition-all duration-700 ease-out" />
+                  <defs>
+                    <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#7c5cff" />
+                      <stop offset="100%" stopColor="#a855f7" />
+                    </linearGradient>
+                  </defs>
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-2xl font-bold text-[var(--color-text-primary)] font-mono">{accuracy}%</span>
+                  <span className="text-3xl font-bold text-[var(--color-text-primary)] font-mono">{accuracy}%</span>
                   <span className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider font-medium mt-0.5">accuracy</span>
                 </div>
               </div>
@@ -87,7 +93,7 @@ export const ProgressAnalytics: React.FC<ProgressAnalyticsProps> = ({ userStats,
                       <span className="text-xs font-medium text-[var(--color-text-secondary)]">{d.label}</span>
                       <span className="text-[10px] font-mono text-[var(--color-text-muted)]">{d.solved}/{d.total}</span>
                     </div>
-                    <div className="w-full h-1.5 rounded-full bg-[var(--color-surface-elevated)] overflow-hidden">
+                    <div className="w-full h-2 rounded-full bg-[var(--color-surface-elevated)] overflow-hidden">
                       <div
                         className="h-full rounded-full transition-all duration-500 ease-out"
                         style={{

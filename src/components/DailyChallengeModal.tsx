@@ -9,7 +9,7 @@ interface DailyChallengeModalProps {
   onStartChallenge: (problem: Problem) => void;
 }
 
-export const DailyChallengeModal: React.FC<DailyChallengeModalProps> = ({problem, onClose, onStartChallenge}) => {
+export const DailyChallengeModal: React.FC<DailyChallengeModalProps> = ({ problem, onClose, onStartChallenge }) => {
   const difficultyClasses = {
     Easy: 'badge-emerald',
     Medium: 'badge-amber',
@@ -33,7 +33,7 @@ export const DailyChallengeModal: React.FC<DailyChallengeModalProps> = ({problem
         initial={{ opacity: 0, scale: 0.96, y: 12 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.96, y: 12 }}
-        transition={{ duration: 0.2 }}
+        transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
       >
         <div className="flex justify-between items-center mb-5 divider pb-4">
           <div className="flex items-center gap-2.5">
@@ -44,7 +44,7 @@ export const DailyChallengeModal: React.FC<DailyChallengeModalProps> = ({problem
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-md text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-elevated)] transition-colors cursor-pointer btn btn-ghost btn-icon"
+            className="p-1.5 rounded-md text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-elevated)] transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -100,13 +100,13 @@ export const DailyChallengeModal: React.FC<DailyChallengeModalProps> = ({problem
         <div className="space-y-2">
           <button
             onClick={() => onStartChallenge(problem)}
-            className="w-full btn btn-primary py-2.5 text-[11px] uppercase font-semibold tracking-wider cursor-pointer flex items-center justify-center gap-2"
+            className="w-full spatial-btn-solid py-2.5 text-[11px] uppercase font-semibold tracking-wider cursor-pointer flex items-center justify-center gap-2"
           >
             Start Challenge <ArrowRight className="w-3.5 h-3.5" />
           </button>
           <button
             onClick={onClose}
-            className="w-full btn btn-ghost py-2.5 text-[11px] uppercase font-semibold tracking-wider text-[var(--color-text-secondary)] cursor-pointer"
+            className="w-full spatial-btn py-2.5 text-[11px] uppercase font-semibold tracking-wider text-[var(--color-text-secondary)] cursor-pointer"
           >
             Skip
           </button>

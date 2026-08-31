@@ -9,7 +9,7 @@ interface DSAUniverseProps {
   onSelectProblem: (problem: Problem) => void;
 }
 
-export const DSAUniverse: React.FC<DSAUniverseProps> = ({nodes, problems, onSelectProblem}) => {
+export const DSAUniverse: React.FC<DSAUniverseProps> = ({ nodes, problems, onSelectProblem }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [selectedNode, setSelectedNode] = useState<UniverseNode | null>(null);
 
@@ -93,7 +93,7 @@ export const DSAUniverse: React.FC<DSAUniverseProps> = ({nodes, problems, onSele
         width={800}
         height={600}
         className="w-full h-auto rounded-lg"
-        style={{ background: 'rgba(8,9,14,0.8)' }}
+        style={{ background: 'rgba(5,6,10,0.8)' }}
       />
       <div className="absolute inset-0 overflow-hidden rounded-lg pointer-events-none">
         {projectedNodes.map((node) => {
@@ -109,7 +109,7 @@ export const DSAUniverse: React.FC<DSAUniverseProps> = ({nodes, problems, onSele
               style={{
                 left: `${leftPct}%`,
                 top: `${topPct}%`,
-                transform: `translate(-50%, -50%) scale(${selectedNode?.id === node.id ? 1.2 : scaleRatio})`,
+                transform: `translate(-50%, -50%) scale(${selectedNode?.id === node.id ? 1.25 : scaleRatio})`,
               }}
               onClick={() => {
                 const problem = problems.find(p => p.topic === node.topic);
@@ -136,7 +136,7 @@ export const DSAUniverse: React.FC<DSAUniverseProps> = ({nodes, problems, onSele
                   key={`${node.id}-${conn.id}`}
                   x1={node.x} y1={node.y}
                   x2={conn.x} y2={conn.y}
-                  stroke="rgba(99,102,241,0.08)"
+                  stroke="rgba(124,92,255,0.08)"
                   strokeWidth="0.5"
                   strokeDasharray="3 3"
                 />
@@ -169,7 +169,7 @@ export const DSAUniverse: React.FC<DSAUniverseProps> = ({nodes, problems, onSele
                   const problem = problems.find(p => p.topic === selectedNode.topic);
                   if (problem) onSelectProblem(problem);
                 }}
-                className="btn btn-primary px-4 py-2 text-[11px] font-semibold uppercase tracking-wider cursor-pointer flex items-center gap-1.5"
+                className="spatial-btn-solid px-4 py-2 text-[11px] font-semibold uppercase tracking-wider cursor-pointer flex items-center gap-1.5"
               >
                 Start <ArrowRight className="w-3 h-3" />
               </button>

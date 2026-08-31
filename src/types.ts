@@ -49,7 +49,8 @@ export interface ProblemStatus {
   lastAttempted?: number;
   attempts: number;
   bestTime?: number;
-  solvedLanguages: Language[];
+  solvedLanguages: string[];
+  lastReviewedAt?: number;
 }
 
 export interface RevisionItem {
@@ -63,16 +64,19 @@ export interface RevisionItem {
   interval: number;
   repetitions: number;
   retention: number;
+  status?: 'learning' | 'familiar' | 'strong' | 'mastered';
+  lastReviewedAt?: number;
 }
 
 export interface ActivityItem {
   id: string;
-  type: 'solved' | 'attempted' | 'revision' | 'badge' | 'streak';
+  type: 'solved' | 'attempted' | 'revision' | 'badge' | 'streak' | 'sync' | 'import';
   title: string;
   detail: string;
   timestamp: number;
   problemId?: string;
   difficulty?: Difficulty;
+  metadata?: Record<string, unknown>;
 }
 
 export interface UserStats {

@@ -19,22 +19,24 @@ export const RevisionView: React.FC<RevisionViewProps> = ({ items, onReviewProbl
   };
 
   const ratingOptions = [
-    { key: 'again' as const, label: 'Again', color: 'badge-danger' },
-    { key: 'hard' as const, label: 'Hard', color: 'badge-amber' },
-    { key: 'good' as const, label: 'Good', color: 'badge-emerald' },
-    { key: 'mastered' as const, label: 'Mastered', color: 'badge-accent' },
+    { key: 'again' as const, label: 'Again', color: 'badge-danger', quality: '0' },
+    { key: 'hard' as const, label: 'Hard', color: 'badge-amber', quality: '3' },
+    { key: 'good' as const, label: 'Good', color: 'badge-emerald', quality: '4' },
+    { key: 'mastered' as const, label: 'Mastered', color: 'badge-accent', quality: '5' },
   ];
 
   return (
-    <motion.section className="space-y-6" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+    <motion.section className="space-y-6" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <RotateCcw className="w-5 h-5 text-[var(--color-accent)]" />
+          <div className="w-7 h-7 rounded-lg bg-[var(--color-accent)]/10 flex items-center justify-center">
+            <RotateCcw className="w-3.5 h-3.5 text-[var(--color-accent)]" />
+          </div>
           <h2 className="text-base font-semibold text-[var(--color-text-primary)]">Spaced Repetition</h2>
         </div>
         <button
           onClick={() => setShowHelp(!showHelp)}
-          className="btn btn-ghost btn-icon"
+          className="p-2 rounded-md text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-elevated)] transition-colors cursor-pointer"
           aria-label="Spaced repetition help"
         >
           <HelpCircle className="w-4 h-4" />
@@ -42,19 +44,24 @@ export const RevisionView: React.FC<RevisionViewProps> = ({ items, onReviewProbl
       </div>
 
       {showHelp && (
-        <div className="card p-4 animate-in">
+        <motion.div
+          className="card p-4"
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+        >
           <h3 className="font-medium text-sm text-[var(--color-text-primary)] mb-3">How Spaced Repetition Works</h3>
           <div className="space-y-2 text-sm text-[var(--color-text-secondary)]">
             <p>Rate your recall after reviewing a problem. The SM-2 algorithm schedules the next review based on your rating:</p>
             <ul className="list-disc list-inside space-y-1 ml-4">
-              <li><strong>Again</strong> — Couldn't recall. Resets interval to 1 day.</li>
-              <li><strong>Hard</strong> — Difficult to recall. Short interval increase.</li>
-              <li><strong>Good</strong> — Recalled with effort. Normal interval increase.</li>
-              <li><strong>Mastered</strong> — Easy recall. Maximum interval boost.</li>
+              <li><strong>Again</strong> (q=0) — Complete blackout. Resets to 1 day.</li>
+              <li><strong>Hard</strong> (q=3) — Difficult recall. Short interval.</li>
+              <li><strong>Good</strong> (q=4) — Recalled with effort. Normal interval.</li>
+              <li><strong>Mastered</strong> (q=5) — Perfect recall. Maximum boost.</li>
             </ul>
             <p className="pt-2">Reviews appear in <strong>Revision Radar</strong> on the dashboard when due.</p>
           </div>
-        </div>
+        </motion.div>
       )}
 
       <p className="text-sm text-[var(--color-text-secondary)]">
@@ -64,15 +71,19 @@ export const RevisionView: React.FC<RevisionViewProps> = ({ items, onReviewProbl
       </p>
 
       {items.length === 0 ? (
-        <div className="card p-8 text-center animate-in">
-          <div className="w-12 h-12 rounded-lg bg-[var(--color-accent)]/10 flex items-center justify-center mx-auto mb-3">
-            <RotateCcw className="w-6 h-6 text-[var(--color-accent)]" />
+        <motion.div
+          className="card p-10 text-center"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <div className="w-14 h-14 rounded-xl bg-[var(--color-accent)]/10 flex items-center justify-center mx-auto mb-4">
+            <RotateCcw className="w-7 h-7 text-[var(--color-accent)]" />
           </div>
-          <h3 className="text-base font-semibold text-[var(--color-text-primary)] mb-1">All Caught Up</h3>
+          <h3 className="text-lg font-semibold text-[var(--color-text-primary)] mb-2">All Caught Up</h3>
           <p className="text-sm text-[var(--color-text-muted)] max-w-md mx-auto">
             No problems due for review. Keep solving to build your revision queue.
           </p>
-        </div>
+        </motion.div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {items.map((item, index) => {
@@ -81,10 +92,12 @@ export const RevisionView: React.FC<RevisionViewProps> = ({ items, onReviewProbl
             const isOverdue = urgency === 'overdue' || urgency === 'due';
 
             return (
-              <div
+              <motion.div
                 key={item.id}
-                className={`card p-4 animate-in ${isOverdue ? 'border-[var(--color-accent-danger)]/20' : ''}`}
-                style={{ animationDelay: `${index * 0.03}s` }}
+                className={`card p-4 ${isOverdue ? 'border-[var(--color-accent-danger)]/20' : ''}`}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05, duration: 0.3 }}
               >
                 <div className="flex items-start gap-2.5">
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
@@ -110,7 +123,7 @@ export const RevisionView: React.FC<RevisionViewProps> = ({ items, onReviewProbl
                       <button
                         key={rating.key}
                         onClick={() => handleRate(item, rating.key)}
-                        className={`flex-1 px-2 py-1.5 rounded-md text-[10px] uppercase font-semibold transition-all cursor-pointer badge ${rating.color} hover:opacity-80`}
+                        className={`flex-1 px-2 py-1.5 rounded-md text-[10px] uppercase font-semibold transition-all cursor-pointer ${rating.color} hover:opacity-80`}
                       >
                         {rating.label}
                       </button>
@@ -120,11 +133,11 @@ export const RevisionView: React.FC<RevisionViewProps> = ({ items, onReviewProbl
 
                 <button
                   onClick={() => onReviewProblem(item.problemId)}
-                  className="mt-3 w-full flex items-center justify-center gap-1.5 px-3 py-2 text-[11px] font-medium text-[var(--color-accent)] hover:bg-[var(--color-accent)]/5 rounded-md transition-colors cursor-pointer btn btn-ghost"
+                  className="mt-3 w-full flex items-center justify-center gap-1.5 px-3 py-2 text-[11px] font-semibold text-[var(--color-accent)] bg-[var(--color-accent)]/5 hover:bg-[var(--color-accent)]/10 rounded-md transition-colors cursor-pointer"
                 >
                   Open Problem <ArrowRight className="w-3 h-3" />
                 </button>
-              </div>
+              </motion.div>
             );
           })}
         </div>

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Flame, Bell, Code2, Compass, BarChart3, RotateCcw,
   GitFork, Globe, ExternalLink, CheckCircle2,
-  Menu, X, User, Search, ChevronDown
+  Menu, X, User, Search, ChevronDown, Database, Settings, Link2
 } from 'lucide-react';
 import { UserStats } from '../types';
 
@@ -13,12 +13,23 @@ interface NavigationProps {
   userStats: UserStats;
   onOpenDailyChallenge: () => void;
   onOpenPortfolioModal: () => void;
+  onOpenConnectedAccounts: () => void;
+  onOpenImportExport: () => void;
 }
 
-export const Navigation: React.FC<NavigationProps> = ({currentTab, onSelectTab, userStats, onOpenDailyChallenge, onOpenPortfolioModal}) => {
+export const Navigation: React.FC<NavigationProps> = ({
+  currentTab,
+  onSelectTab,
+  userStats,
+  onOpenDailyChallenge,
+  onOpenPortfolioModal,
+  onOpenConnectedAccounts,
+  onOpenImportExport
+}) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchFocused, setSearchFocused] = useState(false);
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Compass },
@@ -26,11 +37,12 @@ export const Navigation: React.FC<NavigationProps> = ({currentTab, onSelectTab, 
     { id: 'roadmap', label: 'Roadmap', icon: Compass },
     { id: 'progress', label: 'Progress', icon: BarChart3 },
     { id: 'revision', label: 'Revision', icon: RotateCcw },
+    { id: 'my-problems', label: 'My Problems', icon: Database },
   ];
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-[var(--color-surface)]/95 backdrop-blur-sm border-b border-[var(--color-border)]">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+    <nav className="sticky top-0 z-50 w-full bg-[var(--color-surface)]/95 backdrop-blur-md border-b border-[var(--color-border)]">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
         <div className="flex items-center gap-6">
           <button
             onClick={() => onSelectTab('dashboard')}
@@ -51,14 +63,20 @@ export const Navigation: React.FC<NavigationProps> = ({currentTab, onSelectTab, 
                 <button
                   key={item.id}
                   onClick={() => onSelectTab(item.id)}
-                  className={`relative px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider transition-colors duration-150 rounded-md cursor-pointer ${
+                  className={`relative px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider transition-all duration-150 rounded-md cursor-pointer ${
                     isActive
                       ? 'text-[var(--color-accent)] bg-[var(--color-accent)]/10'
                       : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-elevated)]'
                   }`}
                 >
                   {item.label}
-                  {isActive && <span className="absolute bottom-0 left-3 right-3 h-[2px] bg-[var(--color-accent)] rounded-full" />}
+                  {isActive && (
+                    <motion.span
+                      layoutId="nav-indicator"
+                      className="absolute bottom-0 left-3 right-3 h-[2px] bg-[var(--color-accent)] rounded-full"
+                      transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                    />
+                  )}
                 </button>
               );
             })}
@@ -67,15 +85,23 @@ export const Navigation: React.FC<NavigationProps> = ({currentTab, onSelectTab, 
 
         <div className="flex items-center gap-2">
           <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[var(--color-surface-elevated)] border border-[var(--color-border)]">
-            <Flame className="w-3 h-3 text-[var(--color-accent-amber)]" />
+            <Flame className="w-3 h-3 text-[var(--color-accent-amber)] animate-glow-pulse" />
             <span className="font-mono text-[11px] font-semibold text-[var(--color-text-primary)]">
               {userStats.streak}d
             </span>
           </div>
 
           <button
+            onClick={() => setSearchFocused(true)}
+            className="hidden sm:flex p-2 rounded-md text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-elevated)] transition-colors cursor-pointer"
+            aria-label="Search"
+          >
+            <Search className="w-4 h-4" />
+          </button>
+
+          <button
             onClick={onOpenDailyChallenge}
-            className="btn btn-primary px-3 py-1.5 text-[11px] uppercase font-semibold tracking-wider"
+            className="spatial-btn-solid px-3 py-1.5 text-[11px] uppercase font-semibold tracking-wider cursor-pointer"
           >
             Blitz
           </button>
@@ -90,7 +116,7 @@ export const Navigation: React.FC<NavigationProps> = ({currentTab, onSelectTab, 
               aria-label="Notifications"
             >
               <Bell className="w-4 h-4" />
-              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-[var(--color-accent)] rounded-full" />
+              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-[var(--color-accent)] rounded-full animate-glow-pulse" />
             </button>
 
             <AnimatePresence>
@@ -123,7 +149,7 @@ export const Navigation: React.FC<NavigationProps> = ({currentTab, onSelectTab, 
                         )}
                         {userStats.streak > 0 && (
                           <div className="p-2.5 rounded-lg bg-[var(--color-surface-elevated)] text-xs flex gap-2.5 items-start">
-                            <Flame className="w-3.5 h-3.5 text-[var(--color-accent-emerald)] mt-0.5 shrink-0" />
+                            <Flame className="w-3.5 h-3.5 text-[var(--color-accent-amber)] mt-0.5 shrink-0" />
                             <div>
                               <p className="text-[var(--color-text-primary)] font-semibold text-[11px]">Streak Active</p>
                               <p className="text-[10px] text-[var(--color-text-muted)]">{userStats.streak}-day streak.</p>
@@ -180,6 +206,24 @@ export const Navigation: React.FC<NavigationProps> = ({currentTab, onSelectTab, 
                       className="w-full text-left px-2.5 py-2 rounded-md text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-elevated)] flex items-center gap-2 transition-colors cursor-pointer"
                     >
                       <User className="w-3.5 h-3.5 text-[var(--color-accent)]" /> Bio & Projects
+                    </button>
+                    <button
+                      onClick={() => {
+                        onOpenConnectedAccounts();
+                        setShowProfileMenu(false);
+                      }}
+                      className="w-full text-left px-2.5 py-2 rounded-md text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-elevated)] flex items-center gap-2 transition-colors cursor-pointer"
+                    >
+                      <Link2 className="w-3.5 h-3.5 text-[var(--color-accent)]" /> Connected Accounts
+                    </button>
+                    <button
+                      onClick={() => {
+                        onOpenImportExport();
+                        setShowProfileMenu(false);
+                      }}
+                      className="w-full text-left px-2.5 py-2 rounded-md text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-elevated)] flex items-center gap-2 transition-colors cursor-pointer"
+                    >
+                      <Database className="w-3.5 h-3.5 text-[var(--color-accent)]" /> Import / Export
                     </button>
                     <a
                       href="https://github.com/InterestingAary"
@@ -243,7 +287,7 @@ export const Navigation: React.FC<NavigationProps> = ({currentTab, onSelectTab, 
                       onSelectTab(item.id);
                       setMobileMenuOpen(false);
                     }}
-                    className={`w-full flex items-center justify-between px-3 py-2.5 text-[11px] font-semibold uppercase tracking-wider rounded-md transition-colors cursor-pointer ${
+                    className={`w-full flex items-center justify-between px-3 py-2.5 text-[11px] font-semibold uppercase tracking-wider rounded-md transition-all cursor-pointer ${
                       isActive
                         ? 'text-[var(--color-accent)] bg-[var(--color-accent)]/10'
                         : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-elevated)]'

@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ActivityItem } from '../types';
-import { CheckCircle2, AlertCircle, Award, RotateCcw, Zap } from 'lucide-react';
+import { CheckCircle2, AlertCircle, Award, RotateCcw, Zap, ArrowUpRight } from 'lucide-react';
 
 interface ActivityFeedProps {
   activities: ActivityItem[];
@@ -23,9 +23,9 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({ activities, onSelect
   return (
     <motion.section
       className="card p-5 flex flex-col gap-3"
-      initial={{ opacity: 0, y: 8 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: 0.1 }}
+      transition={{ duration: 0.4, delay: 0.2 }}
     >
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-semibold text-[var(--color-text-primary)]">Activity</h3>
@@ -46,9 +46,9 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({ activities, onSelect
               key={item.id}
               onClick={() => item.problemId && onSelectProblemById(item.problemId)}
               className={`flex items-start gap-2.5 p-2 rounded-md transition-colors ${
-                item.problemId ? 'hover:bg-[var(--color-surface-elevated)] cursor-pointer' : ''
+                item.problemId ? 'hover:bg-[var(--color-surface-elevated)] cursor-pointer group' : ''
               }`}
-              initial={{ opacity: 0, x: -4 }}
+              initial={{ opacity: 0, x: -6 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.2 }}
             >
@@ -61,9 +61,14 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({ activities, onSelect
               </div>
 
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] font-semibold text-[var(--color-text-primary)] truncate">
-                  {item.title}
-                </p>
+                <div className="flex items-center justify-between gap-1">
+                  <p className="text-[11px] font-semibold text-[var(--color-text-primary)] truncate group-hover:text-[var(--color-accent)] transition-colors">
+                    {item.title}
+                  </p>
+                  {item.problemId && (
+                    <ArrowUpRight className="w-3 h-3 text-[var(--color-text-muted)] opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+                  )}
+                </div>
                 <p className="text-[10px] text-[var(--color-text-muted)] line-clamp-1 mt-0.5">{item.detail}</p>
                 <span className="font-mono text-[9px] text-[var(--color-text-muted)] block mt-0.5">{timeAgo(item.timestamp)}</span>
               </div>

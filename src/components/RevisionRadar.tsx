@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { RevisionItem } from '../types';
 import { getUrgency } from '../utils/spacedRepetition';
-import { AlertTriangle, Clock } from 'lucide-react';
+import { AlertTriangle, Clock, ArrowRight } from 'lucide-react';
 
 interface RevisionRadarProps {
   items: RevisionItem[];
@@ -27,10 +27,18 @@ export const RevisionRadar: React.FC<RevisionRadarProps> = ({ items, onReviewIte
       className="card p-5"
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: 0.1 }}
+      transition={{ duration: 0.4, delay: 0.15 }}
     >
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
+          <div className="w-7 h-7 rounded-lg bg-[var(--color-accent)]/10 flex items-center justify-center">
+            <div className="w-3.5 h-3.5 text-[var(--color-accent)]">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 6v6l4 2" />
+              </svg>
+            </div>
+          </div>
           <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">Revision Radar</h2>
         </div>
         <span className="text-[10px] font-mono text-[var(--color-text-muted)]">{items.length} items</span>
@@ -59,7 +67,7 @@ export const RevisionRadar: React.FC<RevisionRadarProps> = ({ items, onReviewIte
           {items.length === 0 && (
             <span className="text-[10px] text-[var(--color-text-muted)] font-mono">No reviews scheduled</span>
           )}
-          {items.slice(0, 12).map((item) => {
+          {items.slice(0, 16).map((item) => {
             const u = getUrgency(item.nextReview);
             const dotColor = u === 'overdue' || u === 'due'
               ? 'bg-[var(--color-accent-danger)]'
@@ -69,13 +77,13 @@ export const RevisionRadar: React.FC<RevisionRadarProps> = ({ items, onReviewIte
             return (
               <div
                 key={item.id}
-                className={`w-2 h-2 rounded-full ${dotColor} transition-all hover:scale-125 cursor-pointer`}
+                className={`w-2.5 h-2.5 rounded-full ${dotColor} transition-all hover:scale-125 cursor-pointer`}
                 title={`${item.title} — ${u}`}
                 onClick={() => onReviewItem(item.problemId)}
               />
             );
           })}
-          {items.length > 12 && <span className="text-[10px] text-[var(--color-text-muted)] font-mono">+{items.length - 12}</span>}
+          {items.length > 16 && <span className="text-[10px] text-[var(--color-text-muted)] font-mono">+{items.length - 16}</span>}
         </div>
       </div>
     </motion.section>
